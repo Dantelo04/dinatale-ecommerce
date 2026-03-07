@@ -1,59 +1,136 @@
-import { headers as getHeaders } from 'next/headers.js'
+import React from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
 import { getPayload } from 'payload'
-import React from 'react'
-import { fileURLToPath } from 'url'
-
-import config from '@/payload.config'
-import './styles.css'
+import config from '@payload-config'
+import { ArrowRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { ProductCard } from '@/components/storefront/ProductCard'
+import type { Media, Category, Product } from '@/payload-types'
 
 export default async function HomePage() {
-  const headers = await getHeaders()
-  const payloadConfig = await config
-  const payload = await getPayload({ config: payloadConfig })
-  const { user } = await payload.auth({ headers })
+  const payload = await getPayload({ config: await config })
 
-  const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
+  const [settings, content, { docs: featured }, { docs: categories }] = await Promise.all([
+    payload.findGlobal({ slug: 'site-settings', depth: 1 }),
+    payload.findGlobal({ slug: 'storefront-content', depth: 1 }),
+    payload.find({
+      collection: 'products',
+      where: { featured: { equals: true }, active: { equals: true } },
+      limit: 8,
+      depth: 2,
+    }),
+    payload.find({ collection: 'categories', limit: 12, depth: 1 }),
+  ])
+
+  const heroImage = content.hero?.heroImage as Media | null
+  const currencySymbol = settings.currencySymbol || '$'
 
   return (
-    <div className="home">
-      <div className="content">
-        <picture>
-          <source srcSet="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg" />
+    <>
+      <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden bg-muted">
+        {heroImage?.url && (
           <Image
-            alt="Payload Logo"
-            height={65}
-            src="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg"
-            width={65}
+            src={heroImage.url}
+            alt={content.hero?.heroTitle || 'Banner principal'}
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
           />
-        </picture>
-        {!user && <h1>Welcome to your new project.</h1>}
-        {user && <h1>Welcome back, {user.email}</h1>}
-        <div className="links">
-          <a
-            className="admin"
-            href={payloadConfig.routes.admin}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Go to admin panel
-          </a>
-          <a
-            className="docs"
-            href="https://payloadcms.com/docs"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Documentation
-          </a>
+        )}
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="relative z-10 mx-auto max-w-3xl px-4 text-center text-white">
+          <h1 className="text-4xl font-bold tracking-tight text-wrap-balance sm:text-5xl lg:text-6xl">
+            {content.hero?.heroTitle || 'Bienvenidos a nuestra tienda'}
+          </h1>
+          <p className="mt-4 text-lg text-white/90 text-pretty sm:text-xl">
+            {content.hero?.heroSubtitle || 'Descubri nuestros productos'}
+          </p>
+          <div className="mt-8">
+            <Button asChild size="lg" className="bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity">
+              <Link href="/tienda">
+                Ver Productos
+                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          </div>
         </div>
-      </div>
-      <div className="footer">
-        <p>Update this page by editing</p>
-        <a className="codeLink" href={fileURL}>
-          <code>app/(frontend)/page.tsx</code>
-        </a>
-      </div>
-    </div>
+      </section>
+
+      {categories.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
+            Categorias
+          </h2>
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {categories.map((cat: Category) => {
+              const catImage = cat.image as Media | null
+              return (
+                <Link key={cat.id} href={`/tienda?categoria=${cat.slug}`}>
+                  <Card className="group overflow-hidden transition-shadow hover:shadow-lg pt-0 gap-0">
+                    <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                      {catImage?.url ? (
+                        <Image
+                          src={catImage.url}
+                          alt={cat.name}
+                          fill
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                          className="object-cover transition-transform duration-300 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="flex h-full items-center justify-center text-muted-foreground text-sm">
+                          {cat.name}
+                        </div>
+                      )}
+                    </div>
+                    <CardContent className="p-3">
+                      <h3 className="text-sm font-medium text-center line-clamp-1">{cat.name}</h3>
+                    </CardContent>
+                  </Card>
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {featured.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
+              Productos Destacados
+            </h2>
+            <Link
+              href="/tienda"
+              className="text-sm font-medium text-site-secondary hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+            >
+              Ver todos
+              <ArrowRight className="ml-1 inline h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {featured.map((product: Product) => {
+              const firstImage = product.images?.[0]?.image as Media | null
+              return (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  slug={product.slug}
+                  price={product.price}
+                  compareAtPrice={product.compareAtPrice}
+                  imageUrl={firstImage?.url ?? null}
+                  imageAlt={firstImage?.alt ?? product.name}
+                  currencySymbol={currencySymbol}
+                />
+              )
+            })}
+          </div>
+        </section>
+      )}
+    </>
   )
 }
