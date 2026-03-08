@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Card, CardContent } from '@/components/ui/card'
@@ -31,8 +31,15 @@ export function ProductCard({
   currencySymbol,
 }: ProductCardProps) {
   const { addItem } = useCart()
+  const [added, setAdded] = useState(false)
 
   const hasDiscount = compareAtPrice && compareAtPrice > price
+
+  const handleAdd = () => {
+    addItem({ id, name, price, imageUrl, slug })
+    setAdded(true)
+    setTimeout(() => setAdded(false), 2000)
+  }
 
   return (
     <Card className="group overflow-hidden border border-border transition-shadow hover:shadow-lg pt-0 gap-0">
@@ -59,7 +66,7 @@ export function ProductCard({
           )}
         </div>
       </Link>
-      <CardContent className="flex flex-col gap-2 p-4">
+      <CardContent className="flex flex-col gap-2 p-4 pb-0">
         <Link href={`/tienda/${slug}`} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">
           <h3 className="line-clamp-2 text-sm font-medium leading-snug text-foreground min-w-0">
             {name}
@@ -78,13 +85,11 @@ export function ProductCard({
         <Button
           size="sm"
           className="mt-1 w-full bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity"
-          onClick={() =>
-            addItem({ id, name, price, imageUrl, slug })
-          }
+          onClick={handleAdd}
           aria-label={`Agregar ${name} al carrito`}
         >
           <ShoppingCart className="mr-2 h-4 w-4" aria-hidden="true" />
-          Agregar
+          {added ? 'Agregado!' : 'Agregar'}
         </Button>
       </CardContent>
     </Card>

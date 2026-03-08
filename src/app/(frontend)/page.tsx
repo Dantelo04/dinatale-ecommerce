@@ -12,7 +12,7 @@ import type { Media, Category, Product } from '@/payload-types'
 export default async function HomePage() {
   const payload = await getPayload({ config: await config })
 
-  const [settings, content, { docs: featured }, { docs: categories }] = await Promise.all([
+  const [settings, content, { docs: featured }, { docs: categories }, { docs: latest }] = await Promise.all([
     payload.findGlobal({ slug: 'site-settings', depth: 1 }),
     payload.findGlobal({ slug: 'storefront-content', depth: 1 }),
     payload.find({
@@ -22,6 +22,13 @@ export default async function HomePage() {
       depth: 2,
     }),
     payload.find({ collection: 'categories', limit: 12, depth: 1 }),
+    payload.find({
+      collection: 'products',
+      where: { active: { equals: true } },
+      limit: 5,
+      depth: 2,
+      sort: '-createdAt',
+    }),
   ])
 
   const heroImage = content.hero?.heroImage as Media | null
@@ -59,6 +66,41 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {featured.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
+              Productos Destacados
+            </h2>
+            <Link
+              href="/tienda"
+              className="text-sm font-medium text-site-secondary hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+            >
+              Ver todos
+              <ArrowRight className="ml-1 inline h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {featured.map((product: Product) => {
+              const firstImage = product.images?.[0]?.image as Media | null
+              return (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  slug={product.slug}
+                  price={product.price}
+                  compareAtPrice={product.compareAtPrice}
+                  imageUrl={firstImage?.url ?? null}
+                  imageAlt={firstImage?.alt ?? product.name}
+                  currencySymbol={currencySymbol}
+                />
+              )
+            })}
+          </div>
+        </section>
+      )}
+
       {categories.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
@@ -86,7 +128,7 @@ export default async function HomePage() {
                         </div>
                       )}
                     </div>
-                    <CardContent className="p-3">
+                    <CardContent className="p-3 pb-0 pt-4">
                       <h3 className="text-sm font-medium text-center line-clamp-1">{cat.name}</h3>
                     </CardContent>
                   </Card>
@@ -97,22 +139,22 @@ export default async function HomePage() {
         </section>
       )}
 
-      {featured.length > 0 && (
+      {latest.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
-              Productos Destacados
+              Ultimos Productos
             </h2>
             <Link
               href="/tienda"
               className="text-sm font-medium text-site-secondary hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
             >
-              Ver todos
+              Ver mas
               <ArrowRight className="ml-1 inline h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((product: Product) => {
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            {latest.map((product: Product) => {
               const firstImage = product.images?.[0]?.image as Media | null
               return (
                 <ProductCard

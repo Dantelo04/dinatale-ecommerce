@@ -53,7 +53,7 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold tracking-tight text-wrap-balance">Carrito de Compras</h1>
       <p className="mt-1 text-muted-foreground">
         {totalItems} {totalItems === 1 ? 'producto' : 'productos'}
@@ -142,7 +142,7 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
 
         <div>
           <Card>
-            <CardContent className="flex flex-col gap-4 p-6">
+            <CardContent className="flex flex-col gap-4 px-6">
               <h2 className="text-lg font-semibold">Resumen del Pedido</h2>
               <Separator />
               {items.map((item) => (

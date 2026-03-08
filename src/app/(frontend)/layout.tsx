@@ -56,6 +56,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <main id="main-content" className="flex-1">{children}</main>
           <Footer
             siteName={settings.siteName}
+            logoUrl={logoUrl}
             socialLinks={content.socialLinks}
           />
         </CartProvider>
