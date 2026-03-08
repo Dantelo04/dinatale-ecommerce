@@ -3,18 +3,25 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Where } from 'payload'
 
+const isDev = process.env.NODE_ENV === 'development'
+
 async function getPayloadInstance() {
   return getPayload({ config: await config })
 }
 
+function cache<T>(fn: () => Promise<T>, keys: string[], tags: string[]): () => Promise<T> {
+  if (isDev) return fn
+  return unstable_cache(fn, keys, { tags })
+}
+
 export const getCachedGlobal = <T>(slug: 'site-settings' | 'storefront-content', depth = 1) =>
-  unstable_cache(
-    async (): Promise<T> => {
+  cache<T>(
+    async () => {
       const payload = await getPayloadInstance()
       return payload.findGlobal({ slug, depth }) as Promise<T>
     },
     [slug],
-    { tags: [slug] },
+    [slug],
   )
 
 export const getCachedProducts = (options?: {
@@ -23,7 +30,7 @@ export const getCachedProducts = (options?: {
   sort?: string
   depth?: number
 }) =>
-  unstable_cache(
+  cache(
     async () => {
       const payload = await getPayloadInstance()
       return payload.find({
@@ -35,11 +42,11 @@ export const getCachedProducts = (options?: {
       })
     },
     ['products', JSON.stringify(options ?? {})],
-    { tags: ['products'] },
+    ['products'],
   )
 
 export const getCachedProductBySlug = (slug: string) =>
-  unstable_cache(
+  cache(
     async () => {
       const payload = await getPayloadInstance()
       return payload.find({
@@ -50,11 +57,11 @@ export const getCachedProductBySlug = (slug: string) =>
       })
     },
     ['products', `product-${slug}`],
-    { tags: ['products'] },
+    ['products'],
   )
 
 export const getCachedCategories = (limit = 50) =>
-  unstable_cache(
+  cache(
     async () => {
       const payload = await getPayloadInstance()
       return payload.find({
@@ -64,5 +71,5 @@ export const getCachedCategories = (limit = 50) =>
       })
     },
     ['categories'],
-    { tags: ['categories'] },
+    ['categories'],
   )

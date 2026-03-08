@@ -5,11 +5,13 @@ import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { ProductCard } from '@/components/storefront/ProductCard'
+import { GoogleReviews } from '@/components/storefront/GoogleReviews'
 import { getCachedGlobal, getCachedProducts, getCachedCategories } from '@/lib/payload-cache'
+import { getCachedPlaceDetails } from '@/lib/google-places'
 import type { Media, Category, Product, SiteSetting, StorefrontContent } from '@/payload-types'
 
 export default async function HomePage() {
-  const [settings, content, { docs: featured }, { docs: categories }, { docs: latest }] =
+  const [settings, content, { docs: featured }, { docs: categories }, { docs: latest }, placeDetails] =
     await Promise.all([
       getCachedGlobal<SiteSetting>('site-settings')(),
       getCachedGlobal<StorefrontContent>('storefront-content')(),
@@ -23,6 +25,7 @@ export default async function HomePage() {
         limit: 5,
         sort: '-createdAt',
       })(),
+      getCachedPlaceDetails(),
     ])
 
   const heroImage = content.hero?.heroImage as Media | null
@@ -36,7 +39,7 @@ export default async function HomePage() {
             src={heroImage.url}
             alt={content.hero?.heroTitle || 'Banner principal'}
             fill
-            className="object-cover"
+            className="object-cover blur-sm"
             priority
             sizes="100vw"
           />
@@ -132,6 +135,8 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {placeDetails && <GoogleReviews place={placeDetails} />}
 
       {latest.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
