@@ -26,6 +26,15 @@ export const SiteSettings: GlobalConfig = {
       relationTo: 'media',
     },
     {
+      name: 'favicon',
+      label: 'Favicon',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'Icono de la pestana del navegador (recomendado: 32x32px o 64x64px, formato PNG o ICO)',
+      },
+    },
+    {
       type: 'row',
       fields: [
         {

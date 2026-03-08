@@ -431,6 +431,10 @@ export interface SiteSetting {
   siteName: string;
   logo?: (number | null) | Media;
   /**
+   * Icono de la pestana del navegador (recomendado: 32x32px o 64x64px, formato PNG o ICO)
+   */
+  favicon?: (number | null) | Media;
+  /**
    * Color hexadecimal (ej: #18181b)
    */
   primaryColor?: string | null;
@@ -507,6 +511,7 @@ export interface StorefrontContent {
 export interface SiteSettingsSelect<T extends boolean = true> {
   siteName?: T;
   logo?: T;
+  favicon?: T;
   primaryColor?: T;
   secondaryColor?: T;
   whatsappNumber?: T;

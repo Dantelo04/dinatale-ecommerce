@@ -28,6 +28,7 @@ export const Products: CollectionConfig = {
       name: 'name',
       type: 'text',
       required: true,
+      label: 'Nombre',
     },
     {
       name: 'slug',
@@ -38,16 +39,19 @@ export const Products: CollectionConfig = {
       admin: {
         position: 'sidebar',
       },
+      label: 'Slug (URL)',
     },
     {
       name: 'description',
       type: 'richText',
+      label: 'Descripción',
     },
     {
       name: 'price',
       type: 'number',
       required: true,
       min: 0,
+      label: 'Precio',
     },
     {
       name: 'compareAtPrice',
@@ -56,17 +60,20 @@ export const Products: CollectionConfig = {
       admin: {
         description: 'Precio original (se mostrara tachado si es mayor al precio actual)',
       },
+      label: 'Precio original',
     },
     {
       name: 'images',
       type: 'array',
       minRows: 1,
+      label: 'Imágenes',
       fields: [
         {
           name: 'image',
           type: 'upload',
           relationTo: 'media',
           required: true,
+          label: 'Imagen',
         },
       ],
     },
@@ -74,6 +81,7 @@ export const Products: CollectionConfig = {
       name: 'category',
       type: 'relationship',
       relationTo: 'categories',
+      label: 'Categoría',
     },
     {
       name: 'featured',
@@ -82,6 +90,7 @@ export const Products: CollectionConfig = {
       admin: {
         position: 'sidebar',
       },
+      label: 'Es destacado',
     },
     {
       name: 'active',
@@ -90,6 +99,7 @@ export const Products: CollectionConfig = {
       admin: {
         position: 'sidebar',
       },
+      label: 'Activo',
     },
   ],
   hooks: {

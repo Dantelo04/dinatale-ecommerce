@@ -10,6 +10,11 @@ import type { SiteSetting, StorefrontContent } from '@/payload-types'
 export async function generateMetadata() {
   const settings = await getCachedGlobal<SiteSetting>('site-settings')()
 
+  const faviconUrl = (settings.favicon as Media)?.url ?? null
+  const icons = faviconUrl
+    ? [{ rel: 'icon' as const, url: faviconUrl }]
+    : undefined
+
   return {
     title: {
       default: settings.siteName,
@@ -17,6 +22,7 @@ export async function generateMetadata() {
     },
     description: `Tienda online - ${settings.siteName}`,
     themeColor: settings.primaryColor || '#18181b',
+    icons,
   }
 }
 

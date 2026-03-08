@@ -21,6 +21,9 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     theme: 'light',
+    meta: {
+      icons: [{ rel: 'icon', url: '/api/favicon' }],
+    },
     importMap: {
       baseDir: path.resolve(dirname),
     },

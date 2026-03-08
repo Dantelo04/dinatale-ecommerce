@@ -25,6 +25,7 @@ export const Categories: CollectionConfig = {
       name: 'name',
       type: 'text',
       required: true,
+      label: 'Nombre',
     },
     {
       name: 'slug',
@@ -35,15 +36,18 @@ export const Categories: CollectionConfig = {
       admin: {
         position: 'sidebar',
       },
+      label: 'Slug (URL)',
     },
     {
       name: 'description',
       type: 'textarea',
+      label: 'Descripción',
     },
     {
       name: 'image',
       type: 'upload',
       relationTo: 'media',
+      label: 'Imagen',
     },
   ],
   hooks: {
