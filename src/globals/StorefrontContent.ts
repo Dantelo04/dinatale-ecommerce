@@ -2,7 +2,7 @@ import type { GlobalConfig } from 'payload'
 
 export const StorefrontContent: GlobalConfig = {
   slug: 'storefront-content',
-  label: 'Contenido del Storefront',
+  label: 'Contenido del Sitio',
   access: {
     read: () => true,
     update: ({ req: { user } }) => Boolean(user?.roles?.includes('admin')),
