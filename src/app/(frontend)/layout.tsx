@@ -53,7 +53,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             logoUrl={logoUrl}
             currencySymbol={settings.currencySymbol || '$'}
           />
-          <main id="main-content" className="flex-1">{children}</main>
+          <main id="main-content" className="flex-1 pb-16">{children}</main>
           <Footer
             siteName={settings.siteName}
             logoUrl={logoUrl}

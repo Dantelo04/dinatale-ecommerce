@@ -31,7 +31,11 @@ async function fetchPlaceDetails(): Promise<PlaceDetails | null> {
     const url = `https://places.googleapis.com/v1/places/${placeId}?fields=${fields}&languageCode=es&key=${apiKey}`
 
     const res = await fetch(url, { next: { revalidate: 86400 } })
-    if (!res.ok) return null
+    if (!res.ok) {
+      const errorBody = await res.text()
+      console.error(`Google Places API error ${res.status}:`, errorBody)
+      return null
+    }
 
     const data = await res.json()
 
@@ -54,7 +58,8 @@ async function fetchPlaceDetails(): Promise<PlaceDetails | null> {
         }
       }),
     }
-  } catch {
+  } catch (error) {
+    console.error('Error fetching place details', error)
     return null
   }
 }

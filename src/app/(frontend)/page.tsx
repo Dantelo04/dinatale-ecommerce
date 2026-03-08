@@ -11,22 +11,28 @@ import { getCachedPlaceDetails } from '@/lib/google-places'
 import type { Media, Category, Product, SiteSetting, StorefrontContent } from '@/payload-types'
 
 export default async function HomePage() {
-  const [settings, content, { docs: featured }, { docs: categories }, { docs: latest }, placeDetails] =
-    await Promise.all([
-      getCachedGlobal<SiteSetting>('site-settings')(),
-      getCachedGlobal<StorefrontContent>('storefront-content')(),
-      getCachedProducts({
-        where: { featured: { equals: true }, active: { equals: true } },
-        limit: 8,
-      })(),
-      getCachedCategories(12)(),
-      getCachedProducts({
-        where: { active: { equals: true } },
-        limit: 5,
-        sort: '-createdAt',
-      })(),
-      getCachedPlaceDetails(),
-    ])
+  const [
+    settings,
+    content,
+    { docs: featured },
+    { docs: categories },
+    { docs: latest },
+    placeDetails,
+  ] = await Promise.all([
+    getCachedGlobal<SiteSetting>('site-settings')(),
+    getCachedGlobal<StorefrontContent>('storefront-content')(),
+    getCachedProducts({
+      where: { featured: { equals: true }, active: { equals: true } },
+      limit: 8,
+    })(),
+    getCachedCategories(12)(),
+    getCachedProducts({
+      where: { active: { equals: true } },
+      limit: 5,
+      sort: '-createdAt',
+    })(),
+    getCachedPlaceDetails(),
+  ])
 
   const heroImage = content.hero?.heroImage as Media | null
   const currencySymbol = settings.currencySymbol || '$'
@@ -39,7 +45,8 @@ export default async function HomePage() {
             src={heroImage.url}
             alt={content.hero?.heroTitle || 'Banner principal'}
             fill
-            className="object-cover blur-sm"
+            className="object-cover"
+            style={{ filter: 'blur(3px)' }}
             priority
             sizes="100vw"
           />
@@ -53,7 +60,11 @@ export default async function HomePage() {
             {content.hero?.heroSubtitle || 'Descubri nuestros productos'}
           </p>
           <div className="mt-8">
-            <Button asChild size="lg" className="bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity">
+            <Button
+              asChild
+              size="lg"
+              className="bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity"
+            >
               <Link href="/tienda">
                 Ver Productos
                 <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
@@ -64,7 +75,7 @@ export default async function HomePage() {
       </section>
 
       {featured.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
               Productos Destacados
@@ -98,8 +109,10 @@ export default async function HomePage() {
         </section>
       )}
 
+      {placeDetails && <GoogleReviews place={placeDetails} />}
+
       {categories.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
           <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
             Categorias
           </h2>
@@ -136,10 +149,8 @@ export default async function HomePage() {
         </section>
       )}
 
-      {placeDetails && <GoogleReviews place={placeDetails} />}
-
       {latest.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
               Ultimos Productos

@@ -60,7 +60,7 @@ export function ProductCard({
             </div>
           )}
           {hasDiscount && (
-            <span className="absolute left-3 top-3 rounded-full bg-red-500 px-2 py-0.5 text-xs font-semibold text-white">
+            <span className="absolute left-3 top-3 rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold text-white">
               Oferta
             </span>
           )}
