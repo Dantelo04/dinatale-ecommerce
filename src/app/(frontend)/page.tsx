@@ -1,35 +1,29 @@
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { getPayload } from 'payload'
-import config from '@payload-config'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { ProductCard } from '@/components/storefront/ProductCard'
-import type { Media, Category, Product } from '@/payload-types'
+import { getCachedGlobal, getCachedProducts, getCachedCategories } from '@/lib/payload-cache'
+import type { Media, Category, Product, SiteSetting, StorefrontContent } from '@/payload-types'
 
 export default async function HomePage() {
-  const payload = await getPayload({ config: await config })
-
-  const [settings, content, { docs: featured }, { docs: categories }, { docs: latest }] = await Promise.all([
-    payload.findGlobal({ slug: 'site-settings', depth: 1 }),
-    payload.findGlobal({ slug: 'storefront-content', depth: 1 }),
-    payload.find({
-      collection: 'products',
-      where: { featured: { equals: true }, active: { equals: true } },
-      limit: 8,
-      depth: 2,
-    }),
-    payload.find({ collection: 'categories', limit: 12, depth: 1 }),
-    payload.find({
-      collection: 'products',
-      where: { active: { equals: true } },
-      limit: 5,
-      depth: 2,
-      sort: '-createdAt',
-    }),
-  ])
+  const [settings, content, { docs: featured }, { docs: categories }, { docs: latest }] =
+    await Promise.all([
+      getCachedGlobal<SiteSetting>('site-settings')(),
+      getCachedGlobal<StorefrontContent>('storefront-content')(),
+      getCachedProducts({
+        where: { featured: { equals: true }, active: { equals: true } },
+        limit: 8,
+      })(),
+      getCachedCategories(12)(),
+      getCachedProducts({
+        where: { active: { equals: true } },
+        limit: 5,
+        sort: '-createdAt',
+      })(),
+    ])
 
   const heroImage = content.hero?.heroImage as Media | null
   const currencySymbol = settings.currencySymbol || '$'
@@ -80,7 +74,7 @@ export default async function HomePage() {
               <ArrowRight className="ml-1 inline h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {featured.map((product: Product) => {
               const firstImage = product.images?.[0]?.image as Media | null
               return (
@@ -106,7 +100,7 @@ export default async function HomePage() {
           <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
             Categorias
           </h2>
-          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {categories.map((cat: Category) => {
               const catImage = cat.image as Media | null
               return (
@@ -153,7 +147,7 @@ export default async function HomePage() {
               <ArrowRight className="ml-1 inline h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
-          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             {latest.map((product: Product) => {
               const firstImage = product.images?.[0]?.image as Media | null
               return (

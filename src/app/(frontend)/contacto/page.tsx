@@ -1,17 +1,16 @@
 import React from 'react'
-import { getPayload } from 'payload'
-import config from '@payload-config'
 import { Mail, Phone, MapPin } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { ContactForm } from '@/components/storefront/ContactForm'
+import { getCachedGlobal } from '@/lib/payload-cache'
+import type { SiteSetting, StorefrontContent } from '@/payload-types'
 
 export const metadata = { title: 'Contacto' }
 
 export default async function ContactoPage() {
-  const payload = await getPayload({ config: await config })
   const [content, settings] = await Promise.all([
-    payload.findGlobal({ slug: 'storefront-content', depth: 0 }),
-    payload.findGlobal({ slug: 'site-settings' }),
+    getCachedGlobal<StorefrontContent>('storefront-content', 0)(),
+    getCachedGlobal<SiteSetting>('site-settings')(),
   ])
 
   const contact = content.contact

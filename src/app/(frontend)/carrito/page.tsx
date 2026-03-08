@@ -1,13 +1,12 @@
 import React from 'react'
-import { getPayload } from 'payload'
-import config from '@payload-config'
 import { CartPageClient } from '@/components/storefront/CartPageClient'
+import { getCachedGlobal } from '@/lib/payload-cache'
+import type { SiteSetting } from '@/payload-types'
 
 export const metadata = { title: 'Carrito' }
 
 export default async function CarritoPage() {
-  const payload = await getPayload({ config: await config })
-  const settings = await payload.findGlobal({ slug: 'site-settings' })
+  const settings = await getCachedGlobal<SiteSetting>('site-settings')()
 
   return (
     <CartPageClient

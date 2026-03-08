@@ -1,36 +1,24 @@
 import React from 'react'
-import { getPayload } from 'payload'
-import config from '@payload-config'
 import { notFound } from 'next/navigation'
-import type { Media, Category } from '@/payload-types'
+import type { Media, Category, SiteSetting } from '@/payload-types'
 import { ProductDetail } from '@/components/storefront/ProductDetail'
+import { getCachedGlobal, getCachedProductBySlug } from '@/lib/payload-cache'
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const payload = await getPayload({ config: await config })
-  const { docs } = await payload.find({
-    collection: 'products',
-    where: { slug: { equals: slug }, active: { equals: true } },
-    limit: 1,
-    depth: 0,
-  })
+  const { docs } = await getCachedProductBySlug(slug)()
 
   if (!docs[0]) return { title: 'Producto no encontrado' }
-
   return { title: docs[0].name }
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const payload = await getPayload({ config: await config })
 
-  const settings = await payload.findGlobal({ slug: 'site-settings' })
-  const { docs } = await payload.find({
-    collection: 'products',
-    where: { slug: { equals: slug }, active: { equals: true } },
-    limit: 1,
-    depth: 2,
-  })
+  const [settings, { docs }] = await Promise.all([
+    getCachedGlobal<SiteSetting>('site-settings')(),
+    getCachedProductBySlug(slug)(),
+  ])
 
   const product = docs[0]
   if (!product) notFound()

@@ -1,4 +1,8 @@
 import type { CollectionConfig } from 'payload'
+import {
+  revalidateCollectionAfterChange,
+  revalidateCollectionAfterDelete,
+} from '@/hooks/revalidateOnChange'
 
 export const Products: CollectionConfig = {
   slug: 'products',
@@ -89,6 +93,8 @@ export const Products: CollectionConfig = {
     },
   ],
   hooks: {
+    afterChange: [revalidateCollectionAfterChange()],
+    afterDelete: [revalidateCollectionAfterDelete()],
     beforeValidate: [
       ({ data, operation }) => {
         if (data && (operation === 'create' || !data.slug) && data.name) {

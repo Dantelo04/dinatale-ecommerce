@@ -1,15 +1,13 @@
 import React from 'react'
 import Image from 'next/image'
-import { getPayload } from 'payload'
-import config from '@payload-config'
 import { RichTextContent } from '@/components/storefront/RichTextContent'
-import type { Media } from '@/payload-types'
+import { getCachedGlobal } from '@/lib/payload-cache'
+import type { Media, StorefrontContent } from '@/payload-types'
 
 export const metadata = { title: 'Nosotros' }
 
 export default async function NosotrosPage() {
-  const payload = await getPayload({ config: await config })
-  const content = await payload.findGlobal({ slug: 'storefront-content', depth: 1 })
+  const content = await getCachedGlobal<StorefrontContent>('storefront-content')()
 
   const aboutImage = content.about?.aboutImage as Media | null
 

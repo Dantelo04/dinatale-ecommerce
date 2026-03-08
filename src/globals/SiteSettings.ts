@@ -1,8 +1,12 @@
 import type { GlobalConfig } from 'payload'
+import { revalidateGlobalAfterChange } from '@/hooks/revalidateOnChange'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: 'Configuracion del Sitio',
+  hooks: {
+    afterChange: [revalidateGlobalAfterChange()],
+  },
   access: {
     read: () => true,
     update: ({ req: { user } }) => Boolean(user?.roles?.includes('admin')),

@@ -1,15 +1,14 @@
 import React from 'react'
-import { getPayload } from 'payload'
-import config from '@payload-config'
 import './styles.css'
 import { Header } from '@/components/storefront/Header'
 import { Footer } from '@/components/storefront/Footer'
 import { CartProvider } from '@/components/storefront/CartProvider'
+import { getCachedGlobal } from '@/lib/payload-cache'
 import type { Media } from '@/payload-types'
+import type { SiteSetting, StorefrontContent } from '@/payload-types'
 
 export async function generateMetadata() {
-  const payload = await getPayload({ config: await config })
-  const settings = await payload.findGlobal({ slug: 'site-settings' })
+  const settings = await getCachedGlobal<SiteSetting>('site-settings')()
 
   return {
     title: {
@@ -22,9 +21,10 @@ export async function generateMetadata() {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const payload = await getPayload({ config: await config })
-  const settings = await payload.findGlobal({ slug: 'site-settings', depth: 1 })
-  const content = await payload.findGlobal({ slug: 'storefront-content', depth: 1 })
+  const [settings, content] = await Promise.all([
+    getCachedGlobal<SiteSetting>('site-settings')(),
+    getCachedGlobal<StorefrontContent>('storefront-content')(),
+  ])
 
   const primaryColor = settings.primaryColor || '#18181b'
   const secondaryColor = settings.secondaryColor || '#71717a'
