@@ -4,6 +4,9 @@ import { revalidateGlobalAfterChange } from '@/hooks/revalidateOnChange'
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: 'Configuracion del Sitio',
+  admin: {
+    hideAPIURL: true,
+  },
   hooks: {
     afterChange: [revalidateGlobalAfterChange()],
   },
@@ -49,6 +52,26 @@ export const SiteSettings: GlobalConfig = {
       label: 'Logo',
       type: 'upload',
       relationTo: 'media',
+    },
+    {
+      name: 'logoSize',
+      label: 'Tamaño del Logo',
+      type: 'text',
+      defaultValue: '10',
+      admin: {
+        description: 'Tamaño del logo en el header en escritorio',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'logoSizeMobile',
+      label: 'Tamaño del Logo en Móvil',
+      type: 'text',
+      defaultValue: '9',
+      admin: {
+        description: 'Tamaño del logo en el header en móvil',
+        position: 'sidebar',
+      },
     },
     {
       name: 'favicon',

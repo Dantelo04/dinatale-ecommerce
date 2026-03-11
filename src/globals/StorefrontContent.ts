@@ -7,6 +7,9 @@ export const StorefrontContent: GlobalConfig = {
   hooks: {
     afterChange: [revalidateGlobalAfterChange()],
   },
+  admin: {
+    hideAPIURL: true,
+  },
   access: {
     read: () => true,
     update: ({ req: { user } }) => Boolean(user?.roles?.includes('admin')),

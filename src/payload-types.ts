@@ -443,6 +443,14 @@ export interface SiteSetting {
   siteKeywords?: string | null;
   logo?: (number | null) | Media;
   /**
+   * Tamaño del logo en el header en escritorio
+   */
+  logoSize?: string | null;
+  /**
+   * Tamaño del logo en el header en móvil
+   */
+  logoSizeMobile?: string | null;
+  /**
    * Icono de la pestana del navegador (recomendado: 32x32px o 64x64px, formato PNG o ICO)
    */
   favicon?: (number | null) | Media;
@@ -545,6 +553,8 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   siteDescription?: T;
   siteKeywords?: T;
   logo?: T;
+  logoSize?: T;
+  logoSizeMobile?: T;
   favicon?: T;
   headerLogoSide?: T;
   primaryColor?: T;

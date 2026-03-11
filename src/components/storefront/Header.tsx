@@ -23,10 +23,12 @@ interface HeaderProps {
   logoUrl: string | null
   currencySymbol: string
   hideName: boolean
+  logoSize: string
+  logoSizeMobile: string
   headerLogoSide: 'left' | 'center' | 'right'
 }
 
-export function Header({ siteName, logoUrl, hideName, headerLogoSide }: HeaderProps) {
+export function Header({ siteName, logoUrl, hideName, headerLogoSide, logoSize, logoSizeMobile }: HeaderProps) {
   const { totalItems } = useCart()
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -52,7 +54,7 @@ export function Header({ siteName, logoUrl, hideName, headerLogoSide }: HeaderPr
               alt={siteName}
               width={1920}
               height={1080}
-              className="xl:h-12 h-9 w-auto object-contain"
+              className={`xl:h-${logoSize} h-${logoSizeMobile} w-auto object-contain`}
               priority
             />
           ) : null}
@@ -73,10 +75,10 @@ export function Header({ siteName, logoUrl, hideName, headerLogoSide }: HeaderPr
 
         <div className="flex items-center xl:gap-2 gap-4">
           <Link href="/carrito" aria-label={`Carrito de compras, ${totalItems} productos`}>
-            <Button variant="ghost" size="icon" className="relative" asChild>
+            <Button variant="ghost" size="icon" className="relative -bottom-0.5" asChild>
               <span>
                 <ShoppingCart
-                  className="xl:size-8.5 xl:-mt-0.5 size-7"
+                  className="xl:size-8.5 size-7"
                   aria-hidden="true"
                   strokeWidth={1.5}
                 />
