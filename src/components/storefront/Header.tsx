@@ -33,7 +33,7 @@ export function Header({ siteName, logoUrl, hideName }: HeaderProps) {
       <div className="mx-auto flex py-4 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">
           {logoUrl ? (
-            <Image src={logoUrl} alt={siteName} width={36} height={36} className="h-9 w-auto object-contain" priority />
+            <Image src={logoUrl} alt={siteName} width={1920} height={1080} className="h-9 w-auto object-contain" priority />
           ) : null}
           {!hideName && <span className="xl:text-lg text-xl font-bold tracking-tight text-wrap-balance">{siteName}</span>}
         </Link>

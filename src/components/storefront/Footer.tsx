@@ -32,7 +32,7 @@ export function Footer({ siteName, logoUrl, hideName, socialLinks }: FooterProps
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 items-start">
           <Link href="/" className="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">
             {logoUrl ? (
-              <Image src={logoUrl} alt={siteName} width={36} height={36} className="h-9 w-auto object-contain" priority />
+              <Image src={logoUrl} alt={siteName} width={1920} height={1080} className="h-9 w-auto object-contain" priority />
             ) : null}
             {!hideName && <span className="xl:text-lg text-xl font-bold tracking-tight text-wrap-balance">{siteName}</span>}
           </Link>
