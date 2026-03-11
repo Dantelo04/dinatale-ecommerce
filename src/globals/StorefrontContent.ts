@@ -13,27 +13,51 @@ export const StorefrontContent: GlobalConfig = {
   },
   fields: [
     {
-      type: 'group',
-      name: 'hero',
-      label: 'Hero / Banner Principal',
+      name: 'heroSlides',
+      label: 'Slides del Banner',
+      type: 'array',
+      minRows: 1,
+      labels: {
+        singular: 'Slide',
+        plural: 'Slides',
+      },
+      admin: {
+        description: 'Cada slide se muestra en el carrusel del banner principal',
+      },
       fields: [
         {
-          name: 'heroTitle',
+          name: 'title',
           label: 'Titulo',
           type: 'text',
           defaultValue: 'Bienvenidos a nuestra tienda',
         },
         {
-          name: 'heroSubtitle',
+          name: 'subtitle',
           label: 'Subtitulo',
           type: 'text',
           defaultValue: 'Descubri nuestros productos',
         },
         {
-          name: 'heroImage',
+          name: 'image',
           label: 'Imagen de Fondo',
           type: 'upload',
           relationTo: 'media',
+          required: true,
+        },
+        {
+          name: 'buttonText',
+          label: 'Texto del Boton',
+          type: 'text',
+          defaultValue: 'Ver Productos',
+        },
+        {
+          name: 'buttonLink',
+          label: 'Link del Boton',
+          type: 'text',
+          defaultValue: '/tienda',
+          admin: {
+            description: 'Ruta interna (ej: /tienda) o URL externa',
+          },
         },
       ],
     },
@@ -108,6 +132,12 @@ export const StorefrontContent: GlobalConfig = {
         {
           name: 'tiktok',
           label: 'TikTok',
+          type: 'text',
+          admin: { description: 'URL completa' },
+        },
+        {
+          name: 'googleMaps',
+          label: 'Google Maps',
           type: 'text',
           admin: { description: 'URL completa' },
         },

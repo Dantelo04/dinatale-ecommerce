@@ -2,10 +2,10 @@ import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { ProductCard } from '@/components/storefront/ProductCard'
 import { GoogleReviews } from '@/components/storefront/GoogleReviews'
+import { HeroCarousel, type HeroSlide } from '@/components/storefront/HeroCarousel'
 import { getCachedGlobal, getCachedProducts, getCachedCategories } from '@/lib/payload-cache'
 import { getCachedPlaceDetails } from '@/lib/google-places'
 import type { Media, Category, Product, SiteSetting, StorefrontContent } from '@/payload-types'
@@ -35,45 +35,28 @@ export default async function HomePage() {
     getCachedPlaceDetails(),
   ])
 
-  const heroImage = content.hero?.heroImage as Media | null
   const currencySymbol = settings.currencySymbol || '$'
+
+  const heroSlides: HeroSlide[] = (content.heroSlides ?? [])
+    .filter((slide) => {
+      const img = slide.image as Media | null
+      return img?.url
+    })
+    .map((slide) => {
+      const img = slide.image as Media
+      return {
+        title: slide.title || undefined,
+        subtitle: slide.subtitle,
+        imageUrl: img.url!,
+        imageAlt: img.alt || slide.title || '',
+        buttonText: slide.buttonText,
+        buttonLink: slide.buttonLink,
+      }
+    })
 
   return (
     <>
-      <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden bg-muted">
-        {heroImage?.url && (
-          <Image
-            src={heroImage.url}
-            alt={content.hero?.heroTitle || 'Banner principal'}
-            fill
-            className="object-cover"
-            style={{ filter: 'blur(3px)' }}
-            priority
-            sizes="100vw"
-          />
-        )}
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 mx-auto max-w-3xl px-4 text-center text-white">
-          <h1 className="text-4xl font-bold tracking-tight text-wrap-balance sm:text-5xl lg:text-6xl">
-            {content.hero?.heroTitle || 'Bienvenidos a nuestra tienda'}
-          </h1>
-          <p className="mt-4 text-lg text-white/90 text-pretty sm:text-xl">
-            {content.hero?.heroSubtitle || 'Descubri nuestros productos'}
-          </p>
-          <div className="mt-8">
-            <Button
-              asChild
-              size="lg"
-              className="bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity"
-            >
-              <Link href="/tienda">
-                Ver Productos
-                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      <HeroCarousel slides={heroSlides} />
 
       {featured.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
