@@ -6,6 +6,7 @@ import { CartProvider } from '@/components/storefront/CartProvider'
 import { getCachedGlobal } from '@/lib/payload-cache'
 import type { Media } from '@/payload-types'
 import type { SiteSetting, StorefrontContent } from '@/payload-types'
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 
 export async function generateMetadata() {
   const settings = await getCachedGlobal<SiteSetting>('site-settings')()
@@ -46,6 +47,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         } as React.CSSProperties
       }
     >
+      <GoogleAnalytics gaId="G-N3BBXYFZHF" />
+      <GoogleTagManager gtmId="GTM-W7WNVJM6" />
       <body className="min-h-screen flex flex-col">
         <a
           href="#main-content"
