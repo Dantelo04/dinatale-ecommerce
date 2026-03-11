@@ -13,6 +13,7 @@ export const Categories: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'slug'],
+    hideAPIURL: true,
   },
   access: {
     read: () => true,

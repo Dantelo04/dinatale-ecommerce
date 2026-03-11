@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Separator } from '@/components/ui/separator'
 import { CustomLink } from '@/components/ui/link'
-import { Facebook, Instagram, MapPin, MusicIcon } from 'lucide-react'
+import { Facebook, Instagram, MapPin, Music3Icon } from 'lucide-react'
 
 interface FooterProps {
   siteName: string
@@ -62,7 +62,7 @@ export function Footer({ siteName, logoUrl, hideName, socialLinks }: FooterProps
               )}
               {socialLinks?.tiktok && (
                 <CustomLink href={socialLinks.tiktok} external>
-                  <MusicIcon className="size-4" aria-hidden="true" /> TikTok
+                  <Music3Icon className="size-4" aria-hidden="true" /> TikTok
                 </CustomLink>
               )}
               {socialLinks?.googleMaps && (

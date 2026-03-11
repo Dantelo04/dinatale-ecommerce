@@ -6,6 +6,9 @@ import {
 
 export const Media: CollectionConfig = {
   slug: 'media',
+  admin: {
+    hideAPIURL: true,
+  },
   labels: {
     singular: 'Multimedia',
     plural: 'Multimedia',

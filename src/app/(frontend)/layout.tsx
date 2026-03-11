@@ -64,6 +64,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             hideName={settings.hideName ?? false}
             currencySymbol={settings.currencySymbol || '$'}
             headerLogoSide={headerLogoSide}
+            logoSize={settings.logoSize || '10'}
+            logoSizeMobile={settings.logoSizeMobile || '9'}
           />
           <main id="main-content" className="flex-1 pb-16">{children}</main>
           <Footer
