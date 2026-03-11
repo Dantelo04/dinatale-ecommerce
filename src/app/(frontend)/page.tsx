@@ -9,6 +9,7 @@ import { HeroCarousel, type HeroSlide } from '@/components/storefront/HeroCarous
 import { getCachedGlobal, getCachedProducts, getCachedCategories } from '@/lib/payload-cache'
 import { getCachedPlaceDetails } from '@/lib/google-places'
 import type { Media, Category, Product, SiteSetting, StorefrontContent } from '@/payload-types'
+import { CornerTools } from '@/components/storefront/CornerTools'
 
 export default async function HomePage() {
   const [
@@ -167,6 +168,8 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      <CornerTools whatsappNumber={settings.whatsappNumber} showScrollToTop={false} />
     </>
   )
 }
