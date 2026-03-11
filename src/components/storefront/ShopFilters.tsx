@@ -100,7 +100,7 @@ export function ShopFilters({
   }
 
   return (
-    <div className="mt-4 flex flex-col gap-5" aria-busy={isPending}>
+    <div className="mt-4 flex xl:flex-row flex-col gap-5" aria-busy={isPending}>
       <div className="flex flex-col gap-4 sm:flex-row xl:items-center">
         <div className="relative flex-1 sm:max-w-xs">
           <label htmlFor="shop-search" className="sr-only">
@@ -120,11 +120,11 @@ export function ShopFilters({
             value={search}
             onChange={handleSearchChange}
             disabled={isPending}
-            className="pl-9"
+            className="pl-9 min-w-64"
           />
         </div>
 
-        <div className="flex flex-1 flex-col gap-1.5 sm:max-w-xs">
+        <div className="flex flex-1 flex-col gap-1.5 sm:max-w-xs min-w-64">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-muted-foreground">Precio</span>
             <span className="text-xs font-medium tabular-nums text-foreground">
@@ -146,7 +146,7 @@ export function ShopFilters({
       </div>
 
       {categories.length > 0 && (
-        <nav className="flex flex-wrap gap-2" aria-label="Filtrar por categoria">
+        <div className="flex flex-wrap gap-2 w-fit xl:mt-0 mt-4" aria-label="Filtrar por categoria">
           <Button
             variant={!activeCategorySlug ? 'default' : 'outline'}
             size="sm"
@@ -171,7 +171,7 @@ export function ShopFilters({
               </Button>
             )
           })}
-        </nav>
+        </div>
       )}
 
       {/* {isPending && (

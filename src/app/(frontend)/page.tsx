@@ -29,7 +29,7 @@ export default async function HomePage() {
     getCachedCategories(12)(),
     getCachedProducts({
       where: { active: { equals: true } },
-      limit: 6,
+      limit: 5,
       sort: '-createdAt',
     })(),
     getCachedPlaceDetails(),
