@@ -1,12 +1,13 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Trash2, Plus, Minus, ShoppingCart, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { Textarea } from '@/components/ui/textarea'
 import { useCart } from './CartProvider'
 import { formatPrice } from '@/lib/utils'
 
@@ -18,6 +19,7 @@ interface CartPageClientProps {
 
 export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: CartPageClientProps) {
   const { items, totalItems, totalPrice, removeItem, updateQuantity, clearCart } = useCart()
+  const [comment, setComment] = useState('')
 
   const buildWhatsAppMessage = () => {
     const header = `Hola! Quiero hacer un pedido en ${siteName}:\n\n`
@@ -28,7 +30,9 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
       )
       .join('\n')
     const footer = `\n\nTotal: ${formatPrice(totalPrice, currencySymbol)}`
-    return header + itemLines + footer
+    const trimmedComment = comment.trim()
+    const commentBlock = trimmedComment ? `\n\nComentario:\n${trimmedComment}` : ''
+    return header + itemLines + footer + commentBlock
   }
 
   const handleCheckout = () => {
@@ -54,7 +58,7 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 lg:py-12 py-6 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold tracking-tight text-wrap-balance">Carrito de Compras</h1>
       <p className="mt-1 text-muted-foreground">
         {totalItems} {totalItems === 1 ? 'producto' : 'productos'}
@@ -65,7 +69,7 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
           <div className="flex flex-col gap-4">
             {items.map((item) => (
               <Card key={item.id} className="flex-row items-center gap-0 py-0">
-                <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-l-lg bg-muted">
+                <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-l-lg bg-muted">
                   {item.imageUrl ? (
                     <Image
                       src={item.imageUrl}
@@ -131,6 +135,18 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
               </Card>
             ))}
           </div>
+          <div className="mt-6">
+            <label htmlFor="cart-comment" className="mb-2 block text-sm font-medium">
+              Comentarios del pedido
+            </label>
+            <Textarea
+              id="cart-comment"
+              value={comment}
+              onChange={(event) => setComment(event.target.value)}
+              placeholder="Ej: Quiero un grabado con el nombre..."
+              rows={4}
+            />
+          </div>
           <Button
             variant="outline"
             size="sm"
@@ -151,7 +167,7 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
                   <span className="text-muted-foreground line-clamp-1 min-w-0 flex-1">
                     {item.name} x{item.quantity}
                   </span>
-                  <span className="ml-2 flex-shrink-0 tabular-nums">
+                  <span className="ml-2 shrink-0 tabular-nums">
                     {formatPrice(item.price * item.quantity, currencySymbol)}
                   </span>
                 </div>
