@@ -2,13 +2,13 @@ import React, { Suspense } from 'react'
 import Link from 'next/link'
 import { ShopFilters } from '@/components/storefront/ShopFilters'
 import { ProductGrid } from '@/components/storefront/ProductGrid'
-import { ScrollToTop } from '@/components/storefront/ScrollToTop'
 import { getCachedGlobal, getCachedCategories, getCachedPriceBounds } from '@/lib/payload-cache'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Where } from 'payload'
 import type { Media, SiteSetting } from '@/payload-types'
 import type { SerializedProduct } from '@/lib/product-actions'
+import { CornerTools } from '@/components/storefront/CornerTools'
 
 const PAGE_SIZE = 24
 
@@ -139,7 +139,7 @@ export default async function TiendaPage({
         />
       )}
 
-      <ScrollToTop />
+      <CornerTools whatsappNumber={settings.whatsappNumber} />
     </div>
   )
 }
