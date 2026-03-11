@@ -60,6 +60,25 @@ export const SiteSettings: GlobalConfig = {
       },
     },
     {
+      name: 'headerLogoSide',
+      label: 'Posición del Logo en el Header en Móvil',
+      type: 'select',
+      options: [
+        {
+          label: 'Izquierda',
+          value: 'left',
+        },
+        {
+          label: 'Centro',
+          value: 'center',
+        },
+      ],
+      defaultValue: 'center',
+      admin: {
+        description: 'Posición del logo en el header en móvil',
+      },
+    },
+    {
       type: 'row',
       fields: [
         {

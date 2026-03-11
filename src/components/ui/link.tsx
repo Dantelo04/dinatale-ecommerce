@@ -24,6 +24,7 @@ const linkVariants = cva(
       },
       size: {
         default: "text-sm",
+        xl: "text-lg",
         lg: "text-base",
         xs: "text-xs",
       },

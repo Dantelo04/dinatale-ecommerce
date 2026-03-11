@@ -103,7 +103,7 @@ export default async function HomePage() {
               const catImage = cat.image as Media | null
               return (
                 <Link key={cat.id} href={`/tienda?categoria=${cat.slug}`}>
-                  <Card className="group overflow-hidden transition-shadow hover:shadow-lg pt-0 gap-0">
+                  <Card className="group overflow-hidden transition-all active:scale-95 hover:shadow-lg pt-0 gap-0">
                     <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                       {catImage?.url ? (
                         <Image
@@ -111,7 +111,7 @@ export default async function HomePage() {
                           alt={cat.name}
                           fill
                           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                          className="object-cover transition-transform duration-300 group-hover:scale-105"
+                          className="object-cover transition-transform duration-300 group-hover:scale-105 border-b"
                           loading="lazy"
                         />
                       ) : (
@@ -121,7 +121,7 @@ export default async function HomePage() {
                       )}
                     </div>
                     <CardContent className="p-3 pb-0 pt-4">
-                      <h3 className="text-sm font-medium text-center line-clamp-1">{cat.name}</h3>
+                      <h3 className="text-sm font-medium text-center line-clamp-1 -mb-1">{cat.name}</h3>
                     </CardContent>
                   </Card>
                 </Link>

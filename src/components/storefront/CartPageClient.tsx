@@ -35,12 +35,13 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
     const message = buildWhatsAppMessage()
     const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
     window.open(url, '_blank', 'noopener,noreferrer')
+    clearCart()
   }
 
   if (items.length === 0) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-20 text-center sm:px-6">
-        <ShoppingCart className="mx-auto h-16 w-16 text-muted-foreground" aria-hidden="true" />
+        <ShoppingCart className="mx-auto h-16 w-16 text-muted-foreground" aria-hidden="true" strokeWidth={1.5}/>
         <h1 className="mt-6 text-2xl font-bold text-wrap-balance">Tu carrito esta vacio</h1>
         <p className="mt-2 text-muted-foreground">
           Agrega productos para comenzar tu pedido.
