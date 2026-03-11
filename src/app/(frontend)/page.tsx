@@ -75,7 +75,7 @@ export default async function HomePage() {
               <ArrowRight className="ml-1 inline h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
-          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             {featured.map((product: Product) => {
               const firstImage = product.images?.[0]?.image as Media | null
               return (

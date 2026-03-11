@@ -78,7 +78,7 @@ export function ProductCard({
             {name}
           </h3>
         </Link>
-        <div className="flex items-center gap-2 -mt-1">
+        <div className="flex items-center -mt-1 flex-wrap">
           {hasDiscount && (
             <span className="text-lg text-muted-foreground line-through tabular-nums">
               {formatPrice(compareAtPrice, currencySymbol)}
