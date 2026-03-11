@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import Link from 'next/link'
 import { ShopFilters } from '@/components/storefront/ShopFilters'
 import { ProductGrid } from '@/components/storefront/ProductGrid'
-import { getCachedGlobal, getCachedCategories, getCachedPriceBounds } from '@/lib/payload-cache'
+import { getCachedCategories, getCachedGlobal, getCachedPriceBounds } from '@/lib/payload-cache'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Where } from 'payload'
@@ -95,6 +95,8 @@ export default async function TiendaPage({
     ? categories.find((c) => c.slug === activeCategorySlug)?.name ?? 'Tienda'
     : 'Tienda'
 
+  const categoryDescription = categories.find((c) => c.slug === activeCategorySlug)?.description ?? ''
+
   const filters = {
     categoria: categoria ?? undefined,
     buscar: buscar ?? undefined,
@@ -108,6 +110,10 @@ export default async function TiendaPage({
       <h1 className="text-3xl font-bold tracking-tight text-wrap-balance sm:text-4xl">
         {pageTitle}
       </h1>
+      {categoryDescription && <p className="mt-2 text-muted-foreground">
+        {categoryDescription}
+      </p>}
+      <hr className="my-4" />
 
       <Suspense>
         <ShopFilters
