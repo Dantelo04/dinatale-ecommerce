@@ -447,6 +447,10 @@ export interface SiteSetting {
    */
   favicon?: (number | null) | Media;
   /**
+   * Posición del logo en el header en móvil
+   */
+  headerLogoSide?: ('left' | 'center') | null;
+  /**
    * Color hexadecimal (ej: #18181b)
    */
   primaryColor?: string | null;
@@ -542,6 +546,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   siteKeywords?: T;
   logo?: T;
   favicon?: T;
+  headerLogoSide?: T;
   primaryColor?: T;
   secondaryColor?: T;
   whatsappNumber?: T;

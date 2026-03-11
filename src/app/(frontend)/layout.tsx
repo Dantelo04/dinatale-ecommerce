@@ -36,6 +36,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const primaryColor = settings.primaryColor || '#18181b'
   const secondaryColor = settings.secondaryColor || '#71717a'
   const logoUrl = (settings.logo as Media)?.url ?? null
+  const headerLogoSide = settings.headerLogoSide as 'left' | 'center' | 'right'
 
   return (
     <html
@@ -62,6 +63,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             logoUrl={logoUrl}
             hideName={settings.hideName ?? false}
             currencySymbol={settings.currencySymbol || '$'}
+            headerLogoSide={headerLogoSide}
           />
           <main id="main-content" className="flex-1 pb-16">{children}</main>
           <Footer
