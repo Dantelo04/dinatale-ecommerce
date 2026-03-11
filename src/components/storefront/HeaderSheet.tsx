@@ -15,7 +15,7 @@ interface HeaderSheetProps {
 export const HeaderSheet = ({ mobileOpen, setMobileOpen, side, NAV_LINKS }: HeaderSheetProps) => {
   return (
     <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-      <SheetTrigger>
+      <SheetTrigger className="md:hidden">
         <Button
           variant="ghost"
           size="icon"
