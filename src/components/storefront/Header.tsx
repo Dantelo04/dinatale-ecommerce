@@ -65,7 +65,7 @@ export function Header({ siteName, logoUrl, hideName, headerLogoSide, logoSize, 
           )}
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Navegacion principal">
+        <nav className="hidden items-center gap-1 md:flex -mb-0.5" aria-label="Navegacion principal">
           {NAV_LINKS.map((link) => (
             <CustomLink key={link.href} variant="nav" asChild>
               <Link href={link.href}>{link.label}</Link>

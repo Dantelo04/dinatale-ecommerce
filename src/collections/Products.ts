@@ -13,6 +13,7 @@ export const Products: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'price', 'category', 'featured', 'active'],
+    hideAPIURL: true,
   },
   access: {
     read: ({ req: { user } }) => {
