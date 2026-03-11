@@ -469,11 +469,22 @@ export interface SiteSetting {
  */
 export interface StorefrontContent {
   id: number;
-  hero?: {
-    heroTitle?: string | null;
-    heroSubtitle?: string | null;
-    heroImage?: (number | null) | Media;
-  };
+  /**
+   * Cada slide se muestra en el carrusel del banner principal
+   */
+  heroSlides?:
+    | {
+        title?: string | null;
+        subtitle?: string | null;
+        image: number | Media;
+        buttonText?: string | null;
+        /**
+         * Ruta interna (ej: /tienda) o URL externa
+         */
+        buttonLink?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   about?: {
     aboutTitle?: string | null;
     aboutContent?: {
@@ -512,6 +523,10 @@ export interface StorefrontContent {
      * URL completa
      */
     tiktok?: string | null;
+    /**
+     * URL completa
+     */
+    googleMaps?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -541,12 +556,15 @@ export interface SiteSettingsSelect<T extends boolean = true> {
  * via the `definition` "storefront-content_select".
  */
 export interface StorefrontContentSelect<T extends boolean = true> {
-  hero?:
+  heroSlides?:
     | T
     | {
-        heroTitle?: T;
-        heroSubtitle?: T;
-        heroImage?: T;
+        title?: T;
+        subtitle?: T;
+        image?: T;
+        buttonText?: T;
+        buttonLink?: T;
+        id?: T;
       };
   about?:
     | T
@@ -569,6 +587,7 @@ export interface StorefrontContentSelect<T extends boolean = true> {
         instagram?: T;
         facebook?: T;
         tiktok?: T;
+        googleMaps?: T;
       };
   updatedAt?: T;
   createdAt?: T;
