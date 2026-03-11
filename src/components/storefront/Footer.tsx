@@ -3,10 +3,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Separator } from '@/components/ui/separator'
 import { CustomLink } from '@/components/ui/link'
+import { Facebook, Instagram, MusicIcon } from 'lucide-react'
 
 interface FooterProps {
   siteName: string
   logoUrl?: string | null
+  hideName: boolean
   socialLinks?: {
     instagram?: string | null
     facebook?: string | null
@@ -21,7 +23,7 @@ const NAV_LINKS = [
   { href: '/contacto', label: 'Contacto' },
 ]
 
-export function Footer({ siteName, logoUrl, socialLinks }: FooterProps) {
+export function Footer({ siteName, logoUrl, hideName, socialLinks }: FooterProps) {
   const hasSocial = socialLinks?.instagram || socialLinks?.facebook || socialLinks?.tiktok
 
   return (
@@ -30,9 +32,9 @@ export function Footer({ siteName, logoUrl, socialLinks }: FooterProps) {
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 items-start">
           <Link href="/" className="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">
             {logoUrl ? (
-              <Image src={logoUrl} alt={siteName} width={36} height={36} className="h-9 w-9 object-contain" priority />
+              <Image src={logoUrl} alt={siteName} width={36} height={36} className="h-9 w-auto object-contain" priority />
             ) : null}
-            <span className="xl:text-lg text-xl font-bold tracking-tight text-wrap-balance">{siteName}</span>
+            {!hideName && <span className="xl:text-lg text-xl font-bold tracking-tight text-wrap-balance">{siteName}</span>}
           </Link>
 
           <div>
@@ -49,17 +51,17 @@ export function Footer({ siteName, logoUrl, socialLinks }: FooterProps) {
             <div className="flex flex-col gap-2">
               {socialLinks?.instagram && (
                 <CustomLink href={socialLinks.instagram} external>
-                  Instagram
+                  <Instagram className="size-4" aria-hidden="true" /> Instagram
                 </CustomLink>
               )}
               {socialLinks?.facebook && (
                 <CustomLink href={socialLinks.facebook} external>
-                  Facebook
+                  <Facebook className="size-4" aria-hidden="true" /> Facebook
                 </CustomLink>
               )}
               {socialLinks?.tiktok && (
                 <CustomLink href={socialLinks.tiktok} external>
-                  TikTok
+                  <MusicIcon className="size-4" aria-hidden="true" /> TikTok
                 </CustomLink>
               )}
             </div>

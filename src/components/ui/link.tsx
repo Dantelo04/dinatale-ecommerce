@@ -5,12 +5,12 @@ import { Slot } from "radix-ui"
 import { cn } from "@/lib/utils"
 
 const linkVariants = cva(
-  "inline-flex w-fit items-center gap-1 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm [&>svg]:pointer-events-none [&>svg]:size-3.5",
+  "inline-flex w-fit items-center gap-1 text-sm transition-colors transition-transform  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm [&>svg]:pointer-events-none [&>svg]:size-3.5",
   {
     variants: {
       variant: {
         default:
-          "text-muted-foreground hover:text-primary",
+          "text-muted-foreground hover:text-primary focus:text-primary active:text-primary/60 active:scale-80",
         primary:
           "text-primary hover:text-primary/80",
         foreground:
@@ -18,9 +18,9 @@ const linkVariants = cva(
         ghost:
           "text-muted-foreground hover:text-foreground hover:bg-accent px-2 py-1 -mx-2",
         nav:
-          "text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2",
+          "hover:text-primary font-medium rounded-md px-3 py-2 focus:text-primary active:text-primary/60 active:scale-80",
         navMobile:
-          "text-foreground hover:bg-accent font-medium rounded-md px-3 py-3",
+          "hover:bg-accent active:text-primary active:scale-80 font-medium rounded-md px-3 py-3 focus:text-primary w-9/12",
       },
       size: {
         default: "text-sm",

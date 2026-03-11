@@ -17,7 +17,7 @@ export default async function ContactoPage() {
   const hasContactInfo = contact?.contactEmail || contact?.contactPhone || contact?.contactAddress
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 lg:py-12 py-6 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold tracking-tight text-wrap-balance sm:text-4xl">
         Contacto
       </h1>

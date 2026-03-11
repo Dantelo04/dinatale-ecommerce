@@ -56,7 +56,7 @@ export function GoogleReviews({ place }: { place: PlaceDetails }) {
 
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col xl:gap-6 gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
             Lo que dicen nuestros clientes

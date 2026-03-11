@@ -73,3 +73,36 @@ export const getCachedCategories = (limit = 50) =>
     ['categories'],
     ['categories'],
   )
+
+export const getCachedPriceBounds = () =>
+  cache(
+    async () => {
+      const payload = await getPayloadInstance()
+
+      const [cheapest, mostExpensive] = await Promise.all([
+        payload.find({
+          collection: 'products',
+          where: { active: { equals: true } },
+          sort: 'price',
+          limit: 1,
+          depth: 0,
+          select: { price: true },
+        }),
+        payload.find({
+          collection: 'products',
+          where: { active: { equals: true } },
+          sort: '-price',
+          limit: 1,
+          depth: 0,
+          select: { price: true },
+        }),
+      ])
+
+      const min = cheapest.docs[0]?.price ?? 0
+      const max = mostExpensive.docs[0]?.price ?? 0
+
+      return { min: Math.floor(min), max: Math.ceil(max) }
+    },
+    ['products-price-bounds'],
+    ['products'],
+  )

@@ -1,0 +1,88 @@
+'use server'
+
+import { getPayload } from 'payload'
+import config from '@payload-config'
+import type { Where } from 'payload'
+import type { Media } from '@/payload-types'
+
+export interface SerializedProduct {
+  id: number
+  name: string
+  slug: string
+  price: number
+  compareAtPrice?: number | null
+  imageUrl: string | null
+  imageAlt: string
+}
+
+const PAGE_SIZE = 24
+
+function buildWhereClause(filters: {
+  buscar?: string
+  precioMin?: string
+  precioMax?: string
+  categoryId?: number | null
+}): Where {
+  const where: Where = { active: { equals: true } }
+
+  if (filters.categoryId) {
+    where.category = { equals: filters.categoryId }
+  }
+
+  if (filters.buscar) {
+    where.name = { contains: filters.buscar }
+  }
+
+  const parsedMin = filters.precioMin ? Number(filters.precioMin) : null
+  const parsedMax = filters.precioMax ? Number(filters.precioMax) : null
+
+  if (parsedMin !== null && !isNaN(parsedMin)) {
+    where.price = { greater_than_equal: parsedMin }
+  }
+
+  if (parsedMax !== null && !isNaN(parsedMax)) {
+    where.price = {
+      ...(typeof where.price === 'object' ? where.price : {}),
+      less_than_equal: parsedMax,
+    }
+  }
+
+  return where
+}
+
+export async function loadMoreProducts(
+  page: number,
+  filters: {
+    buscar?: string
+    precioMin?: string
+    precioMax?: string
+    categoryId?: number | null
+  },
+): Promise<{ products: SerializedProduct[]; hasNextPage: boolean }> {
+  const payload = await getPayload({ config: await config })
+  const where = buildWhereClause(filters)
+
+  const result = await payload.find({
+    collection: 'products',
+    where,
+    limit: PAGE_SIZE,
+    page,
+    sort: '-createdAt',
+    depth: 2,
+  })
+
+  const products: SerializedProduct[] = result.docs.map((product) => {
+    const firstImage = product.images?.[0]?.image as Media | null
+    return {
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      price: product.price,
+      compareAtPrice: product.compareAtPrice,
+      imageUrl: firstImage?.url ?? null,
+      imageAlt: firstImage?.alt ?? product.name,
+    }
+  })
+
+  return { products, hasNextPage: result.hasNextPage }
+}

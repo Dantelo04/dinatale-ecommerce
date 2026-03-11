@@ -43,7 +43,10 @@ export function ProductCard({
 
   return (
     <Card className="group overflow-hidden border border-border transition-shadow hover:shadow-lg pt-0 gap-0">
-      <Link href={`/tienda/${slug}`} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-t-lg">
+      <Link
+        href={`/tienda/${slug}`}
+        className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-t-lg"
+      >
         <div className="relative aspect-square overflow-hidden bg-muted">
           {imageUrl ? (
             <Image
@@ -59,38 +62,43 @@ export function ProductCard({
               Sin imagen
             </div>
           )}
-          {hasDiscount && (
-            <span className="absolute left-3 top-3 rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold text-white">
-              Oferta
-            </span>
-          )}
         </div>
       </Link>
-      <CardContent className="flex flex-col gap-2 p-4 pb-0">
-        <Link href={`/tienda/${slug}`} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">
+      <CardContent className="flex flex-col gap-2 p-4 pb-0 h-full">
+        {hasDiscount && (
+          <span className="rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold text-white w-fit">
+            Oferta
+          </span>
+        )}
+        <Link
+          href={`/tienda/${slug}`}
+          className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+        >
           <h3 className="line-clamp-2 text-sm font-medium leading-snug text-foreground min-w-0">
             {name}
           </h3>
         </Link>
-        <div className="flex items-center gap-2">
-          <span className="text-lg font-bold tabular-nums">
-            {formatPrice(price, currencySymbol)}
-          </span>
+        <div className="flex items-center gap-2 -mt-1">
           {hasDiscount && (
-            <span className="text-sm text-muted-foreground line-through tabular-nums">
+            <span className="text-lg text-muted-foreground line-through tabular-nums">
               {formatPrice(compareAtPrice, currencySymbol)}
             </span>
           )}
+          <span className="text-lg font-bold tabular-nums">
+            {formatPrice(price, currencySymbol)}
+          </span>
         </div>
-        <Button
-          size="sm"
-          className="mt-1 w-full bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity"
-          onClick={handleAdd}
-          aria-label={`Agregar ${name} al carrito`}
-        >
-          <ShoppingCart className="mr-2 h-4 w-4" aria-hidden="true" />
-          {added ? 'Agregado!' : 'Agregar'}
-        </Button>
+        <div className="h-full flex items-end">
+          <Button
+            size="sm"
+            className="mt-1 w-full bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity active:bg-primary/60"
+            onClick={handleAdd}
+            aria-label={`Agregar ${name} al carrito`}
+          >
+            <ShoppingCart className="mr-2 h-4 w-4" aria-hidden="true" />
+            {added ? 'Agregado!' : 'Agregar'}
+          </Button>
+        </div>
       </CardContent>
     </Card>
   )

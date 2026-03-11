@@ -2,18 +2,5 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
-  &__image {
-    max-width: 30px;
-    max-height: 30px;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-  }
-
-  &__text {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--theme-text);
-  }
+  margin-top: 0.15rem;
 }

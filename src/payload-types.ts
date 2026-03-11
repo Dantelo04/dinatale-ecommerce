@@ -429,6 +429,18 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface SiteSetting {
   id: number;
   siteName: string;
+  /**
+   * Si se activa, el nombre de la tienda no se mostrará en el header
+   */
+  hideName?: boolean | null;
+  /**
+   * Descripción de la tienda
+   */
+  siteDescription?: string | null;
+  /**
+   * Palabras claves separadas por comas (ej: producto, tienda, online, etc.)
+   */
+  siteKeywords?: string | null;
   logo?: (number | null) | Media;
   /**
    * Icono de la pestana del navegador (recomendado: 32x32px o 64x64px, formato PNG o ICO)
@@ -510,6 +522,9 @@ export interface StorefrontContent {
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
   siteName?: T;
+  hideName?: T;
+  siteDescription?: T;
+  siteKeywords?: T;
   logo?: T;
   favicon?: T;
   primaryColor?: T;

@@ -57,12 +57,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Header
             siteName={settings.siteName}
             logoUrl={logoUrl}
+            hideName={settings.hideName ?? false}
             currencySymbol={settings.currencySymbol || '$'}
           />
           <main id="main-content" className="flex-1 pb-16">{children}</main>
           <Footer
             siteName={settings.siteName}
             logoUrl={logoUrl}
+            hideName={settings.hideName ?? false}
             socialLinks={content.socialLinks}
           />
         </CartProvider>

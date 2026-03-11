@@ -20,6 +20,31 @@ export const SiteSettings: GlobalConfig = {
       defaultValue: 'Mi Tienda',
     },
     {
+      name: 'hideName',
+      label: 'Ocultar Nombre de la Tienda en el Header',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        description: 'Si se activa, el nombre de la tienda no se mostrará en el header',
+      },
+    },
+    {
+      name: 'siteDescription',
+      label: 'Descripción de la Tienda',
+      type: 'textarea',
+      admin: {
+        description: 'Descripción de la tienda',
+      },
+    },
+    {
+      name: 'siteKeywords',
+      label: 'Palabras Clave',
+      type: 'text',
+      admin: {
+        description: 'Palabras claves separadas por comas (ej: producto, tienda, online, etc.)',
+      },
+    },
+    {
       name: 'logo',
       label: 'Logo',
       type: 'upload',

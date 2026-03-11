@@ -23,12 +23,13 @@ export default async function HomePage() {
     getCachedGlobal<StorefrontContent>('storefront-content')(),
     getCachedProducts({
       where: { featured: { equals: true }, active: { equals: true } },
-      limit: 8,
+      limit: 4,
+      sort: '-createdAt',
     })(),
     getCachedCategories(12)(),
     getCachedProducts({
       where: { active: { equals: true } },
-      limit: 5,
+      limit: 6,
       sort: '-createdAt',
     })(),
     getCachedPlaceDetails(),
