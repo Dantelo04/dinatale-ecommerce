@@ -16,18 +16,16 @@ export default async function HomePage() {
     settings,
     content,
     { docs: featured },
-    { docs: categories },
     { docs: latest },
     placeDetails,
   ] = await Promise.all([
     getCachedGlobal<SiteSetting>('site-settings')(),
-    getCachedGlobal<StorefrontContent>('storefront-content')(),
+    getCachedGlobal<StorefrontContent>('storefront-content', 2)(),
     getCachedProducts({
       where: { featured: { equals: true }, active: { equals: true } },
       limit: 4,
       sort: '-createdAt',
     })(),
-    getCachedCategories(12)(),
     getCachedProducts({
       where: { active: { equals: true } },
       limit: 5,
@@ -54,6 +52,10 @@ export default async function HomePage() {
         buttonLink: slide.buttonLink,
       }
     })
+
+  const storefrontCategories = (content.categories ?? []).filter(
+    (cat): cat is { category: Category; id?: string | null } => typeof cat.category !== 'number',
+  )
 
   return (
     <>
@@ -94,22 +96,23 @@ export default async function HomePage() {
         </section>
       )}
 
-      {categories.length > 0 && (
+      {storefrontCategories.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
           <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
             Categorias
           </h2>
           <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {categories.map((cat: Category) => {
-              const catImage = cat.image as Media | null
+            {storefrontCategories.map((cat) => {
+              const catImage = cat.category.image as Media | null
+              
               return (
-                <Link key={cat.id} href={`/tienda?categoria=${cat.slug}`}>
+                <Link key={cat.category.id} href={`/tienda?categoria=${cat.category.slug}`}>
                   <Card className="group overflow-hidden transition-all active:scale-95 hover:shadow-lg pt-0 gap-0">
                     <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                       {catImage?.url ? (
                         <Image
                           src={catImage.url}
-                          alt={cat.name}
+                          alt={cat.category.name}
                           fill
                           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                           className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -117,12 +120,13 @@ export default async function HomePage() {
                         />
                       ) : (
                         <div className="flex h-full items-center justify-center text-muted-foreground text-sm">
-                          {cat.name}
+                          {cat.category.name}
                         </div>
                       )}
                     </div>
-                    <CardContent className="p-3 pb-0 pt-4 border-t">
-                      <h3 className="text-sm font-medium text-center line-clamp-1 -mb-1">{cat.name}</h3>
+                    <CardContent className="p-3 pb-0 pt-4 border-t flex flex-col gap-2">
+                      <h3 className="text-sm font-medium line-clamp-1 -mb-1">{cat.category.name}</h3>
+                      <span className="text-xs text-muted-foreground max-h-32 truncate">{cat.category.description}</span>
                     </CardContent>
                   </Card>
                 </Link>

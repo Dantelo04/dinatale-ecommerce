@@ -101,7 +101,7 @@ export function ShopFilters({
 
   return (
     <div className="mt-4 flex xl:flex-row flex-col gap-5" aria-busy={isPending}>
-      <div className="flex flex-col gap-4 sm:flex-row xl:items-center">
+      <div className="flex flex-col gap-4 sm:flex-row xl:items-center flex-wrap">
         <div className="relative flex-1 sm:max-w-xs">
           <label htmlFor="shop-search" className="sr-only">
             Buscar productos
@@ -143,36 +143,39 @@ export function ShopFilters({
             aria-label="Rango de precio"
           />
         </div>
-      </div>
 
-      {categories.length > 0 && (
-        <div className="flex flex-wrap gap-2 w-fit xl:mt-0 mt-4" aria-label="Filtrar por categoria">
-          <Button
-            variant={!activeCategorySlug ? 'default' : 'outline'}
-            size="sm"
-            disabled={isPending}
-            className={!activeCategorySlug ? 'bg-site-primary text-primary-foreground' : ''}
-            onClick={() => handleCategoryClick(null)}
+        {categories.length > 0 && (
+          <div
+            className="flex flex-wrap gap-2 w-fit xl:mt-0 mt-4"
+            aria-label="Filtrar por categoria"
           >
-            Todos
-          </Button>
-          {categories.map((cat) => {
-            const isActive = activeCategorySlug === cat.slug
-            return (
-              <Button
-                key={cat.id}
-                variant={isActive ? 'default' : 'outline'}
-                size="sm"
-                disabled={isPending}
-                className={isActive ? 'bg-site-primary text-primary-foreground' : ''}
-                onClick={() => handleCategoryClick(cat.slug)}
-              >
-                {cat.name}
-              </Button>
-            )
-          })}
-        </div>
-      )}
+            <Button
+              variant={!activeCategorySlug ? 'default' : 'outline'}
+              size="sm"
+              disabled={isPending}
+              className={!activeCategorySlug ? 'bg-site-primary text-primary-foreground' : ''}
+              onClick={() => handleCategoryClick(null)}
+            >
+              Todos
+            </Button>
+            {categories.map((cat) => {
+              const isActive = activeCategorySlug === cat.slug
+              return (
+                <Button
+                  key={cat.id}
+                  variant={isActive ? 'default' : 'outline'}
+                  size="sm"
+                  disabled={isPending}
+                  className={isActive ? 'bg-site-primary text-primary-foreground' : ''}
+                  onClick={() => handleCategoryClick(cat.slug)}
+                >
+                  {cat.name}
+                </Button>
+              )
+            })}
+          </div>
+        )}
+      </div>
 
       {/* {isPending && (
         <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" aria-hidden="true" />

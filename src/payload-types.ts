@@ -206,7 +206,7 @@ export interface Product {
         id?: string | null;
       }[]
     | null;
-  category?: (number | null) | Category;
+  category?: (number | Category)[] | null;
   featured?: boolean | null;
   active?: boolean | null;
   updatedAt: string;
@@ -497,6 +497,12 @@ export interface StorefrontContent {
         id?: string | null;
       }[]
     | null;
+  categories?:
+    | {
+        category: number | Category;
+        id?: string | null;
+      }[]
+    | null;
   about?: {
     aboutTitle?: string | null;
     aboutContent?: {
@@ -579,6 +585,12 @@ export interface StorefrontContentSelect<T extends boolean = true> {
         image?: T;
         buttonText?: T;
         buttonLink?: T;
+        id?: T;
+      };
+  categories?:
+    | T
+    | {
+        category?: T;
         id?: T;
       };
   about?:

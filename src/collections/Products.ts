@@ -82,7 +82,8 @@ export const Products: CollectionConfig = {
       name: 'category',
       type: 'relationship',
       relationTo: 'categories',
-      label: 'Categoría',
+      label: 'Categorías',
+      hasMany: true,
     },
     {
       name: 'featured',

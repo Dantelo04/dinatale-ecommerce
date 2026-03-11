@@ -20,7 +20,7 @@ export const getCachedGlobal = <T>(slug: 'site-settings' | 'storefront-content',
       const payload = await getPayloadInstance()
       return payload.findGlobal({ slug, depth }) as Promise<T>
     },
-    [slug],
+    [slug, `depth-${depth}`],
     [slug],
   )
 

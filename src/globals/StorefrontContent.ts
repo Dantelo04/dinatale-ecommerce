@@ -65,6 +65,25 @@ export const StorefrontContent: GlobalConfig = {
       ],
     },
     {
+      name: 'categories',
+      label: 'Categorias del Home',
+      type: 'array',
+      minRows: 1,
+      labels: {
+        singular: 'Categoria',
+        plural: 'Categorias',
+      },
+      fields: [
+        {
+          name: 'category',
+          label: 'Categoria',
+          type: 'relationship',
+          relationTo: 'categories',
+          required: true,
+        },
+      ],
+    },
+    {
       type: 'group',
       name: 'about',
       label: 'Sobre Nosotros',
