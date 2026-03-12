@@ -4,6 +4,7 @@ import type { Media, Category, SiteSetting } from '@/payload-types'
 import { ProductDetail } from '@/components/storefront/ProductDetail'
 import { getCachedGlobal, getCachedProductBySlug } from '@/lib/payload-cache'
 
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const { docs } = await getCachedProductBySlug(slug)()

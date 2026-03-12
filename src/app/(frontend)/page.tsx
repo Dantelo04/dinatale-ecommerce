@@ -58,7 +58,7 @@ export default async function HomePage() {
       <HeroCarousel slides={heroSlides} />
 
       {storefrontCategories.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 lg:pt-16 pt-8">
           <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
             Categorias
           </h2>
