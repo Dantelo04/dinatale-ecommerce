@@ -47,7 +47,7 @@ export function ProductDetail({ product, currencySymbol }: ProductDetailProps) {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:pt-8 pt-6 lg:px-8">
       <Link
         href="/tienda"
         className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
@@ -101,7 +101,7 @@ export function ProductDetail({ product, currencySymbol }: ProductDetailProps) {
           )}
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col lg:mt-0 -mt-4">
           {product.categoryName && (
             <Badge variant="secondary" className="mb-3 w-fit">
               {product.categoryName}
