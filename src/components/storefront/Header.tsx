@@ -3,13 +3,13 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ShoppingCart, Menu, XIcon } from 'lucide-react'
+import { ShoppingCart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { CustomLink } from '@/components/ui/link'
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import { useCart } from './CartProvider'
 import { HeaderSheet } from './HeaderSheet'
+import { AlertMarquee } from './AlertMarquee'
 
 const NAV_LINKS = [
   { href: '/', label: 'Inicio' },
@@ -26,14 +26,17 @@ interface HeaderProps {
   logoSize: string
   logoSizeMobile: string
   headerLogoSide: 'left' | 'center' | 'right'
+  alertText: string
+  primaryColor: string
 }
 
-export function Header({ siteName, logoUrl, hideName, headerLogoSide, logoSize, logoSizeMobile }: HeaderProps) {
+export function Header({ siteName, logoUrl, hideName, headerLogoSide, logoSize, logoSizeMobile, alertText, primaryColor }: HeaderProps) {
   const { totalItems } = useCart()
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
     <header className="sticky top-0 z-50 bg-background backdrop-blur-sm supports-[backdrop-filter]:bg-background/75">
+      {alertText && <AlertMarquee text={alertText} primaryColor={primaryColor} />}
       <div className="mx-auto flex py-4 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {headerLogoSide === 'center' && (
           <HeaderSheet

@@ -472,6 +472,9 @@ export interface SiteSetting {
   whatsappNumber: string;
   currency?: string | null;
   currencySymbol?: string | null;
+  customAlert?: {
+    alertTitle?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -568,6 +571,11 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   whatsappNumber?: T;
   currency?: T;
   currencySymbol?: T;
+  customAlert?:
+    | T
+    | {
+        alertTitle?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

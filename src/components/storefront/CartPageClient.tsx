@@ -58,8 +58,8 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 lg:py-12 py-6 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold tracking-tight text-wrap-balance">Carrito de Compras</h1>
+    <div className="mx-auto max-w-7xl px-4 lg:py-12 py-4 sm:px-6 lg:px-8">
+      <h1 className="lg:text-3xl text-2xl font-bold tracking-tight text-wrap-balance">Carrito de Compras</h1>
       <p className="mt-1 text-muted-foreground">
         {totalItems} {totalItems === 1 ? 'producto' : 'productos'}
       </p>

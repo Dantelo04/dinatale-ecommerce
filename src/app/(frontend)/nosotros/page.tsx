@@ -12,8 +12,8 @@ export default async function NosotrosPage() {
   const aboutImage = content.about?.aboutImage as Media | null
 
   return (
-    <div className="mx-auto max-w-7xl px-4 lg:py-12 py-6 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold tracking-tight text-wrap-balance sm:text-4xl">
+    <div className="mx-auto max-w-7xl px-4 lg:py-12 py-4 sm:px-6 lg:px-8">
+      <h1 className="lg:text-3xl text-2xl font-bold tracking-tight text-wrap-balance sm:text-4xl">
         {content.about?.aboutTitle || 'Sobre Nosotros'}
       </h1>
 
