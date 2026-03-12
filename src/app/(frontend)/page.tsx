@@ -61,6 +61,7 @@ export default async function HomePage() {
           products={featured}
           currencySymbol={currencySymbol}
           title="Productos Destacados"
+          columnQuantity={5}
         />
       )}
 
@@ -71,6 +72,7 @@ export default async function HomePage() {
           products={latest}
           currencySymbol={currencySymbol}
           title="Ultimos Productos"
+          columnQuantity={5}
         />
       )}
 

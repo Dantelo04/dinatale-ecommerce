@@ -66,6 +66,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             headerLogoSide={headerLogoSide}
             logoSize={settings.logoSize || '10'}
             logoSizeMobile={settings.logoSizeMobile || '9'}
+            alertText={settings.customAlert?.alertTitle || ''}
+            primaryColor={primaryColor}
           />
           <main id="main-content" className="flex-1 pb-16">{children}</main>
           <Footer

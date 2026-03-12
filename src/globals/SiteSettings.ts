@@ -150,5 +150,17 @@ export const SiteSettings: GlobalConfig = {
         },
       ],
     },
+    {
+      type: 'group',
+      name: 'customAlert',
+      label: 'Alerta Personalizada en el Header',
+      fields: [
+        {
+          name: 'alertTitle',
+          label: 'Texto de la Alerta',
+          type: 'text',
+        },
+      ],
+    },
   ],
 }

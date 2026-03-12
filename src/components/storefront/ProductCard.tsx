@@ -42,7 +42,7 @@ export function ProductCard({
   }
 
   return (
-    <Card className="group overflow-hidden transition-shadow hover:shadow-lg pt-0 gap-0 shadow-none pb-4">
+    <Card className="group overflow-hidden hover:shadow-lg pt-0 gap-0 shadow-none pb-4 active:scale-90 transition-all">
       <Link
         href={`/tienda/${slug}`}
         className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-t-lg"
