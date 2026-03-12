@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import type { CSSProperties } from 'react'
 
 export const metadata: Metadata = {
@@ -19,12 +20,12 @@ export default function GlobalNotFound() {
           </p>
 
           <div style={actionsStyle}>
-            <a href="/" style={primaryLinkStyle}>
+            <Link href="/" style={primaryLinkStyle}>
               Ir al Inicio
-            </a>
-            <a href="/tienda" style={secondaryLinkStyle}>
+            </Link>
+            <Link href="/tienda" style={secondaryLinkStyle}>
               Explorar Tienda
-            </a>
+            </Link>
           </div>
         </main>
       </body>
