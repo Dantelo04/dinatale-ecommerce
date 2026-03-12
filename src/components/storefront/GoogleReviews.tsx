@@ -91,7 +91,7 @@ export function GoogleReviews({ place }: { place: PlaceDetails }) {
       <hr className="my-4" />
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {visibleReviews.map((review, i) => (
-          <Card key={i} className="flex flex-col">
+          <Card key={i} className="flex flex-col shadow-none hover:shadow-lg transition-shadow">
             <CardContent className="flex flex-1 flex-col gap-3 px-5">
               <div className="flex items-center gap-3">
                 {review.authorPhotoUrl ? (

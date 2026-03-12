@@ -102,7 +102,7 @@ export function ShopFilters({
   return (
     <div className="mt-4 flex xl:flex-row flex-col gap-5" aria-busy={isPending}>
       <div className="flex flex-col gap-4 sm:flex-row xl:items-center flex-wrap">
-        <div className="relative flex-1 sm:max-w-xs">
+        <div className="relative flex-1 w-full">
           <label htmlFor="shop-search" className="sr-only">
             Buscar productos
           </label>
@@ -120,7 +120,7 @@ export function ShopFilters({
             value={search}
             onChange={handleSearchChange}
             disabled={isPending}
-            className="pl-9 min-w-64"
+            className="pl-9 min-w-64 w-full"
           />
         </div>
 

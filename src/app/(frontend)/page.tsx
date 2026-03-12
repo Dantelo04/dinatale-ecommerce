@@ -1,15 +1,12 @@
 import React from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { ArrowRight } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
-import { ProductCard } from '@/components/storefront/ProductCard'
 import { GoogleReviews } from '@/components/storefront/GoogleReviews'
 import { HeroCarousel, type HeroSlide } from '@/components/storefront/HeroCarousel'
-import { getCachedGlobal, getCachedProducts, getCachedCategories } from '@/lib/payload-cache'
+import { getCachedGlobal, getCachedProducts } from '@/lib/payload-cache'
 import { getCachedPlaceDetails } from '@/lib/google-places'
-import type { Media, Category, Product, SiteSetting, StorefrontContent } from '@/payload-types'
+import type { Media, Category, SiteSetting, StorefrontContent } from '@/payload-types'
 import { CornerTools } from '@/components/storefront/CornerTools'
+import { CategoriesGallery } from '@/components/storefront/CategoriesGallery'
+import { ProductsGallery } from '@/components/storefront/ProductsGallery'
 
 export default async function HomePage() {
   const [settings, content, { docs: featured }, { docs: latest }, placeDetails] = await Promise.all(
@@ -57,124 +54,24 @@ export default async function HomePage() {
     <>
       <HeroCarousel slides={heroSlides} />
 
-      {storefrontCategories.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 lg:pt-16 pt-8">
-          <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
-            Categorias
-          </h2>
-          <hr className="my-4" />
-          <div className="mt-6 grid grid-cols-3 gap-4 sm:grid-cols-5 lg:grid-cols-8">
-            {storefrontCategories.map((cat) => {
-              const catImage = cat.category.image as Media | null
-
-              return (
-                <Link key={cat.category.id} href={`/tienda?categoria=${cat.category.slug}`}>
-                  <Card className="group overflow-hidden transition-all active:scale-95 hover:shadow-lg pt-0 gap-0 lg:pb-2 pb-4">
-                    <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-                      {catImage?.url ? (
-                        <Image
-                          src={catImage.url}
-                          alt={cat.category.name}
-                          fill
-                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                          className="object-cover transition-transform duration-300 group-hover:scale-105"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-muted-foreground text-sm">
-                          {cat.category.name}
-                        </div>
-                      )}
-                    </div>
-                    <CardContent className="lg:p-3 p-2 lg:pt-4 pt-3 border-t flex flex-col gap-2 pb-0">
-                      <h3 className="text-sm font-medium line-clamp-1 -mb-1">
-                        {cat.category.name}
-                      </h3>
-                      <span className="text-xs text-muted-foreground max-h-32 truncate">
-                        {cat.category.description}
-                      </span>
-                    </CardContent>
-                  </Card>
-                </Link>
-              )
-            })}
-          </div>
-        </section>
-      )}
+      <CategoriesGallery storefrontCategories={storefrontCategories} />
 
       {featured.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
-              Productos Destacados
-            </h2>
-            
-            <Link
-              href="/tienda"
-              className="text-sm font-medium text-site-secondary hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
-            >
-              Ver todos
-              <ArrowRight className="ml-1 inline h-4 w-4" aria-hidden="true" />
-            </Link>
-          </div>
-          <hr className="my-4" />
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-            {featured.map((product: Product) => {
-              const firstImage = product.images?.[0]?.image as Media | null
-              return (
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  slug={product.slug}
-                  price={product.price}
-                  compareAtPrice={product.compareAtPrice}
-                  imageUrl={firstImage?.url ?? null}
-                  imageAlt={firstImage?.alt ?? product.name}
-                  currencySymbol={currencySymbol}
-                />
-              )
-            })}
-          </div>
-        </section>
+        <ProductsGallery
+          products={featured}
+          currencySymbol={currencySymbol}
+          title="Productos Destacados"
+        />
       )}
 
       {placeDetails && <GoogleReviews place={placeDetails} />}
 
       {latest.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
-              Ultimos Productos
-            </h2>
-            <Link
-              href="/tienda"
-              className="text-sm font-medium text-site-secondary hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
-            >
-              Ver mas
-              <ArrowRight className="ml-1 inline h-4 w-4" aria-hidden="true" />
-            </Link>
-          </div>
-          <hr className="my-4" />
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-            {latest.map((product: Product) => {
-              const firstImage = product.images?.[0]?.image as Media | null
-              return (
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  slug={product.slug}
-                  price={product.price}
-                  compareAtPrice={product.compareAtPrice}
-                  imageUrl={firstImage?.url ?? null}
-                  imageAlt={firstImage?.alt ?? product.name}
-                  currencySymbol={currencySymbol}
-                />
-              )
-            })}
-          </div>
-        </section>
+        <ProductsGallery
+          products={latest}
+          currencySymbol={currencySymbol}
+          title="Ultimos Productos"
+        />
       )}
 
       <CornerTools whatsappNumber={settings.whatsappNumber} showScrollToTop={false} />
