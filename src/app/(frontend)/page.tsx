@@ -12,27 +12,23 @@ import type { Media, Category, Product, SiteSetting, StorefrontContent } from '@
 import { CornerTools } from '@/components/storefront/CornerTools'
 
 export default async function HomePage() {
-  const [
-    settings,
-    content,
-    { docs: featured },
-    { docs: latest },
-    placeDetails,
-  ] = await Promise.all([
-    getCachedGlobal<SiteSetting>('site-settings')(),
-    getCachedGlobal<StorefrontContent>('storefront-content', 2)(),
-    getCachedProducts({
-      where: { featured: { equals: true }, active: { equals: true } },
-      limit: 4,
-      sort: '-createdAt',
-    })(),
-    getCachedProducts({
-      where: { active: { equals: true } },
-      limit: 5,
-      sort: '-createdAt',
-    })(),
-    getCachedPlaceDetails(),
-  ])
+  const [settings, content, { docs: featured }, { docs: latest }, placeDetails] = await Promise.all(
+    [
+      getCachedGlobal<SiteSetting>('site-settings')(),
+      getCachedGlobal<StorefrontContent>('storefront-content', 2)(),
+      getCachedProducts({
+        where: { featured: { equals: true }, active: { equals: true } },
+        limit: 4,
+        sort: '-createdAt',
+      })(),
+      getCachedProducts({
+        where: { active: { equals: true } },
+        limit: 5,
+        sort: '-createdAt',
+      })(),
+      getCachedPlaceDetails(),
+    ],
+  )
 
   const currencySymbol = settings.currencySymbol || '$'
 
@@ -60,6 +56,50 @@ export default async function HomePage() {
   return (
     <>
       <HeroCarousel slides={heroSlides} />
+
+      {storefrontCategories.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
+          <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
+            Categorias
+          </h2>
+          <div className="mt-6 grid grid-cols-3 gap-4 sm:grid-cols-5 lg:grid-cols-8">
+            {storefrontCategories.map((cat) => {
+              const catImage = cat.category.image as Media | null
+
+              return (
+                <Link key={cat.category.id} href={`/tienda?categoria=${cat.category.slug}`}>
+                  <Card className="group overflow-hidden transition-all active:scale-95 hover:shadow-lg pt-0 gap-0 lg:pb-2 pb-4">
+                    <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                      {catImage?.url ? (
+                        <Image
+                          src={catImage.url}
+                          alt={cat.category.name}
+                          fill
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                          className="object-cover transition-transform duration-300 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="flex h-full items-center justify-center text-muted-foreground text-sm">
+                          {cat.category.name}
+                        </div>
+                      )}
+                    </div>
+                    <CardContent className="lg:p-3 p-2 lg:pt-4 pt-3 border-t flex flex-col gap-2 pb-0">
+                      <h3 className="text-sm font-medium line-clamp-1 -mb-1">
+                        {cat.category.name}
+                      </h3>
+                      <span className="text-xs text-muted-foreground max-h-32 truncate">
+                        {cat.category.description}
+                      </span>
+                    </CardContent>
+                  </Card>
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      )}
 
       {featured.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
@@ -90,46 +130,6 @@ export default async function HomePage() {
                   imageAlt={firstImage?.alt ?? product.name}
                   currencySymbol={currencySymbol}
                 />
-              )
-            })}
-          </div>
-        </section>
-      )}
-
-      {storefrontCategories.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
-          <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
-            Categorias
-          </h2>
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {storefrontCategories.map((cat) => {
-              const catImage = cat.category.image as Media | null
-              
-              return (
-                <Link key={cat.category.id} href={`/tienda?categoria=${cat.category.slug}`}>
-                  <Card className="group overflow-hidden transition-all active:scale-95 hover:shadow-lg pt-0 gap-0">
-                    <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-                      {catImage?.url ? (
-                        <Image
-                          src={catImage.url}
-                          alt={cat.category.name}
-                          fill
-                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                          className="object-cover transition-transform duration-300 group-hover:scale-105"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-muted-foreground text-sm">
-                          {cat.category.name}
-                        </div>
-                      )}
-                    </div>
-                    <CardContent className="p-3 pb-0 pt-4 border-t flex flex-col gap-2">
-                      <h3 className="text-sm font-medium line-clamp-1 -mb-1">{cat.category.name}</h3>
-                      <span className="text-xs text-muted-foreground max-h-32 truncate">{cat.category.description}</span>
-                    </CardContent>
-                  </Card>
-                </Link>
               )
             })}
           </div>
