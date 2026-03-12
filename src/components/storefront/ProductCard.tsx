@@ -42,12 +42,17 @@ export function ProductCard({
   }
 
   return (
-    <Card className="group overflow-hidden border border-border transition-shadow hover:shadow-lg pt-0 gap-0">
+    <Card className="group overflow-hidden transition-shadow hover:shadow-lg pt-0 gap-0 shadow-none pb-4">
       <Link
         href={`/tienda/${slug}`}
         className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-t-lg"
       >
         <div className="relative aspect-square overflow-hidden bg-muted">
+          {hasDiscount && (
+            <span className="absolute top-2 left-2 z-10 rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold text-white w-fit">
+              Oferta
+            </span>
+          )}
           {imageUrl ? (
             <Image
               src={imageUrl}
@@ -65,11 +70,6 @@ export function ProductCard({
         </div>
       </Link>
       <CardContent className="flex flex-col gap-2 p-4 pb-0 h-full">
-        {hasDiscount && (
-          <span className="rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold text-white w-fit">
-            Oferta
-          </span>
-        )}
         <Link
           href={`/tienda/${slug}`}
           className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"

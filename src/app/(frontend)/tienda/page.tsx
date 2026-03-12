@@ -10,7 +10,7 @@ import type { Media, SiteSetting } from '@/payload-types'
 import type { SerializedProduct } from '@/lib/product-actions'
 import { CornerTools } from '@/components/storefront/CornerTools'
 
-const PAGE_SIZE = 24
+const PAGE_SIZE = 21
 
 export const metadata = { title: 'Tienda' }
 
