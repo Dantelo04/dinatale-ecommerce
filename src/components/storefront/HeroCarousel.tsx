@@ -68,6 +68,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
           className="object-cover"
           priority
           sizes="100vw"
+          style={{ objectFit: 'cover', filter: slide.title || slide.subtitle ? 'blur(3px)' : undefined }}
         />
         {/* <div className="absolute inset-0 bg-black/40" /> */}
         <div className="relative z-10 mx-auto max-w-3xl px-4 text-center text-white">
@@ -101,7 +102,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
       <Carousel
         setApi={setApi}
         opts={{ loop: true }}
-        plugins={[Autoplay({ delay: 5000, stopOnInteraction: true })]}
+        plugins={[Autoplay({ delay: 5000 })]}
         className="relative w-full"
       >
         <CarouselContent className="ml-0">
@@ -116,6 +117,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
                   priority={index === 0}
                   loading={index === 0 ? 'eager' : 'lazy'}
                   sizes="100vw"
+                  style={{ objectFit: 'cover', filter: slide.title || slide.subtitle ? 'blur(5px)' : undefined }}
                 />
                 <div className="absolute inset-0 bg-black/40" />
                 <div className="relative z-10 mx-auto max-w-3xl px-4 text-center text-white">
@@ -148,11 +150,11 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
         </CarouselContent>
 
         <CarouselPrevious
-          className="left-4 top-1/2 z-20 h-10 w-10 -translate-y-1/2 border-none bg-primary text-white backdrop-blur-sm hover:scale-110 transition-all duration-300 cursor-pointer lg:flex hidden"
+          className="left-4 top-1/2 z-20 h-10 w-10 -translate-y-1/2 border-none bg-white/20 text-white backdrop-blur-sm hover:scale-110 transition-all duration-300 cursor-pointer lg:flex hidden opacity-50 hover:opacity-100"
           aria-label="Slide anterior"
         />
         <CarouselNext
-          className="right-4 top-1/2 z-20 h-10 w-10 -translate-y-1/2 border-none bg-primary text-white backdrop-blur-sm hover:scale-110 transition-all duration-300 cursor-pointer lg:flex hidden"
+          className="right-4 top-1/2 z-20 h-10 w-10 -translate-y-1/2 border-none bg-white/20 text-white backdrop-blur-sm hover:scale-110 transition-all duration-300 cursor-pointer lg:flex hidden opacity-50 hover:opacity-100"
           aria-label="Siguiente slide"
         />
 
@@ -168,7 +170,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
                 onClick={() => scrollTo(index)}
                 className={cn(
                   'h-2 rounded-full transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white',
-                  current === index ? 'w-8 bg-primary' : 'w-2 bg-white/50 hover:bg-primary/50',
+                  current === index ? 'w-8 bg-primary' : 'w-2 bg-white/15 hover:bg-primary/50',
                 )}
               />
             ))}

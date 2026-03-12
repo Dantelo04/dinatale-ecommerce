@@ -57,38 +57,39 @@ export function GoogleReviews({ place }: { place: PlaceDetails }) {
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
       <div className="flex flex-col xl:gap-6 gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+        <div className="flex flex-row justify-between items-center w-full">
           <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
             Lo que dicen nuestros clientes
           </h2>
-        </div>
-        {place.googleMapsUrl && (
-          <a
-            href={place.googleMapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-medium text-site-secondary hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
-          >
-            Ver en Google Maps
-            <svg
-              className="h-4 w-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-              <polyline points="15 3 21 3 21 9" />
-              <line x1="10" y1="14" x2="21" y2="3" />
-            </svg>
-          </a>
-        )}
-      </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {place.googleMapsUrl && (
+            <a
+              href={place.googleMapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-medium text-site-secondary hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+            >
+              Ver en Google Maps
+              <svg
+                className="h-4 w-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
+          )}
+        </div>
+      </div>
+      <hr className="my-4" />
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {visibleReviews.map((review, i) => (
           <Card key={i} className="flex flex-col">
             <CardContent className="flex flex-1 flex-col gap-3 px-5">

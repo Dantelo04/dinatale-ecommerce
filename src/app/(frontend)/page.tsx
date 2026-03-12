@@ -62,6 +62,7 @@ export default async function HomePage() {
           <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
             Categorias
           </h2>
+          <hr className="my-4" />
           <div className="mt-6 grid grid-cols-3 gap-4 sm:grid-cols-5 lg:grid-cols-8">
             {storefrontCategories.map((cat) => {
               const catImage = cat.category.image as Media | null
@@ -107,6 +108,7 @@ export default async function HomePage() {
             <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
               Productos Destacados
             </h2>
+            
             <Link
               href="/tienda"
               className="text-sm font-medium text-site-secondary hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
@@ -115,6 +117,7 @@ export default async function HomePage() {
               <ArrowRight className="ml-1 inline h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
+          <hr className="my-4" />
           <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             {featured.map((product: Product) => {
               const firstImage = product.images?.[0]?.image as Media | null
@@ -152,6 +155,7 @@ export default async function HomePage() {
               <ArrowRight className="ml-1 inline h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
+          <hr className="my-4" />
           <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             {latest.map((product: Product) => {
               const firstImage = product.images?.[0]?.image as Media | null
