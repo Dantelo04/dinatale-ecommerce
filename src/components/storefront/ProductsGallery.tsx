@@ -10,6 +10,17 @@ interface ProductsGalleryProps {
   columnQuantity?: number
 }
 
+const gridCols: Record<number, string> = {
+  3: 'lg:grid-cols-3',
+  4: 'lg:grid-cols-4',
+  5: 'lg:grid-cols-5',
+  6: 'lg:grid-cols-6',
+  7: 'lg:grid-cols-7',
+  8: 'lg:grid-cols-8',
+  9: 'lg:grid-cols-9',
+  10: 'lg:grid-cols-10',
+};
+
 export const ProductsGallery = ({ products, currencySymbol, title = 'Productos Destacados', columnQuantity = 5 }: ProductsGalleryProps) => {
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
@@ -27,7 +38,7 @@ export const ProductsGallery = ({ products, currencySymbol, title = 'Productos D
         </Link>
       </div>
       <hr className="my-4" />
-      <div className={`mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-${columnQuantity}`}>
+      <div className={`mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 ${gridCols[columnQuantity ?? 5]}`}>
         {products.map((product: Product) => {
           const firstImage = product.images?.[0]?.image as Media | null
           return (
