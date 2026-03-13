@@ -50,7 +50,7 @@ export function ProductCard({
         <div className="relative aspect-square overflow-hidden bg-muted">
           {hasDiscount && (
             <span className="absolute top-2 left-2 z-10 rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold text-white w-fit">
-              Oferta
+              Promo
             </span>
           )}
           {imageUrl ? (

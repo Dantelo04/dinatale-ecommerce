@@ -68,7 +68,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
           className="object-cover"
           priority
           sizes="100vw"
-          style={{ objectFit: 'cover', filter: slide.title || slide.subtitle ? 'blur(3px)' : undefined }}
+          style={{ objectFit: 'cover', filter: slide.title || slide.subtitle ? 'blur(1px)' : undefined }}
         />
         {/* <div className="absolute inset-0 bg-black/40" /> */}
         <div className="relative z-10 mx-auto max-w-3xl px-4 text-center text-white">
@@ -117,7 +117,7 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
                   priority={index === 0}
                   loading={index === 0 ? 'eager' : 'lazy'}
                   sizes="100vw"
-                  style={{ objectFit: 'cover', filter: slide.title || slide.subtitle ? 'blur(5px)' : undefined }}
+                  style={{ objectFit: 'cover', filter: slide.title || slide.subtitle ? 'blur(2px)' : undefined }}
                 />
                 <div className="absolute inset-0 bg-black/40" />
                 <div className="relative z-10 mx-auto max-w-3xl px-4 text-center text-white">
