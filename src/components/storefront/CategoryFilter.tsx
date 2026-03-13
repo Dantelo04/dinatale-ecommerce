@@ -4,9 +4,10 @@ import React, { useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
+import type { SerializedCategory } from '@/lib/types'
 
 interface CategoryFilterProps {
-  categories: { id: number; name: string; slug: string }[]
+  categories: SerializedCategory[]
   activeCategoryId: number | null
 }
 

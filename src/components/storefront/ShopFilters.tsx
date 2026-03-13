@@ -7,9 +7,10 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { formatPrice } from '@/lib/utils'
+import type { SerializedCategory } from '@/lib/types'
 
 interface ShopFiltersProps {
-  categories: { id: number; name: string; slug: string }[]
+  categories: SerializedCategory[]
   activeCategorySlug: string | null
   priceRange: { min: number; max: number }
   initialSearch: string

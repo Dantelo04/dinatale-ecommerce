@@ -5,6 +5,7 @@ import { Separator } from '@/components/ui/separator'
 import { CustomLink } from '@/components/ui/link'
 import { MapPin } from 'lucide-react'
 import { FaFacebook, FaInstagram, FaTiktok } from 'react-icons/fa'
+import { NAV_LINKS } from '@/lib/constants'
 
 interface FooterProps {
   siteName: string
@@ -17,14 +18,6 @@ interface FooterProps {
     googleMaps?: string | null
   } | null
 }
-
-const NAV_LINKS = [
-  { href: '/', label: 'Inicio' },
-  { href: '/tienda', label: 'Tienda' },
-  { href: '/tienda?ofertas=true', label: 'Promo' },
-  { href: '/nosotros', label: 'Nosotros' },
-  { href: '/contacto', label: 'Contacto' },
-]
 
 export function Footer({ siteName, logoUrl, hideName, socialLinks }: FooterProps) {
   const hasSocial = socialLinks?.instagram || socialLinks?.facebook || socialLinks?.tiktok
