@@ -79,7 +79,7 @@ export function Header({ siteName, logoUrl, hideName, headerLogoSide, logoSize, 
 
         <div className="flex items-center xl:gap-2 gap-4">
           <Link href="/carrito" aria-label={`Carrito de compras, ${totalItems} productos`}>
-            <Button variant="ghost" size="icon" className="relative -bottom-0.5" asChild>
+            <Button variant="ghost" size="icon" className="relative -bottom-0.5 hover:bg-transparent hover:scale-105 transition-all active:scale-90" asChild>
               <span>
                 <ShoppingCart
                   className="xl:size-8.5 size-7"
