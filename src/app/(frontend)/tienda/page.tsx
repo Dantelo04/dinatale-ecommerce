@@ -22,9 +22,10 @@ export default async function TiendaPage({
     buscar?: string
     precioMin?: string
     precioMax?: string
+    ofertas?: string
   }>
 }) {
-  const { categoria, buscar, precioMin, precioMax } = await searchParams
+  const { categoria, buscar, precioMin, precioMax, ofertas } = await searchParams
 
   const [settings, { docs: categories }, priceBounds, payload] = await Promise.all([
     getCachedGlobal<SiteSetting>('site-settings')(),
@@ -50,6 +51,10 @@ export default async function TiendaPage({
 
   if (buscar) {
     whereClause.name = { contains: buscar }
+  }
+
+  if (ofertas) {
+    whereClause.compareAtPrice = { not_equals: null }
   }
 
   const parsedMin = precioMin ? Number(precioMin) : null
@@ -142,6 +147,7 @@ export default async function TiendaPage({
           hasNextPage={result.hasNextPage}
           currencySymbol={currencySymbol}
           filters={filters}
+          onlyPromo={ofertas === 'true'}
         />
       )}
 

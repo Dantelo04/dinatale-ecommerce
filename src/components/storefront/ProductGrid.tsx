@@ -9,6 +9,7 @@ interface ProductGridProps {
   initialProducts: SerializedProduct[]
   hasNextPage: boolean
   currencySymbol: string
+  onlyPromo?: boolean
   filters: {
     categoria?: string
     buscar?: string
@@ -23,6 +24,7 @@ export function ProductGrid({
   hasNextPage: initialHasNextPage,
   currencySymbol,
   filters,
+  onlyPromo = false,
 }: ProductGridProps) {
   const [products, setProducts] = useState(initialProducts)
   const [hasNextPage, setHasNextPage] = useState(initialHasNextPage)
@@ -72,7 +74,7 @@ export function ProductGrid({
   return (
     <>
       <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
-        {products.map((product) => (
+        {(onlyPromo ? products.filter((product) => product.compareAtPrice) : products).map((product) => (
           <ProductCard
             key={product.id}
             id={product.id}

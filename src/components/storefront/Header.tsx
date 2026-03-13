@@ -14,6 +14,7 @@ import { AlertMarquee } from './AlertMarquee'
 const NAV_LINKS = [
   { href: '/', label: 'Inicio' },
   { href: '/tienda', label: 'Tienda' },
+  { href: '/tienda?ofertas=true', label: 'Promo' },
   { href: '/nosotros', label: 'Nosotros' },
   { href: '/contacto', label: 'Contacto' },
 ]
