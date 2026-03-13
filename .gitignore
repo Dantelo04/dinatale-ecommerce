@@ -26,6 +26,8 @@
 *.pem
 CLAUDE.md
 .claude
+skills-lock.json
+.agents/
 
 # debug
 npm-debug.log*

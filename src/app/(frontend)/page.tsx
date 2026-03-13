@@ -50,31 +50,49 @@ export default async function HomePage() {
     (cat): cat is { category: Category; id?: string | null } => typeof cat.category !== 'number',
   )
 
+  const sections = content.homeSections?.filter((s) => s.enabled) ?? [
+    { type: 'categories' as const, enabled: true, id: 'default-categories' },
+    { type: 'featured' as const, enabled: true, id: 'default-featured' },
+    { type: 'reviews' as const, enabled: true, id: 'default-reviews' },
+    { type: 'latest' as const, enabled: true, id: 'default-latest' },
+  ]
+
   return (
     <>
       <HeroCarousel slides={heroSlides} />
 
-      <CategoriesGallery storefrontCategories={storefrontCategories} />
-
-      {featured.length > 0 && (
-        <ProductsGallery
-          products={featured}
-          currencySymbol={currencySymbol}
-          title="Productos Destacados"
-          columnQuantity={5}
-        />
-      )}
-
-      {placeDetails && <GoogleReviews place={placeDetails} />}
-
-      {latest.length > 0 && (
-        <ProductsGallery
-          products={latest}
-          currencySymbol={currencySymbol}
-          title="Ultimos Productos"
-          columnQuantity={5}
-        />
-      )}
+      {sections.map((section) => {
+        switch (section.type) {
+          case 'categories':
+            return (
+              <CategoriesGallery key={section.id} storefrontCategories={storefrontCategories} />
+            )
+          case 'featured':
+            return featured.length > 0 ? (
+              <ProductsGallery
+                key={section.id}
+                products={featured}
+                currencySymbol={currencySymbol}
+                title="Productos Destacados"
+                columnQuantity={5}
+              />
+            ) : null
+          case 'reviews':
+            return placeDetails ? <GoogleReviews key={section.id} place={placeDetails} /> : null
+          case 'latest':
+            return latest.length > 0 ? (
+              <ProductsGallery
+                key={section.id}
+                products={latest}
+                currencySymbol={currencySymbol}
+                title="Ultimos Productos"
+                columnQuantity={5}
+              />
+            ) : null
+          default:
+            return null
+        }
+      })}
 
       <CornerTools whatsappNumber={settings.whatsappNumber} showScrollToTop={false} />
     </>
