@@ -2,7 +2,7 @@ import React from 'react'
 import { notFound } from 'next/navigation'
 import type { Media, Category, SiteSetting } from '@/payload-types'
 import { ProductDetail } from '@/components/storefront/ProductDetail'
-import { getCachedGlobal, getCachedProductBySlug } from '@/lib/payload-cache'
+import { getCachedGlobal, getCachedProductBySlug, updateCachedProduct } from '@/lib/payload-cache'
 
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -29,6 +29,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     .filter((img): img is Media => typeof img === 'object' && img !== null)
 
   const category = product.category as Category | null
+
+  if (product) await updateCachedProduct(product.id, { views: product.views ?? 0 + 1 })
 
   return (
     <ProductDetail

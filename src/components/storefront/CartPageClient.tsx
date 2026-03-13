@@ -35,7 +35,7 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
     return header + itemLines + footer + commentBlock
   }
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     const message = buildWhatsAppMessage()
     const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
     window.open(url, '_blank', 'noopener,noreferrer')

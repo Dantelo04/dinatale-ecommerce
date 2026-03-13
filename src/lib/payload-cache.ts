@@ -2,6 +2,7 @@ import { unstable_cache } from 'next/cache'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Where } from 'payload'
+import { Product } from '@/payload-types'
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -104,5 +105,15 @@ export const getCachedPriceBounds = () =>
       return { min: Math.floor(min), max: Math.ceil(max) }
     },
     ['products-price-bounds'],
+    ['products'],
+  )
+
+export const updateCachedProduct = (id: number, data: Partial<Product>) =>
+  cache(
+    async () => {
+      const payload = await getPayloadInstance()
+      return payload.update({ collection: 'products', id, data })
+    },
+    ['products', `product-${id}`],
     ['products'],
   )

@@ -209,6 +209,14 @@ export interface Product {
   category?: (number | Category)[] | null;
   featured?: boolean | null;
   active?: boolean | null;
+  /**
+   * Número de visitas a la página del producto
+   */
+  views?: number | null;
+  /**
+   * Número de ventas del producto
+   */
+  sales?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -367,6 +375,8 @@ export interface ProductsSelect<T extends boolean = true> {
   category?: T;
   featured?: T;
   active?: T;
+  views?: T;
+  sales?: T;
   updatedAt?: T;
   createdAt?: T;
 }
