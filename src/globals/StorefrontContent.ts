@@ -16,6 +16,36 @@ export const StorefrontContent: GlobalConfig = {
   },
   fields: [
     {
+      name: 'homeSections',
+      label: 'Secciones del Home',
+      type: 'array',
+      admin: {
+        description:
+          'Arrastra las secciones para cambiar su orden en el home. El Hero siempre se muestra primero.',
+      },
+      labels: { singular: 'Seccion', plural: 'Secciones' },
+      fields: [
+        {
+          name: 'type',
+          label: 'Tipo de Seccion',
+          type: 'select',
+          required: true,
+          options: [
+            { label: 'Categorias', value: 'categories' },
+            { label: 'Productos Destacados', value: 'featured' },
+            { label: 'Reseñas de Google', value: 'reviews' },
+            { label: 'Ultimos Productos', value: 'latest' },
+          ],
+        },
+        {
+          name: 'enabled',
+          label: 'Habilitada',
+          type: 'checkbox',
+          defaultValue: true,
+        },
+      ],
+    },
+    {
       name: 'heroSlides',
       label: 'Slides del Banner',
       type: 'array',

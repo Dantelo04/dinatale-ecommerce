@@ -495,6 +495,16 @@ export interface SiteSetting {
 export interface StorefrontContent {
   id: number;
   /**
+   * Arrastra las secciones para cambiar su orden en el home. El Hero siempre se muestra primero.
+   */
+  homeSections?:
+    | {
+        type: 'categories' | 'featured' | 'reviews' | 'latest';
+        enabled?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
    * Cada slide se muestra en el carrusel del banner principal
    */
   heroSlides?:
@@ -595,6 +605,13 @@ export interface SiteSettingsSelect<T extends boolean = true> {
  * via the `definition` "storefront-content_select".
  */
 export interface StorefrontContentSelect<T extends boolean = true> {
+  homeSections?:
+    | T
+    | {
+        type?: T;
+        enabled?: T;
+        id?: T;
+      };
   heroSlides?:
     | T
     | {
