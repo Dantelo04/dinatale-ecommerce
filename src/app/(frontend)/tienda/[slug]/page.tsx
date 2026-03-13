@@ -2,8 +2,8 @@ import React from 'react'
 import { notFound } from 'next/navigation'
 import type { Media, Category, SiteSetting } from '@/payload-types'
 import { ProductDetail } from '@/components/storefront/ProductDetail'
-import { getCachedGlobal, getCachedProductBySlug, updateCachedProduct } from '@/lib/payload-cache'
-
+import { ProductViewTracker } from '@/components/storefront/ProductViewTracker'
+import { getCachedGlobal, getCachedProductBySlug } from '@/lib/payload-cache'
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -30,23 +30,24 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   const category = product.category as Category | null
 
-  if (product) await updateCachedProduct(product.id, { views: product.views ?? 0 + 1 })
-
   return (
-    <ProductDetail
-      product={{
-        id: product.id,
-        name: product.name,
-        slug: product.slug,
-        price: product.price,
-        compareAtPrice: product.compareAtPrice,
-        description: product.description,
-        images,
-        categoryName: category?.name ?? null,
-        sales: product.sales ?? 0,
-        views: product.views ?? 0,
-      }}
-      currencySymbol={settings.currencySymbol || '$'}
-    />
+    <>
+      <ProductViewTracker productId={product.id} />
+      <ProductDetail
+        product={{
+          id: product.id,
+          name: product.name,
+          slug: product.slug,
+          price: product.price,
+          compareAtPrice: product.compareAtPrice,
+          description: product.description,
+          images,
+          categoryName: category?.name ?? null,
+          sales: product.sales ?? 0,
+          views: product.views ?? 0,
+        }}
+        currencySymbol={settings.currencySymbol || '$'}
+      />
+    </>
   )
 }

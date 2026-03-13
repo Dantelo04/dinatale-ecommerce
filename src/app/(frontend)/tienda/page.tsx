@@ -7,7 +7,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Where } from 'payload'
 import type { Media, SiteSetting } from '@/payload-types'
-import type { SerializedProduct } from '@/lib/product-actions'
+import type { SerializedProduct } from '@/lib/types'
 import { CornerTools } from '@/components/storefront/CornerTools'
 
 const PAGE_SIZE = 21

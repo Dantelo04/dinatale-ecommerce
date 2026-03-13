@@ -10,14 +10,7 @@ import { CustomLink } from '@/components/ui/link'
 import { useCart } from './CartProvider'
 import { HeaderSheet } from './HeaderSheet'
 import { AlertMarquee } from './AlertMarquee'
-
-const NAV_LINKS = [
-  { href: '/', label: 'Inicio' },
-  { href: '/tienda', label: 'Tienda' },
-  { href: '/tienda?ofertas=true', label: 'Promo' },
-  { href: '/nosotros', label: 'Nosotros' },
-  { href: '/contacto', label: 'Contacto' },
-]
+import { NAV_LINKS } from '@/lib/constants'
 
 interface HeaderProps {
   siteName: string

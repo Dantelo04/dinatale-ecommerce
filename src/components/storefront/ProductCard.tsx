@@ -8,19 +8,9 @@ import { Button } from '@/components/ui/button'
 import { ShoppingCart } from 'lucide-react'
 import { useCart } from './CartProvider'
 import { formatPrice } from '@/lib/utils'
+import type { SerializedProduct } from '@/lib/types'
 
-interface ProductCardProps {
-  id: number
-  name: string
-  slug: string
-  price: number
-  compareAtPrice?: number | null
-  imageUrl: string | null
-  imageAlt: string
-  currencySymbol: string
-  sales: number
-  views: number
-}
+type ProductCardProps = SerializedProduct & { currencySymbol: string }
 
 export function ProductCard({
   id,

@@ -3,20 +3,15 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { Loader2 } from 'lucide-react'
 import { ProductCard } from './ProductCard'
-import { loadMoreProducts, type SerializedProduct } from '@/lib/product-actions'
+import { loadMoreProducts } from '@/lib/product-actions'
+import type { SerializedProduct, ProductFilters } from '@/lib/types'
 
 interface ProductGridProps {
   initialProducts: SerializedProduct[]
   hasNextPage: boolean
   currencySymbol: string
   onlyPromo?: boolean
-  filters: {
-    categoria?: string
-    buscar?: string
-    precioMin?: string
-    precioMax?: string
-    categoryId?: number | null
-  }
+  filters: ProductFilters
 }
 
 export function ProductGrid({

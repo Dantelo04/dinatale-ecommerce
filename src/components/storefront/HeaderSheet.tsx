@@ -4,12 +4,13 @@ import { Menu, XIcon } from 'lucide-react'
 import { CustomLink } from '../ui/link'
 import Link from 'next/link'
 import { Fragment } from 'react'
+import type { NavLink } from '@/lib/types'
 
 interface HeaderSheetProps {
   mobileOpen: boolean
   setMobileOpen: (open: boolean) => void
   side: 'left' | 'right'
-  NAV_LINKS: { href: string; label: string }[]
+  NAV_LINKS: NavLink[]
 }
 
 export const HeaderSheet = ({ mobileOpen, setMobileOpen, side, NAV_LINKS }: HeaderSheetProps) => {

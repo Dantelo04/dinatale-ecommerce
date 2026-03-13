@@ -1,16 +1,10 @@
 'use client'
 
 import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react'
+import type { SerializedProduct } from '@/lib/types'
 
-export interface CartItem {
-  id: number
-  name: string
-  price: number
-  imageUrl: string | null
-  slug: string
+export interface CartItem extends Omit<SerializedProduct, 'imageAlt' | 'compareAtPrice'> {
   quantity: number
-  sales: number
-  views: number
 }
 
 interface CartState {

@@ -4,27 +4,13 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Where } from 'payload'
 import type { Media } from '@/payload-types'
+import type { SerializedProduct, ProductFilters } from '@/lib/types'
 
-export interface SerializedProduct {
-  id: number
-  name: string
-  slug: string
-  price: number
-  compareAtPrice?: number | null
-  imageUrl: string | null
-  imageAlt: string
-  sales: number
-  views: number
-}
+export type { SerializedProduct }
 
 const PAGE_SIZE = 24
 
-function buildWhereClause(filters: {
-  buscar?: string
-  precioMin?: string
-  precioMax?: string
-  categoryId?: number | null
-}): Where {
+function buildWhereClause(filters: ProductFilters): Where {
   const where: Where = { active: { equals: true } }
 
   if (filters.categoryId) {
@@ -54,12 +40,7 @@ function buildWhereClause(filters: {
 
 export async function loadMoreProducts(
   page: number,
-  filters: {
-    buscar?: string
-    precioMin?: string
-    precioMax?: string
-    categoryId?: number | null
-  },
+  filters: ProductFilters,
 ): Promise<{ products: SerializedProduct[]; hasNextPage: boolean }> {
   const payload = await getPayload({ config: await config })
   const where = buildWhereClause(filters)
@@ -89,4 +70,30 @@ export async function loadMoreProducts(
   })
 
   return { products, hasNextPage: result.hasNextPage }
+}
+
+export async function incrementProductViews(productId: number): Promise<void> {
+  const payload = await getPayload({ config: await config })
+  const product = await payload.findByID({ collection: 'products', id: productId, depth: 0 })
+  await payload.update({
+    collection: 'products',
+    id: productId,
+    data: { views: (product.views ?? 0) + 1 },
+  })
+}
+
+export async function incrementProductSales(
+  items: { id: number; quantity: number }[],
+): Promise<void> {
+  const payload = await getPayload({ config: await config })
+  await Promise.all(
+    items.map(async (item) => {
+      const product = await payload.findByID({ collection: 'products', id: item.id, depth: 0 })
+      return payload.update({
+        collection: 'products',
+        id: item.id,
+        data: { sales: (product.sales ?? 0) + item.quantity },
+      })
+    }),
+  )
 }
