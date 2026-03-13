@@ -52,6 +52,8 @@ export const ProductsGallery = ({ products, currencySymbol, title = 'Productos D
               imageUrl={firstImage?.url ?? null}
               imageAlt={firstImage?.alt ?? product.name}
               currencySymbol={currencySymbol}
+              sales={product.sales ?? 0}
+              views={product.views ?? 0}
             />
           )
         })}

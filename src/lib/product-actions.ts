@@ -13,6 +13,8 @@ export interface SerializedProduct {
   compareAtPrice?: number | null
   imageUrl: string | null
   imageAlt: string
+  sales: number
+  views: number
 }
 
 const PAGE_SIZE = 24
@@ -81,6 +83,8 @@ export async function loadMoreProducts(
       compareAtPrice: product.compareAtPrice,
       imageUrl: firstImage?.url ?? null,
       imageAlt: firstImage?.alt ?? product.name,
+      sales: product.sales ?? 0,
+      views: product.views ?? 0,
     }
   })
 

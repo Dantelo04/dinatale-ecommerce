@@ -93,6 +93,8 @@ export default async function TiendaPage({
       compareAtPrice: product.compareAtPrice,
       imageUrl: firstImage?.url ?? null,
       imageAlt: firstImage?.alt ?? product.name,
+      sales: product.sales ?? 0,
+      views: product.views ?? 0,
     }
   })
 

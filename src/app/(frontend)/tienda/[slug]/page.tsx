@@ -43,6 +43,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         description: product.description,
         images,
         categoryName: category?.name ?? null,
+        sales: product.sales ?? 0,
+        views: product.views ?? 0,
       }}
       currencySymbol={settings.currencySymbol || '$'}
     />

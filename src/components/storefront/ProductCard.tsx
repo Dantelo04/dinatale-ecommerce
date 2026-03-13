@@ -18,6 +18,8 @@ interface ProductCardProps {
   imageUrl: string | null
   imageAlt: string
   currencySymbol: string
+  sales: number
+  views: number
 }
 
 export function ProductCard({
@@ -29,6 +31,8 @@ export function ProductCard({
   imageUrl,
   imageAlt,
   currencySymbol,
+  sales,
+  views,
 }: ProductCardProps) {
   const { addItem } = useCart()
   const [added, setAdded] = useState(false)
@@ -36,7 +40,7 @@ export function ProductCard({
   const hasDiscount = compareAtPrice && compareAtPrice > price
 
   const handleAdd = () => {
-    addItem({ id, name, price, imageUrl, slug })
+    addItem({ id, name, price, imageUrl, slug, sales, views })
     setAdded(true)
     setTimeout(() => setAdded(false), 2000)
   }
