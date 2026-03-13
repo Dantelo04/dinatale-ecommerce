@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
+import { Inter } from 'next/font/google'
+
+const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
 export const metadata: Metadata = {
   title: '404 | Pagina no encontrada',
@@ -9,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function GlobalNotFound() {
   return (
-    <html lang="es">
+    <html lang="es" className={inter.className}>
       <body style={bodyStyle}>
         <main style={mainStyle}>
           <p style={codeStyle}>404</p>
@@ -35,7 +38,6 @@ export default function GlobalNotFound() {
 
 const bodyStyle: CSSProperties = {
   margin: 0,
-  fontFamily: 'system-ui, -apple-system, sans-serif',
   backgroundColor: '#fff',
   color: '#18181b',
   overflow: 'hidden',
