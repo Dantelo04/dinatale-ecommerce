@@ -103,6 +103,28 @@ export const Products: CollectionConfig = {
       },
       label: 'Activo',
     },
+    {
+      name: 'views',
+      type: 'number',
+      defaultValue: 0,
+      admin: {
+        position: 'sidebar',
+        description: 'Número de visitas a la página del producto',
+        readOnly: true,
+      },
+      label: 'Visitas',
+    },
+    {
+      name: 'sales',
+      type: 'number',
+      defaultValue: 0,
+      admin: {
+        position: 'sidebar',
+        description: 'Número de ventas del producto',
+        readOnly: true,
+      },
+      label: 'Ventas',
+    },
   ],
   hooks: {
     afterChange: [revalidateCollectionAfterChange()],

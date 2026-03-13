@@ -22,6 +22,8 @@ interface ProductDetailProps {
     description?: Record<string, unknown> | null
     images: Media[]
     categoryName: string | null
+    sales: number
+    views: number
   }
   currencySymbol: string
 }
@@ -41,6 +43,8 @@ export function ProductDetail({ product, currencySymbol }: ProductDetailProps) {
       price: product.price,
       imageUrl: product.images[0]?.url ?? null,
       slug: product.slug,
+      sales: product.sales ?? 0,
+      views: product.views ?? 0,
     })
     setAdded(true)
     setTimeout(() => setAdded(false), 2000)

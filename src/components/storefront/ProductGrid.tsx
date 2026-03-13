@@ -85,6 +85,8 @@ export function ProductGrid({
             imageUrl={product.imageUrl}
             imageAlt={product.imageAlt}
             currencySymbol={currencySymbol}
+            sales={product.sales}
+            views={product.views}
           />
         ))}
       </div>

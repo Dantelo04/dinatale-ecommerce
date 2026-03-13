@@ -9,6 +9,8 @@ export interface CartItem {
   imageUrl: string | null
   slug: string
   quantity: number
+  sales: number
+  views: number
 }
 
 interface CartState {
