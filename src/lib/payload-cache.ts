@@ -107,13 +107,3 @@ export const getCachedPriceBounds = () =>
     ['products-price-bounds'],
     ['products'],
   )
-
-export const updateCachedProduct = (id: number, data: Partial<Product>) =>
-  cache(
-    async () => {
-      const payload = await getPayloadInstance()
-      return payload.update({ collection: 'products', id, data })
-    },
-    ['products', `product-${id}`],
-    ['products'],
-  )

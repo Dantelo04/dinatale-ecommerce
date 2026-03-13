@@ -90,3 +90,29 @@ export async function loadMoreProducts(
 
   return { products, hasNextPage: result.hasNextPage }
 }
+
+export async function incrementProductViews(productId: number): Promise<void> {
+  const payload = await getPayload({ config: await config })
+  const product = await payload.findByID({ collection: 'products', id: productId, depth: 0 })
+  await payload.update({
+    collection: 'products',
+    id: productId,
+    data: { views: (product.views ?? 0) + 1 },
+  })
+}
+
+export async function incrementProductSales(
+  items: { id: number; quantity: number }[],
+): Promise<void> {
+  const payload = await getPayload({ config: await config })
+  await Promise.all(
+    items.map(async (item) => {
+      const product = await payload.findByID({ collection: 'products', id: item.id, depth: 0 })
+      return payload.update({
+        collection: 'products',
+        id: item.id,
+        data: { sales: (product.sales ?? 0) + item.quantity },
+      })
+    }),
+  )
+}
