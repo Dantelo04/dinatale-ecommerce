@@ -6,6 +6,13 @@ import { Search, Loader2 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { formatPrice } from '@/lib/utils'
 import type { SerializedCategory } from '@/lib/types'
 
@@ -146,35 +153,59 @@ export function ShopFilters({
         </div>
 
         {categories.length > 0 && (
-          <div
-            className="flex flex-wrap gap-2 w-fit xl:mt-0 mt-4"
-            aria-label="Filtrar por categoria"
-          >
-            <Button
-              variant={!activeCategorySlug ? 'default' : 'outline'}
-              size="sm"
-              disabled={isPending}
-              className={!activeCategorySlug ? 'bg-site-primary text-primary-foreground' : ''}
-              onClick={() => handleCategoryClick(null)}
+          <>
+            {/* Mobile: dropdown */}
+            <div className="sm:hidden w-full">
+              <Select
+                value={activeCategorySlug ?? 'all'}
+                onValueChange={(val) => handleCategoryClick(val === 'all' ? null : val)}
+                disabled={isPending}
+              >
+                <SelectTrigger className="w-full" aria-label="Filtrar por categoria">
+                  <SelectValue placeholder="Categoría" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.slug}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Desktop (sm+): pill buttons */}
+            <div
+              className="hidden sm:flex flex-wrap gap-2 w-fit xl:mt-0 mt-4"
+              aria-label="Filtrar por categoria"
             >
-              Todos
-            </Button>
-            {categories.map((cat) => {
-              const isActive = activeCategorySlug === cat.slug
-              return (
-                <Button
-                  key={cat.id}
-                  variant={isActive ? 'default' : 'outline'}
-                  size="sm"
-                  disabled={isPending}
-                  className={isActive ? 'bg-site-primary text-primary-foreground' : ''}
-                  onClick={() => handleCategoryClick(cat.slug)}
-                >
-                  {cat.name}
-                </Button>
-              )
-            })}
-          </div>
+              <Button
+                variant={!activeCategorySlug ? 'default' : 'outline'}
+                size="sm"
+                disabled={isPending}
+                className={!activeCategorySlug ? 'bg-site-primary text-primary-foreground' : ''}
+                onClick={() => handleCategoryClick(null)}
+              >
+                Todos
+              </Button>
+              {categories.map((cat) => {
+                const isActive = activeCategorySlug === cat.slug
+                return (
+                  <Button
+                    key={cat.id}
+                    variant={isActive ? 'default' : 'outline'}
+                    size="sm"
+                    disabled={isPending}
+                    className={isActive ? 'bg-site-primary text-primary-foreground' : ''}
+                    onClick={() => handleCategoryClick(cat.slug)}
+                  >
+                    {cat.name}
+                  </Button>
+                )
+              })}
+            </div>
+          </>
         )}
       </div>
 
