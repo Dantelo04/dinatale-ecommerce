@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import Link from 'next/link'
 import { ShopFilters } from '@/components/storefront/ShopFilters'
 import { ProductGrid } from '@/components/storefront/ProductGrid'
-import { getCachedCategories, getCachedGlobal, getCachedPriceBounds } from '@/lib/payload-cache'
+import { getCachedCategoriesWithProductCount, getCachedGlobal, getCachedPriceBounds } from '@/lib/payload-cache'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Where } from 'payload'
@@ -27,9 +27,9 @@ export default async function TiendaPage({
 }) {
   const { categoria, buscar, precioMin, precioMax, ofertas } = await searchParams
 
-  const [settings, { docs: categories }, priceBounds, payload] = await Promise.all([
+  const [settings, categories, priceBounds, payload] = await Promise.all([
     getCachedGlobal<SiteSetting>('site-settings')(),
-    getCachedCategories()(),
+    getCachedCategoriesWithProductCount()(),
     getCachedPriceBounds()(),
     getPayload({ config: await config }),
   ])

@@ -75,6 +75,36 @@ export const getCachedCategories = (limit = 50) =>
     ['categories'],
   )
 
+export const getCachedCategoriesWithProductCount = (limit = 50) =>
+  cache(
+    async () => {
+      const payload = await getPayloadInstance()
+      const { docs } = await payload.find({
+        collection: 'categories',
+        limit,
+        depth: 1,
+      })
+
+      const counts = await Promise.all(
+        docs.map((cat) =>
+          payload.count({
+            collection: 'products',
+            where: {
+              category: { equals: cat.id },
+              active: { equals: true },
+            },
+          }),
+        ),
+      )
+
+      return docs
+        .map((cat, i) => ({ ...cat, _count: counts[i].totalDocs }))
+        .sort((a, b) => b._count - a._count)
+    },
+    ['categories-sorted'],
+    ['categories', 'products'],
+  )
+
 export const getCachedPriceBounds = () =>
   cache(
     async () => {
