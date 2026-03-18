@@ -5,7 +5,12 @@ import { ContactForm } from '@/components/storefront/ContactForm'
 import { getCachedGlobal } from '@/lib/payload-cache'
 import type { SiteSetting, StorefrontContent } from '@/payload-types'
 
-export const metadata = { title: 'Contacto' }
+export const metadata = {
+  title: 'Contacto',
+  description: '¿Tenés alguna pregunta? Contactanos por email, teléfono o envianos un mensaje directo.',
+  alternates: { canonical: '/contacto' },
+  openGraph: { type: 'website' as const, title: 'Contacto', url: 'https://www.dinatale.com.py/contacto', locale: 'es_AR' },
+}
 
 export default async function ContactoPage() {
   const [content, settings] = await Promise.all([
