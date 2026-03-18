@@ -12,7 +12,36 @@ import { CornerTools } from '@/components/storefront/CornerTools'
 
 const PAGE_SIZE = 21
 
-export const metadata = { title: 'Tienda' }
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ categoria?: string }>
+}) {
+  const { categoria } = await searchParams
+  const [settings, categories] = await Promise.all([
+    getCachedGlobal<SiteSetting>('site-settings')(),
+    getCachedCategoriesWithProductCount()(),
+  ])
+  const activeCategory = categoria ? categories.find((c) => c.slug === categoria) : null
+  const title = activeCategory?.name ?? 'Tienda'
+  const description =
+    activeCategory?.description ||
+    settings.siteDescription ||
+    `Explorá todos nuestros productos en ${settings.siteName}`
+  return {
+    title,
+    description,
+    alternates: { canonical: '/tienda' },
+    openGraph: {
+      type: 'website',
+      title,
+      description,
+      url: 'https://www.dinatale.com.py/tienda',
+      locale: 'es_AR',
+    },
+    twitter: { card: 'summary_large_image', title, description },
+  }
+}
 
 export default async function TiendaPage({
   searchParams,

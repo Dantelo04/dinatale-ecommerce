@@ -11,6 +11,8 @@ import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
+const SITE_URL = 'https://www.dinatale.com.py'
+
 export async function generateMetadata() {
   const settings = await getCachedGlobal<SiteSetting>('site-settings')()
 
@@ -19,14 +21,38 @@ export async function generateMetadata() {
     ? [{ rel: 'icon' as const, url: faviconUrl }]
     : undefined
 
+  const description = settings.siteDescription || `Tienda online - ${settings.siteName}`
+
   return {
+    metadataBase: new URL(SITE_URL),
     title: {
       default: settings.siteName,
       template: `%s | ${settings.siteName}`,
     },
-    description: `Tienda online - ${settings.siteName}`,
+    description,
     themeColor: settings.primaryColor || '#18181b',
     icons,
+    openGraph: {
+      type: 'website',
+      siteName: settings.siteName,
+      title: settings.siteName,
+      description,
+      url: SITE_URL,
+      locale: 'es_AR',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: settings.siteName,
+      description,
+    },
+    alternates: {
+      canonical: '/',
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true },
+    },
   }
 }
 
@@ -41,6 +67,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const logoUrl = (settings.logo as Media)?.url ?? null
   const headerLogoSide = settings.headerLogoSide as 'left' | 'center' | 'right'
 
+  const orgJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: settings.siteName,
+    url: 'https://www.dinatale.com.py',
+    ...(logoUrl ? { logo: logoUrl } : {}),
+  }
+
   return (
     <html
       lang="es"
@@ -53,6 +87,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     >
       <GoogleAnalytics gaId="G-N3BBXYFZHF" />
       <GoogleTagManager gtmId="GTM-W7WNVJM6" />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <a
           href="#main-content"

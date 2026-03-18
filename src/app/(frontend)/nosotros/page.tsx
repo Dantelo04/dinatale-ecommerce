@@ -4,7 +4,12 @@ import { RichTextContent } from '@/components/storefront/RichTextContent'
 import { getCachedGlobal } from '@/lib/payload-cache'
 import type { Media, StorefrontContent } from '@/payload-types'
 
-export const metadata = { title: 'Nosotros' }
+export const metadata = {
+  title: 'Nosotros',
+  description: 'Conocé más sobre nosotros, nuestra historia y los valores que nos guían.',
+  alternates: { canonical: '/nosotros' },
+  openGraph: { type: 'website' as const, title: 'Nosotros', url: 'https://www.dinatale.com.py/nosotros', locale: 'es_AR' },
+}
 
 export default async function NosotrosPage() {
   const content = await getCachedGlobal<StorefrontContent>('storefront-content')()
