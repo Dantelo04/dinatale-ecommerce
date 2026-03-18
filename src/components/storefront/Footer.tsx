@@ -73,7 +73,7 @@ export function Footer({ siteName, logoUrl, hideName, socialLinks }: FooterProps
 
         <p className="text-sm text-muted-foreground">
           &copy; {new Date().getFullYear()} {siteName}. Todos los derechos reservados. Desarrollado por{' '}
-          <CustomLink href="https://www.instagram.com/anoto" variant="primary" external>
+          <CustomLink href="https://www.anoto.com.py/" variant="primary" external>
             Anoto
           </CustomLink>
           .
