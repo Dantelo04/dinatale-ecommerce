@@ -22,7 +22,13 @@ export default buildConfig({
     user: Users.slug,
     theme: 'light',
     meta: {
-      icons: [{ rel: 'icon', url: '/api/favicon' }],
+      icons: [
+        {
+          rel: 'icon',
+          type: 'image/png',
+          url: '/favicon.png',
+        },
+      ],
     },
     importMap: {
       baseDir: path.resolve(dirname),
@@ -52,18 +58,20 @@ export default buildConfig({
     },
   }),
   sharp,
-  plugins: [s3Storage({
-    collections: {
-      media: true,
-    },
-    bucket: process.env.S3_BUCKET || '',
-    config: {
-      endpoint: process.env.S3_ENDPOINT || '',
-      credentials: {
-        accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
-        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
+  plugins: [
+    s3Storage({
+      collections: {
+        media: true,
       },
-      region: process.env.S3_REGION,
-    },
-  }),],
+      bucket: process.env.S3_BUCKET || '',
+      config: {
+        endpoint: process.env.S3_ENDPOINT || '',
+        credentials: {
+          accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
+          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
+        },
+        region: process.env.S3_REGION,
+      },
+    }),
+  ],
 })
