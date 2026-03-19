@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation'
 import type { Media, Category, SiteSetting } from '@/payload-types'
 import { ProductDetail } from '@/components/storefront/ProductDetail'
 import { ProductViewTracker } from '@/components/storefront/ProductViewTracker'
-import { getCachedGlobal, getCachedProductBySlug } from '@/lib/payload-cache'
+import { getCachedGlobal, getCachedProductBySlug, getCachedProducts } from '@/lib/payload-cache'
+import { ProductsGallery } from '@/components/storefront/ProductsGallery'
 
 const SITE_URL = 'https://www.dinatale.com.py'
 
@@ -81,6 +82,42 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const description =
     lexicalToText(product.description) || `Comprá ${product.name} en ${settings.siteName}`
 
+  // Extract first category ID for the recommended products query
+  const cats = product.category as (number | Category)[] | null
+  const firstCatId =
+    Array.isArray(cats) && cats.length > 0
+      ? typeof cats[0] === 'object'
+        ? cats[0].id
+        : cats[0]
+      : null
+
+  const [{ docs: recommended }, { docs: promoProducts }] = await Promise.all([
+    firstCatId
+      ? getCachedProducts({
+          where: {
+            category: { equals: firstCatId },
+            id: { not_in: [product.id] },
+            active: { equals: true },
+          },
+          sort: '-sales',
+          limit: 5,
+          depth: 2,
+        })()
+      : Promise.resolve({ docs: [] as import('@/payload-types').Product[] }),
+    getCachedProducts({
+      where: {
+        compareAtPrice: { greater_than: 0 },
+        id: { not_in: [product.id] },
+        active: { equals: true },
+      },
+      sort: '-sales',
+      limit: 5,
+      depth: 2,
+    })(),
+  ])
+
+  const currencySymbol = settings.currencySymbol || '$'
+
   const productJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -117,8 +154,24 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           sales: product.sales ?? 0,
           views: product.views ?? 0,
         }}
-        currencySymbol={settings.currencySymbol || '$'}
+        currencySymbol={currencySymbol}
       />
+      {recommended.length > 0 && (
+        <ProductsGallery
+          products={recommended}
+          currencySymbol={currencySymbol}
+          title="Productos relacionados"
+          columnQuantity={5}
+        />
+      )}
+      {product.showPromos && promoProducts.length > 0 && (
+        <ProductsGallery
+          products={promoProducts}
+          currencySymbol={currencySymbol}
+          title="Productos en promo"
+          columnQuantity={5}
+        />
+      )}
     </>
   )
 }

@@ -104,6 +104,16 @@ export const Products: CollectionConfig = {
       label: 'Activo',
     },
     {
+      name: 'showPromos',
+      type: 'checkbox',
+      defaultValue: true,
+      admin: {
+        position: 'sidebar',
+        description: 'Mostrar la sección de productos en promoción en la página de este producto',
+      },
+      label: 'Mostrar promos',
+    },
+    {
       name: 'views',
       type: 'number',
       defaultValue: 0,
