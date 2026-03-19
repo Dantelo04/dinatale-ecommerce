@@ -62,7 +62,7 @@ export const ProductsGallery = ({
                 views={product.views ?? 0}
               />
               {products.length % 2 !== 0 && index === products.length - 1 && (
-                <a
+                <Link
                   href="/tienda"
                   className="border rounded-xl sm:hidden p-4 text-sm font-medium gap-2 text-site-secondary hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring flex items-center justify-center flex-wrap active:scale-95"
                 >
@@ -70,7 +70,7 @@ export const ProductsGallery = ({
                     <ShoppingBag className="size-12" aria-hidden="true" strokeWidth={1.5}/>
                     Ver más productos{' '}
                   </div>
-                </a>
+                </Link>
               )}
             </Fragment>
           )
