@@ -210,6 +210,10 @@ export interface Product {
   featured?: boolean | null;
   active?: boolean | null;
   /**
+   * Mostrar la sección de productos en promoción en la página de este producto
+   */
+  showPromos?: boolean | null;
+  /**
    * Número de visitas a la página del producto
    */
   views?: number | null;
@@ -375,6 +379,7 @@ export interface ProductsSelect<T extends boolean = true> {
   category?: T;
   featured?: T;
   active?: T;
+  showPromos?: T;
   views?: T;
   sales?: T;
   updatedAt?: T;
