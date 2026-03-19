@@ -6,13 +6,14 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { s3Storage } from '@payloadcms/storage-s3'
-
+import { resendAdapter } from '@payloadcms/email-resend'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Products } from './collections/Products'
 import { Categories } from './collections/Categories'
 import { SiteSettings } from './globals/SiteSettings'
 import { StorefrontContent } from './globals/StorefrontContent'
+
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -41,6 +42,11 @@ export default buildConfig({
       },
     },
   },
+  email: resendAdapter({
+    apiKey: process.env.RESEND_API_KEY || '',
+    defaultFromAddress: 'contact@anoto.com.py',
+    defaultFromName: 'Anoto',
+  }),
   i18n: {
     supportedLanguages: { es },
     fallbackLanguage: 'es',
