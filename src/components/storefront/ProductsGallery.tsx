@@ -1,6 +1,6 @@
 import { ProductCard } from './ProductCard'
 import Link from 'next/link'
-import { ArrowRight, ShoppingBag, ShoppingCart } from 'lucide-react'
+import { ArrowRight, ShoppingBag } from 'lucide-react'
 import { Media, Product } from '@/payload-types'
 import { Fragment } from 'react'
 
@@ -31,7 +31,7 @@ export const ProductsGallery = ({
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">{title}</h2>
+        <h2 className="text-xl font-bold tracking-tight text-wrap-balance sm:text-2xl">{title}</h2>
 
         <Link
           href="/tienda"
@@ -41,7 +41,7 @@ export const ProductsGallery = ({
           <ArrowRight className="ml-1 inline h-4 w-4" aria-hidden="true" />
         </Link>
       </div>
-      <hr className="my-4" />
+      <hr className="my-2" />
       <div
         className={`mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 ${gridCols[columnQuantity ?? 5]}`}
       >

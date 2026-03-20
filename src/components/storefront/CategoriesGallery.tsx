@@ -14,10 +14,10 @@ export const CategoriesGallery = ({ storefrontCategories }: CategoriesGalleryPro
   if (storefrontCategories.length > 0) {
     return (
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 lg:pt-16 pt-8">
-        <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
+        <h2 className="text-xl font-bold tracking-tight text-wrap-balance sm:text-2xl">
           Categorias
         </h2>
-        <hr className="my-4" />
+        <hr className="my-2" />
         <div className="mt-6 grid grid-cols-3 gap-4 sm:grid-cols-5 lg:grid-cols-8">
           {storefrontCategories.map((cat) => {
             const catImage = cat.category.image as Media | null
