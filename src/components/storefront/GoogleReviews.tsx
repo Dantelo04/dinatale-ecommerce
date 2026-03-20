@@ -58,7 +58,7 @@ export function GoogleReviews({ place }: { place: PlaceDetails }) {
     <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
       <div className="flex flex-col xl:gap-6 gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex flex-row justify-between items-center w-full flex-wrap gap-2">
-          <h2 className="text-2xl font-bold tracking-tight text-wrap-balance sm:text-3xl">
+          <h2 className="text-xl font-bold tracking-tight text-wrap-balance sm:text-2xl">
             Lo que dicen nuestros clientes
           </h2>
 
@@ -88,7 +88,7 @@ export function GoogleReviews({ place }: { place: PlaceDetails }) {
           )}
         </div>
       </div>
-      <hr className="my-4" />
+      <hr className="my-2" />
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {visibleReviews.map((review, i) => (
           <Card key={i} className="flex flex-col shadow-none hover:shadow-lg transition-shadow">
