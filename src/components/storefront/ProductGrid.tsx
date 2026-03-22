@@ -12,6 +12,18 @@ interface ProductGridProps {
   currencySymbol: string
   onlyPromo?: boolean
   filters: ProductFilters
+  gridCols?: number
+}
+
+const gridColsMap: Record<number, string> = {
+  3: 'lg:grid-cols-3',
+  4: 'lg:grid-cols-4',
+  5: 'lg:grid-cols-5',
+  6: 'lg:grid-cols-6',
+  7: 'lg:grid-cols-7',
+  8: 'lg:grid-cols-8',
+  9: 'lg:grid-cols-9',
+  10: 'lg:grid-cols-10',
 }
 
 export function ProductGrid({
@@ -20,6 +32,7 @@ export function ProductGrid({
   currencySymbol,
   filters,
   onlyPromo = false,
+  gridCols = 5,
 }: ProductGridProps) {
   const [products, setProducts] = useState(initialProducts)
   const [hasNextPage, setHasNextPage] = useState(initialHasNextPage)
@@ -68,7 +81,7 @@ export function ProductGrid({
 
   return (
     <>
-      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
+      <div className={`mt-8 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4 ${gridColsMap[gridCols ?? 5]}`}>
         {(onlyPromo ? products.filter((product) => product.compareAtPrice) : products).map((product) => (
           <ProductCard
             key={product.id}
