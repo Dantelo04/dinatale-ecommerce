@@ -487,6 +487,9 @@ export interface SiteSetting {
   whatsappNumber: string;
   currency?: string | null;
   currencySymbol?: string | null;
+  storefront?: {
+    gridCols?: number | null;
+  };
   customAlert?: {
     alertTitle?: string | null;
   };
@@ -596,6 +599,11 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   whatsappNumber?: T;
   currency?: T;
   currencySymbol?: T;
+  storefront?:
+    | T
+    | {
+        gridCols?: T;
+      };
   customAlert?:
     | T
     | {

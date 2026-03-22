@@ -152,6 +152,19 @@ export const SiteSettings: GlobalConfig = {
     },
     {
       type: 'group',
+      name: 'storefront',
+      label: 'Configuracion de la Tienda',
+      fields: [
+        {
+          name: 'gridCols',
+          label: 'Columnas en la Grilla de Productos de Tienda',
+          type: 'number',
+          defaultValue: 5,
+        },
+      ],
+    },
+    {
+      type: 'group',
       name: 'customAlert',
       label: 'Alerta Personalizada en el Header',
       fields: [

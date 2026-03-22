@@ -12,6 +12,7 @@ import { CornerTools } from '@/components/storefront/CornerTools'
 
 const PAGE_SIZE = 21
 
+
 export async function generateMetadata({
   searchParams,
 }: {
@@ -64,7 +65,7 @@ export default async function TiendaPage({
   ])
 
   const currencySymbol = settings.currencySymbol || '$'
-
+  const gridCols = settings.storefront?.gridCols || 5
   const whereClause: Where = { active: { equals: true } }
   let activeCategorySlug: string | null = null
   let activeCategoryId: number | null = null
@@ -179,6 +180,7 @@ export default async function TiendaPage({
           currencySymbol={currencySymbol}
           filters={filters}
           onlyPromo={ofertas === 'true'}
+          gridCols={gridCols}
         />
       )}
 
