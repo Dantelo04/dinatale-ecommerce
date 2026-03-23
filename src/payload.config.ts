@@ -11,6 +11,7 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Products } from './collections/Products'
 import { Categories } from './collections/Categories'
+import { Orders } from './collections/Orders'
 import { SiteSettings } from './globals/SiteSettings'
 import { StorefrontContent } from './globals/StorefrontContent'
 
@@ -35,7 +36,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     components: {
-      beforeDashboard: ['/components/admin/GoToSiteButton'],
+      beforeDashboard: ['/components/admin/GoToSiteButton', '/components/admin/Dashboard'],
       graphics: {
         Logo: '/components/admin/Logo',
         Icon: '/components/admin/Icon',
@@ -51,7 +52,7 @@ export default buildConfig({
     supportedLanguages: { es },
     fallbackLanguage: 'es',
   },
-  collections: [Users, Media, Products, Categories],
+  collections: [Users, Media, Products, Categories, Orders],
   globals: [SiteSettings, StorefrontContent],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

@@ -97,3 +97,41 @@ export async function incrementProductSales(
     }),
   )
 }
+
+export async function processCheckout(
+  items: { id: number; name: string; quantity: number; price: number }[],
+  customerComment?: string,
+): Promise<void> {
+  const payload = await getPayload({ config: await config })
+
+  await Promise.all(
+    items.map(async (item) => {
+      const product = await payload.findByID({ collection: 'products', id: item.id, depth: 0 })
+      return payload.update({
+        collection: 'products',
+        id: item.id,
+        data: { sales: (product.sales ?? 0) + item.quantity },
+      })
+    }),
+  )
+
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
+  const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+
+  await payload.create({
+    collection: 'orders',
+    overrideAccess: true,
+    draft: false,
+    data: {
+      items: items.map((item) => ({
+        product: item.id,
+        productName: item.name,
+        quantity: item.quantity,
+        unitPrice: item.price,
+      })),
+      totalItems,
+      totalAmount,
+      ...(customerComment ? { customerComment } : {}),
+    },
+  })
+}
