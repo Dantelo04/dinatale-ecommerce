@@ -13,6 +13,7 @@ interface ProductGridProps {
   onlyPromo?: boolean
   filters: ProductFilters
   gridCols?: number
+  gridColsMobile?: number
 }
 
 const gridColsMap: Record<number, string> = {
@@ -26,6 +27,18 @@ const gridColsMap: Record<number, string> = {
   10: 'lg:grid-cols-10',
 }
 
+const gridColsMobileMap: Record<number, string> = {
+  2: 'grid-cols-2',
+  3: 'grid-cols-3',
+  4: 'grid-cols-4',
+  5: 'grid-cols-5',
+  6: 'grid-cols-6',
+  7: 'grid-cols-7',
+  8: 'grid-cols-8',
+  9: 'grid-cols-9',
+  10: 'grid-cols-10',
+}
+
 export function ProductGrid({
   initialProducts,
   hasNextPage: initialHasNextPage,
@@ -33,6 +46,7 @@ export function ProductGrid({
   filters,
   onlyPromo = false,
   gridCols = 5,
+  gridColsMobile = 2,
 }: ProductGridProps) {
   const [products, setProducts] = useState(initialProducts)
   const [hasNextPage, setHasNextPage] = useState(initialHasNextPage)
@@ -81,7 +95,7 @@ export function ProductGrid({
 
   return (
     <>
-      <div className={`mt-8 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4 ${gridColsMap[gridCols ?? 5]}`}>
+      <div className={`mt-8 grid ${gridColsMobileMap[gridColsMobile ?? 2]} gap-3 sm:grid-cols-2 lg:grid-cols-4 ${gridColsMap[gridCols ?? 5]}`}>
         {(onlyPromo ? products.filter((product) => product.compareAtPrice) : products).map((product) => (
           <ProductCard
             key={product.id}

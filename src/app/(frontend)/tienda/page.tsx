@@ -66,6 +66,7 @@ export default async function TiendaPage({
 
   const currencySymbol = settings.currencySymbol || '$'
   const gridCols = settings.storefront?.gridCols || 5
+  const gridColsMobile = settings.storefront?.gridColsMobile || 2
   const whereClause: Where = { active: { equals: true } }
   let activeCategorySlug: string | null = null
   let activeCategoryId: number | null = null
@@ -181,6 +182,7 @@ export default async function TiendaPage({
           filters={filters}
           onlyPromo={ofertas === 'true'}
           gridCols={gridCols}
+          gridColsMobile={gridColsMobile}
         />
       )}
 
