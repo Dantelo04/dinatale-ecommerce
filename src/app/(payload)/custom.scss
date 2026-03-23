@@ -199,7 +199,9 @@ border: 1px solid var(--theme-elevation-200);
 .card__actions {}
 
 /* Background (empty) */
-.template-default__wrap {}
+.template-default__wrap {
+  margin-bottom: 200px;
+}
 
 /* Primary Button */
 .btn--style-primary {

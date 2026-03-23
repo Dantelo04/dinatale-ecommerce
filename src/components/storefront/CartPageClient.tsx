@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { useCart } from './CartProvider'
-import { incrementProductSales } from '@/lib/product-actions'
+import { processCheckout } from '@/lib/product-actions'
 import { formatPrice } from '@/lib/utils'
 
 interface CartPageClientProps {
@@ -39,7 +39,10 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
   const handleCheckout = async () => {
     const message = buildWhatsAppMessage()
     const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
-    incrementProductSales(items.map((item) => ({ id: item.id, quantity: item.quantity })))
+    processCheckout(
+      items.map((item) => ({ id: item.id, name: item.name, quantity: item.quantity, price: item.price })),
+      comment.trim() || undefined,
+    )
     window.open(url, '_blank', 'noopener,noreferrer')
     clearCart()
   }
