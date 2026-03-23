@@ -489,6 +489,7 @@ export interface SiteSetting {
   currencySymbol?: string | null;
   storefront?: {
     gridCols?: number | null;
+    gridColsMobile?: number | null;
   };
   customAlert?: {
     alertTitle?: string | null;
@@ -603,6 +604,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
     | T
     | {
         gridCols?: T;
+        gridColsMobile?: T;
       };
   customAlert?:
     | T

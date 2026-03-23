@@ -157,9 +157,15 @@ export const SiteSettings: GlobalConfig = {
       fields: [
         {
           name: 'gridCols',
-          label: 'Columnas en la Grilla de Productos de Tienda',
+          label: 'Columnas en la Grilla de Productos de Tienda en Escritorio',
           type: 'number',
           defaultValue: 5,
+        },  
+        {
+          name: 'gridColsMobile',
+          label: 'Columnas en la Grilla de Productos de Tienda en Móvil',
+          type: 'number',
+          defaultValue: 2,
         },
       ],
     },
