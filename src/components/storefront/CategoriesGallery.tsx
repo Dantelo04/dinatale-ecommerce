@@ -18,7 +18,7 @@ export const CategoriesGallery = ({ storefrontCategories }: CategoriesGalleryPro
           Categorias
         </h2>
         <hr className="my-2" />
-        <div className="mt-6 grid grid-cols-3 gap-4 sm:grid-cols-5 lg:grid-cols-8">
+        <div className="mt-6 grid grid-cols-3 gap-4 sm:grid-cols-5 lg:grid-cols-7">
           {storefrontCategories.map((cat) => {
             const catImage = cat.category.image as Media | null
 
