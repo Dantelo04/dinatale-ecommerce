@@ -66,6 +66,7 @@ export async function loadMoreProducts(
       imageAlt: firstImage?.alt ?? product.name,
       sales: product.sales ?? 0,
       views: product.views ?? 0,
+      stock: product.stock ?? 5,
     }
   })
 
@@ -101,8 +102,18 @@ export async function incrementProductSales(
 export async function processCheckout(
   items: { id: number; name: string; quantity: number; price: number }[],
   customerComment?: string,
-): Promise<void> {
+): Promise<{ success: true } | { success: false; error: string }> {
   const payload = await getPayload({ config: await config })
+
+  for (const item of items) {
+    const product = await payload.findByID({ collection: 'products', id: item.id, depth: 0 })
+    if ((product.stock ?? 0) < item.quantity) {
+      return {
+        success: false,
+        error: `Solo quedan ${product.stock} unidades de "${item.name}".`,
+      }
+    }
+  }
 
   await Promise.all(
     items.map(async (item) => {
@@ -110,7 +121,10 @@ export async function processCheckout(
       return payload.update({
         collection: 'products',
         id: item.id,
-        data: { sales: (product.sales ?? 0) + item.quantity },
+        data: {
+          sales: (product.sales ?? 0) + item.quantity,
+          stock: Math.max(0, (product.stock ?? 0) - item.quantity),
+        },
       })
     }),
   )
@@ -134,4 +148,6 @@ export async function processCheckout(
       ...(customerComment ? { customerComment } : {}),
     },
   })
+
+  return { success: true }
 }

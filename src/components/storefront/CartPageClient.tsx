@@ -21,6 +21,8 @@ interface CartPageClientProps {
 export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: CartPageClientProps) {
   const { items, totalItems, totalPrice, removeItem, updateQuantity, clearCart } = useCart()
   const [comment, setComment] = useState('')
+  const [checkoutError, setCheckoutError] = useState<string | null>(null)
+  const [checkoutLoading, setCheckoutLoading] = useState(false)
 
   const buildWhatsAppMessage = () => {
     const header = `Hola! Quiero hacer un pedido en ${siteName}:\n\n`
@@ -37,14 +39,24 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
   }
 
   const handleCheckout = async () => {
-    const message = buildWhatsAppMessage()
-    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
-    processCheckout(
-      items.map((item) => ({ id: item.id, name: item.name, quantity: item.quantity, price: item.price })),
-      comment.trim() || undefined,
-    )
-    window.open(url, '_blank', 'noopener,noreferrer')
-    clearCart()
+    setCheckoutError(null)
+    setCheckoutLoading(true)
+    try {
+      const result = await processCheckout(
+        items.map((item) => ({ id: item.id, name: item.name, quantity: item.quantity, price: item.price })),
+        comment.trim() || undefined,
+      )
+      if (!result.success) {
+        setCheckoutError(result.error)
+        return
+      }
+      const message = buildWhatsAppMessage()
+      const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
+      window.open(url, '_blank', 'noopener,noreferrer')
+      clearCart()
+    } finally {
+      setCheckoutLoading(false)
+    }
   }
 
   if (items.length === 0) {
@@ -182,13 +194,19 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
                 <span>Total</span>
                 <span className="tabular-nums">{formatPrice(totalPrice, currencySymbol)}</span>
               </div>
+              {checkoutError && (
+                <p className="text-sm text-destructive" role="alert">
+                  {checkoutError}
+                </p>
+              )}
               <Button
                 size="lg"
-                className="mt-2 w-full bg-green-600 text-white hover:bg-green-700 transition-colors"
+                className="mt-2 w-full bg-green-600 text-white hover:bg-green-700 transition-colors disabled:opacity-50"
                 onClick={handleCheckout}
+                disabled={checkoutLoading}
               >
                 <MessageCircle className="mr-2 h-5 w-5" aria-hidden="true" />
-                Pedir por WhatsApp
+                {checkoutLoading ? 'Procesando...' : 'Pedir por WhatsApp'}
               </Button>
             </CardContent>
           </Card>

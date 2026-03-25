@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Card, CardContent } from '@/components/ui/card'
@@ -23,14 +23,17 @@ export function ProductCard({
   currencySymbol,
   sales,
   views,
+  stock,
 }: ProductCardProps) {
   const { addItem } = useCart()
   const [added, setAdded] = useState(false)
 
   const hasDiscount = compareAtPrice && compareAtPrice > price
+  const outOfStock = stock === 0
 
   const handleAdd = () => {
-    addItem({ id, name, price, imageUrl, slug, sales, views })
+    if (outOfStock) return
+    addItem({ id, name, price, imageUrl, slug, sales, views, stock })
     setAdded(true)
     setTimeout(() => setAdded(false), 2000)
   }
@@ -56,6 +59,7 @@ export function ProductCard({
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"
+                style={{ filter: outOfStock ? 'grayscale(50%)' : 'none' }}
               />
             ) : (
               <div className="flex h-full items-center justify-center text-muted-foreground">
@@ -86,12 +90,13 @@ export function ProductCard({
             </div>
             <Button
               size="sm"
-              className="mt-1 w-full bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity active:bg-primary/60"
+              className="mt-1 w-full bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity active:bg-primary/60 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleAdd}
-              aria-label={`Agregar ${name} al carrito`}
+              disabled={outOfStock}
+              aria-label={outOfStock ? `${name} sin stock` : `Agregar ${name} al carrito`}
             >
               <ShoppingCart className="mr-2 h-4 w-4" aria-hidden="true" />
-              {added ? 'Agregado!' : 'Agregar'}
+              {outOfStock ? 'Sin stock' : added ? 'Agregado!' : 'Agregar'}
             </Button>
           </div>
         </CardContent>

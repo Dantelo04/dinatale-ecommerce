@@ -223,6 +223,10 @@ export interface Product {
    * Número de ventas del producto
    */
   sales?: number | null;
+  /**
+   * Unidades disponibles en stock
+   */
+  stock?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -411,6 +415,7 @@ export interface ProductsSelect<T extends boolean = true> {
   showPromos?: T;
   views?: T;
   sales?: T;
+  stock?: T;
   updatedAt?: T;
   createdAt?: T;
 }

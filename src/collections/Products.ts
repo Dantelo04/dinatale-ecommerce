@@ -135,6 +135,17 @@ export const Products: CollectionConfig = {
       },
       label: 'Ventas',
     },
+    {
+      name: 'stock',
+      type: 'number',
+      defaultValue: 5,
+      min: 0,
+      admin: {
+        position: 'sidebar',
+        description: 'Unidades disponibles en stock',
+      },
+      label: 'Stock',
+    },
   ],
   hooks: {
     afterChange: [revalidateCollectionAfterChange()],

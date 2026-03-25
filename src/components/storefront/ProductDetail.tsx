@@ -24,6 +24,7 @@ interface ProductDetailProps {
     categoryName: string | null
     sales: number
     views: number
+    stock: number
   }
   currencySymbol: string
 }
@@ -34,9 +35,11 @@ export function ProductDetail({ product, currencySymbol }: ProductDetailProps) {
   const [added, setAdded] = useState(false)
 
   const hasDiscount = product.compareAtPrice && product.compareAtPrice > product.price
+  const outOfStock = product.stock === 0
   const currentImage = product.images[selectedImage]
 
   const handleAdd = () => {
+    if (outOfStock) return
     addItem({
       id: product.id,
       name: product.name,
@@ -45,6 +48,7 @@ export function ProductDetail({ product, currencySymbol }: ProductDetailProps) {
       slug: product.slug,
       sales: product.sales ?? 0,
       views: product.views ?? 0,
+      stock: product.stock,
     })
     setAdded(true)
     setTimeout(() => setAdded(false), 2000)
@@ -133,16 +137,22 @@ export function ProductDetail({ product, currencySymbol }: ProductDetailProps) {
             </div>
           )}
 
-          <div className="mt-8">
+          <div className="mt-8 flex flex-col gap-3">
             <Button
               size="lg"
-              className="w-full bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity sm:w-auto"
+              className="w-full bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleAdd}
-              aria-label={`Agregar ${product.name} al carrito`}
+              disabled={outOfStock}
+              aria-label={outOfStock ? `${product.name} sin stock` : `Agregar ${product.name} al carrito`}
             >
               <ShoppingCart className="mr-2 h-5 w-5" aria-hidden="true" />
-              {added ? 'Agregado!' : 'Agregar al Carrito'}
+              {outOfStock ? 'Sin stock' : added ? 'Agregado!' : 'Agregar al Carrito'}
             </Button>
+            {outOfStock && (
+              <p className="text-sm text-muted-foreground">
+                Este producto no está disponible en este momento.
+              </p>
+            )}
           </div>
         </div>
       </div>
