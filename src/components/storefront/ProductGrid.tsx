@@ -109,6 +109,7 @@ export function ProductGrid({
             currencySymbol={currencySymbol}
             sales={product.sales}
             views={product.views}
+            stock={product.stock}
           />
         ))}
       </div>

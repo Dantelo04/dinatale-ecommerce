@@ -8,6 +8,7 @@ export interface SerializedProduct {
   imageAlt: string
   sales: number
   views: number
+  stock: number
 }
 
 export interface SerializedCategory {

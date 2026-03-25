@@ -126,6 +126,7 @@ export default async function TiendaPage({
       imageAlt: firstImage?.alt ?? product.name,
       sales: product.sales ?? 0,
       views: product.views ?? 0,
+      stock: product.stock ?? 5,
     }
   })
 
