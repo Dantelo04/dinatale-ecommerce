@@ -60,6 +60,7 @@ export const ProductsGallery = ({
                 currencySymbol={currencySymbol}
                 sales={product.sales ?? 0}
                 views={product.views ?? 0}
+                stock={product.stock ?? 5}
               />
               {products.length % 2 !== 0 && index === products.length - 1 && (
                 <Link
