@@ -553,6 +553,10 @@ export interface SiteSetting {
   storefront?: {
     gridCols?: number | null;
     gridColsMobile?: number | null;
+    /**
+     * Si se activa, después de confirmar el pedido se redirige al cliente a la página de estado del pedido
+     */
+    redirectToOrderAfterCheckout?: boolean | null;
   };
   customAlert?: {
     alertTitle?: string | null;
@@ -668,6 +672,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
     | {
         gridCols?: T;
         gridColsMobile?: T;
+        redirectToOrderAfterCheckout?: T;
       };
   customAlert?:
     | T

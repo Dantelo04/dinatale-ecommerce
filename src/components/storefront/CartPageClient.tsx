@@ -17,9 +17,10 @@ interface CartPageClientProps {
   whatsappNumber: string
   currencySymbol: string
   siteName: string
+  redirectToOrder?: boolean
 }
 
-export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: CartPageClientProps) {
+export function CartPageClient({ whatsappNumber, currencySymbol, siteName, redirectToOrder }: CartPageClientProps) {
   const { items, totalItems, totalPrice, removeItem, updateQuantity, clearCart } = useCart()
   const [customerName, setCustomerName] = useState('')
   const [customerPhone, setCustomerPhone] = useState('')
@@ -66,6 +67,9 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
       const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
       window.open(url, '_blank', 'noopener,noreferrer')
       clearCart()
+      if (redirectToOrder) {
+        window.location.href = `/ordenes/${result.orderNumber}`
+      }
     } finally {
       setCheckoutLoading(false)
     }

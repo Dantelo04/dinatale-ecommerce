@@ -16,6 +16,7 @@ export default async function CarritoPage() {
       whatsappNumber={settings.whatsappNumber}
       currencySymbol={settings.currencySymbol || '$'}
       siteName={settings.siteName}
+      redirectToOrder={settings.storefront?.redirectToOrderAfterCheckout ?? false}
     />
   )
 }

@@ -167,6 +167,16 @@ export const SiteSettings: GlobalConfig = {
           type: 'number',
           defaultValue: 2,
         },
+        {
+          name: 'redirectToOrderAfterCheckout',
+          label: 'Redirigir a la página del pedido después del checkout',
+          type: 'checkbox',
+          defaultValue: false,
+          admin: {
+            description:
+              'Si se activa, después de confirmar el pedido se redirige al cliente a la página de estado del pedido',
+          },
+        },
       ],
     },
     {

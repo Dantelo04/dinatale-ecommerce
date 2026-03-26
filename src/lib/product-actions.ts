@@ -104,7 +104,7 @@ export async function processCheckout(
   customerComment?: string,
   customerName?: string,
   customerPhone?: string,
-): Promise<{ success: true } | { success: false; error: string }> {
+): Promise<{ success: true; orderNumber: string } | { success: false; error: string }> {
   const payload = await getPayload({ config: await config })
 
   for (const item of items) {
@@ -134,7 +134,7 @@ export async function processCheckout(
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
   const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
-  await payload.create({
+  const order = await payload.create({
     collection: 'orders',
     overrideAccess: true,
     draft: false,
@@ -154,5 +154,5 @@ export async function processCheckout(
     },
   })
 
-  return { success: true }
+  return { success: true, orderNumber: order.orderNumber! }
 }

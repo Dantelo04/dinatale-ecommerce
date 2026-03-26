@@ -121,6 +121,22 @@ export const getCachedOrders = () =>
     ['orders'],
   )
 
+export const getCachedOrderByNumber = (orderNumber: string) =>
+  cache(
+    async () => {
+      const payload = await getPayloadInstance()
+      return payload.find({
+        collection: 'orders',
+        where: { orderNumber: { equals: orderNumber } },
+        limit: 1,
+        depth: 0,
+        overrideAccess: true,
+      })
+    },
+    ['orders', `order-${orderNumber}`],
+    ['orders'],
+  )
+
 export const getCachedPriceBounds = () =>
   cache(
     async () => {
