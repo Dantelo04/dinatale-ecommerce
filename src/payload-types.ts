@@ -250,6 +250,9 @@ export interface Category {
 export interface Order {
   id: number;
   orderNumber?: string | null;
+  status: 'received' | 'in_process' | 'shipped' | 'delivered' | 'finalized';
+  customerName?: string | null;
+  customerPhone?: string | null;
   items: {
     product?: (number | null) | Product;
     /**
@@ -263,6 +266,7 @@ export interface Order {
   totalItems: number;
   totalAmount: number;
   customerComment?: string | null;
+  deliveredAt?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -437,6 +441,9 @@ export interface CategoriesSelect<T extends boolean = true> {
  */
 export interface OrdersSelect<T extends boolean = true> {
   orderNumber?: T;
+  status?: T;
+  customerName?: T;
+  customerPhone?: T;
   items?:
     | T
     | {
@@ -449,6 +456,7 @@ export interface OrdersSelect<T extends boolean = true> {
   totalItems?: T;
   totalAmount?: T;
   customerComment?: T;
+  deliveredAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -545,6 +553,10 @@ export interface SiteSetting {
   storefront?: {
     gridCols?: number | null;
     gridColsMobile?: number | null;
+    /**
+     * Si se activa, después de confirmar el pedido se redirige al cliente a la página de estado del pedido
+     */
+    redirectToOrderAfterCheckout?: boolean | null;
   };
   customAlert?: {
     alertTitle?: string | null;
@@ -660,6 +672,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
     | {
         gridCols?: T;
         gridColsMobile?: T;
+        redirectToOrderAfterCheckout?: T;
       };
   customAlert?:
     | T

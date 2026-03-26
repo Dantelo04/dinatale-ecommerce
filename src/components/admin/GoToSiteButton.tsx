@@ -29,7 +29,6 @@ const GoToSiteButton: React.FC = async () => {
           rel="noopener noreferrer"
           className="go-to-site__button"
         >
-          Ver tienda: {settings.siteName}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -46,6 +45,8 @@ const GoToSiteButton: React.FC = async () => {
             <polyline points="15 3 21 3 21 9" />
             <line x1="10" y1="14" x2="21" y2="3" />
           </svg>
+          Ver tienda: {settings.siteName}
+          
         </a>
       </div>
     </>

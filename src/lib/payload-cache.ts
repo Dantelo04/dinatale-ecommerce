@@ -105,6 +105,38 @@ export const getCachedCategoriesWithProductCount = (limit = 50) =>
     ['categories', 'products'],
   )
 
+export const getCachedOrders = () =>
+  cache(
+    async () => {
+      const payload = await getPayloadInstance()
+      return payload.find({
+        collection: 'orders',
+        limit: 500,
+        sort: '-createdAt',
+        depth: 0,
+        overrideAccess: true,
+      })
+    },
+    ['orders'],
+    ['orders'],
+  )
+
+export const getCachedOrderByNumber = (orderNumber: string) =>
+  cache(
+    async () => {
+      const payload = await getPayloadInstance()
+      return payload.find({
+        collection: 'orders',
+        where: { orderNumber: { equals: orderNumber } },
+        limit: 1,
+        depth: 0,
+        overrideAccess: true,
+      })
+    },
+    ['orders', `order-${orderNumber}`],
+    ['orders'],
+  )
+
 export const getCachedPriceBounds = () =>
   cache(
     async () => {
