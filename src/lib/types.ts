@@ -29,3 +29,32 @@ export interface ProductFilters {
   precioMax?: string
   categoryId?: number | null
 }
+
+export const ORDER_STATUSES = ['received', 'in_process', 'shipped', 'delivered', 'finalized'] as const
+export type OrderStatus = (typeof ORDER_STATUSES)[number]
+
+export const KANBAN_STATUSES = ORDER_STATUSES.filter((s) => s !== 'finalized') as readonly Exclude<
+  OrderStatus,
+  'finalized'
+>[]
+
+export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
+  received: 'Recibido',
+  in_process: 'En Proceso',
+  shipped: 'Enviado',
+  delivered: 'Entregado',
+  finalized: 'Finalizado',
+}
+
+export interface SerializedOrder {
+  id: number
+  orderNumber: string
+  status: OrderStatus
+  customerName?: string | null
+  customerPhone?: string | null
+  items: { productName: string; quantity: number; unitPrice: number }[]
+  totalItems: number
+  totalAmount: number
+  customerComment?: string | null
+  createdAt: string
+}

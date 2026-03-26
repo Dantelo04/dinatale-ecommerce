@@ -1,6 +1,7 @@
 import React from 'react'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { ORDER_STATUS_LABELS } from '@/lib/types'
 
 import './Dashboard.scss'
 
@@ -196,6 +197,7 @@ const Dashboard: React.FC = async () => {
               <thead>
                 <tr>
                   <th>Pedido</th>
+                  <th>Estado</th>
                   <th>Unidades</th>
                   <th>Monto</th>
                   <th>Fecha</th>
@@ -205,6 +207,7 @@ const Dashboard: React.FC = async () => {
                 {recentOrders.docs.map((o) => (
                   <tr key={o.id}>
                     <td>{o.orderNumber}</td>
+                    <td>{o.status ? ORDER_STATUS_LABELS[o.status] : '—'}</td>
                     <td>{o.totalItems}</td>
                     <td>{fmt(o.totalAmount)}</td>
                     <td>{new Date(o.createdAt).toLocaleDateString('es-AR')}</td>

@@ -1,4 +1,8 @@
 import type { CollectionConfig } from 'payload'
+import {
+  revalidateCollectionAfterChange,
+  revalidateCollectionAfterDelete,
+} from '@/hooks/revalidateOnChange'
 
 export const Orders: CollectionConfig = {
   slug: 'orders',
@@ -8,7 +12,7 @@ export const Orders: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'orderNumber',
-    defaultColumns: ['orderNumber', 'totalItems', 'totalAmount', 'createdAt'],
+    defaultColumns: ['orderNumber', 'status', 'customerName', 'totalAmount', 'createdAt'],
     hideAPIURL: true,
   },
   access: {
@@ -26,6 +30,30 @@ export const Orders: CollectionConfig = {
       admin: {
         readOnly: true,
       },
+    },
+    {
+      name: 'status',
+      type: 'select',
+      required: true,
+      defaultValue: 'received',
+      label: 'Estado',
+      options: [
+        { label: 'Recibido', value: 'received' },
+        { label: 'En Proceso', value: 'in_process' },
+        { label: 'Enviado', value: 'shipped' },
+        { label: 'Entregado', value: 'delivered' },
+        { label: 'Finalizado', value: 'finalized' },
+      ],
+    },
+    {
+      name: 'customerName',
+      type: 'text',
+      label: 'Nombre del cliente',
+    },
+    {
+      name: 'customerPhone',
+      type: 'text',
+      label: 'Teléfono del cliente',
     },
     {
       name: 'items',
@@ -88,6 +116,14 @@ export const Orders: CollectionConfig = {
       type: 'textarea',
       label: 'Comentario del cliente',
     },
+    {
+      name: 'deliveredAt',
+      type: 'date',
+      label: 'Fecha de entrega',
+      admin: {
+        hidden: true,
+      },
+    },
   ],
   hooks: {
     beforeValidate: [
@@ -98,5 +134,33 @@ export const Orders: CollectionConfig = {
         return data
       },
     ],
+    afterChange: [
+      revalidateCollectionAfterChange(),
+      async ({ doc, previousDoc, req, operation, context }) => {
+        if (context?.skipDeliveredHook) return doc
+        if (
+          doc.status === 'delivered' &&
+          (operation === 'create' || previousDoc?.status !== 'delivered')
+        ) {
+          await req.payload.update({
+            collection: 'orders',
+            id: doc.id,
+            data: { deliveredAt: new Date().toISOString() },
+            req,
+            context: { skipDeliveredHook: true },
+          })
+        } else if (doc.status !== 'delivered' && previousDoc?.status === 'delivered') {
+          await req.payload.update({
+            collection: 'orders',
+            id: doc.id,
+            data: { deliveredAt: null },
+            req,
+            context: { skipDeliveredHook: true },
+          })
+        }
+        return doc
+      },
+    ],
+    afterDelete: [revalidateCollectionAfterDelete()],
   },
 }

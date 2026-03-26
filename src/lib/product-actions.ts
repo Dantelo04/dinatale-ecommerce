@@ -102,6 +102,8 @@ export async function incrementProductSales(
 export async function processCheckout(
   items: { id: number; name: string; quantity: number; price: number }[],
   customerComment?: string,
+  customerName?: string,
+  customerPhone?: string,
 ): Promise<{ success: true } | { success: false; error: string }> {
   const payload = await getPayload({ config: await config })
 
@@ -137,6 +139,9 @@ export async function processCheckout(
     overrideAccess: true,
     draft: false,
     data: {
+      status: 'received',
+      ...(customerName ? { customerName } : {}),
+      ...(customerPhone ? { customerPhone } : {}),
       items: items.map((item) => ({
         product: item.id,
         productName: item.name,

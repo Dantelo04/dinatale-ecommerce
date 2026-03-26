@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Trash2, Plus, Minus, ShoppingCart, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { useCart } from './CartProvider'
@@ -20,12 +21,17 @@ interface CartPageClientProps {
 
 export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: CartPageClientProps) {
   const { items, totalItems, totalPrice, removeItem, updateQuantity, clearCart } = useCart()
+  const [customerName, setCustomerName] = useState('')
+  const [customerPhone, setCustomerPhone] = useState('')
   const [comment, setComment] = useState('')
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
   const [checkoutLoading, setCheckoutLoading] = useState(false)
 
   const buildWhatsAppMessage = () => {
-    const header = `Hola! Quiero hacer un pedido en ${siteName}:\n\n`
+    const nameLine = customerName.trim() ? `Nombre: ${customerName.trim()}\n` : ''
+    const phoneLine = customerPhone.trim() ? `Teléfono: ${customerPhone.trim()}\n` : ''
+    const contactBlock = nameLine || phoneLine ? `${nameLine}${phoneLine}\n` : ''
+    const header = `Hola! Quiero hacer un pedido en ${siteName}:\n\n${contactBlock}`
     const itemLines = items
       .map(
         (item) =>
@@ -39,12 +45,18 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
   }
 
   const handleCheckout = async () => {
+    if (!customerName.trim() || !customerPhone.trim()) {
+      setCheckoutError('Por favor completá tu nombre y teléfono.')
+      return
+    }
     setCheckoutError(null)
     setCheckoutLoading(true)
     try {
       const result = await processCheckout(
         items.map((item) => ({ id: item.id, name: item.name, quantity: item.quantity, price: item.price })),
         comment.trim() || undefined,
+        customerName.trim(),
+        customerPhone.trim(),
       )
       if (!result.success) {
         setCheckoutError(result.error)
@@ -152,7 +164,34 @@ export function CartPageClient({ whatsappNumber, currencySymbol, siteName }: Car
               </Card>
             ))}
           </div>
-          <div className="mt-6">
+          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label htmlFor="customer-name" className="mb-2 block text-sm font-medium">
+                Nombre <span className="text-destructive">*</span>
+              </label>
+              <Input
+                id="customer-name"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                placeholder="Tu nombre completo"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="customer-phone" className="mb-2 block text-sm font-medium">
+                Teléfono <span className="text-destructive">*</span>
+              </label>
+              <Input
+                id="customer-phone"
+                type="tel"
+                value={customerPhone}
+                onChange={(e) => setCustomerPhone(e.target.value)}
+                placeholder="Ej: 3814123456"
+                required
+              />
+            </div>
+          </div>
+          <div className="mt-4">
             <label htmlFor="cart-comment" className="mb-2 block text-sm font-medium">
               Comentarios del pedido
             </label>

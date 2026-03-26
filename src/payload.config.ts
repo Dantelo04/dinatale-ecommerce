@@ -36,7 +36,11 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     components: {
-      beforeDashboard: ['/components/admin/GoToSiteButton', '/components/admin/Dashboard'],
+      beforeDashboard: [
+        '/components/admin/GoToSiteButton',
+        '/components/admin/GoToOrdersButton',
+        '/components/admin/Dashboard',
+      ],
       graphics: {
         Logo: '/components/admin/Logo',
         Icon: '/components/admin/Icon',
