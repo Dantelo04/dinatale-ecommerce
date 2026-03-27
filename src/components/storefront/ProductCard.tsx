@@ -42,7 +42,7 @@ export function ProductCard({
   return (
     <div className="relative h-full active:scale-90 transition-all">
       {hasDiscount && (
-        <span className="absolute -top-2 -left-2 z-10 rounded-full bg-red-600 px-2 py-0.5 text-sm font-semibold text-white w-fit">
+        <span className="absolute top-2 left-2 z-10 rounded-full bg-site-primary px-2 py-0.5 text-sm font-semibold text-white w-fit">
           -{Math.round(((compareAtPrice - price) / compareAtPrice) * 100)}%
         </span>
       )}
