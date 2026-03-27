@@ -1,9 +1,13 @@
 import React from 'react'
 import './styles.css'
 import { Inter } from 'next/font/google'
+import { headers } from 'next/headers'
+import { getPayload } from 'payload'
+import config from '@payload-config'
 import { Header } from '@/components/storefront/Header'
 import { Footer } from '@/components/storefront/Footer'
 import { CartProvider } from '@/components/storefront/CartProvider'
+import { AdminBar } from '@/components/storefront/AdminBar'
 import { getCachedGlobal } from '@/lib/payload-cache'
 import type { Media } from '@/payload-types'
 import type { SiteSetting, StorefrontContent } from '@/payload-types'
@@ -57,10 +61,14 @@ export async function generateMetadata() {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [settings, content] = await Promise.all([
+  const [settings, content, payload] = await Promise.all([
     getCachedGlobal<SiteSetting>('site-settings')(),
     getCachedGlobal<StorefrontContent>('storefront-content')(),
+    getPayload({ config: await config }),
   ])
+
+  const { user } = await payload.auth({ headers: await headers() })
+  const isAdmin = Boolean(user?.roles?.includes('admin'))
 
   const primaryColor = settings.primaryColor || '#18181b'
   const secondaryColor = settings.secondaryColor || '#71717a'
@@ -92,6 +100,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
         />
+        {isAdmin && <AdminBar userEmail={user!.email} />}
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-foreground focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-ring"
@@ -109,6 +118,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             logoSizeMobile={settings.logoSizeMobile || '9'}
             alertText={settings.customAlert?.alertTitle || ''}
             primaryColor={primaryColor}
+            isAdmin={isAdmin}
           />
           <main id="main-content" className="flex-1 pb-16">{children}</main>
           <Footer
