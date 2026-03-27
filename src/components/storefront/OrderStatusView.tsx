@@ -49,7 +49,7 @@ export function OrderStatusView({ order, currencySymbol }: OrderStatusViewProps)
   }).format(new Date(order.createdAt))
 
   return (
-    <div className="mx-auto max-w-7xl px-4 lg:py-12 py-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-8xl px-4 lg:py-12 py-4 sm:px-6 lg:px-8">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="lg:text-3xl text-2xl font-bold tracking-tight text-wrap-balance">

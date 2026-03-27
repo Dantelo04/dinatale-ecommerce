@@ -91,6 +91,16 @@ export async function finalizeDeliveredOrders(): Promise<{ count: number }> {
   return { count: result.docs.length }
 }
 
+export async function getReceivedOrderCount(): Promise<number> {
+  const payload = await getAdminPayload()
+  const result = await payload.count({
+    collection: 'orders',
+    where: { status: { equals: 'received' } },
+    overrideAccess: true,
+  })
+  return result.totalDocs
+}
+
 export async function updateOrderStatus(orderId: number, status: OrderStatus): Promise<void> {
   if (!ORDER_STATUSES.includes(status)) {
     throw new Error('Estado inválido')

@@ -10,7 +10,9 @@ export const Users: CollectionConfig = {
     useAsTitle: 'email',
     hideAPIURL: true,
   },
-  auth: true,
+  auth: {
+    tokenExpiration: 604800, // 7 days
+  },
   fields: [
     {
       name: 'roles',

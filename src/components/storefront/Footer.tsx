@@ -24,7 +24,7 @@ export function Footer({ siteName, logoUrl, hideName, socialLinks }: FooterProps
 
   return (
     <footer className="bg-muted/60">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-8xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 items-start">
           <Link href="/" className="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">
             {logoUrl ? (

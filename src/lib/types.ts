@@ -9,6 +9,7 @@ export interface SerializedProduct {
   sales: number
   views: number
   stock: number
+  category: SerializedCategory[]
 }
 
 export interface SerializedCategory {

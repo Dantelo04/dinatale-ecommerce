@@ -3,7 +3,7 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Where } from 'payload'
-import type { Media } from '@/payload-types'
+import type { Category, Media } from '@/payload-types'
 import type { SerializedProduct, ProductFilters } from '@/lib/types'
 
 export type { SerializedProduct }
@@ -67,6 +67,7 @@ export async function loadMoreProducts(
       sales: product.sales ?? 0,
       views: product.views ?? 0,
       stock: product.stock ?? 5,
+      category: product.category as Category[],
     }
   })
 

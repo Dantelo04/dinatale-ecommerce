@@ -260,7 +260,7 @@ export function OrdersKanban({ initialOrders, currencySymbol }: OrdersKanbanProp
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-8xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>

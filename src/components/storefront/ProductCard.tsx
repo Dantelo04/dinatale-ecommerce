@@ -24,6 +24,7 @@ export function ProductCard({
   sales,
   views,
   stock,
+  category,
 }: ProductCardProps) {
   const { addItem } = useCart()
   const [added, setAdded] = useState(false)
@@ -33,7 +34,7 @@ export function ProductCard({
 
   const handleAdd = () => {
     if (outOfStock) return
-    addItem({ id, name, price, imageUrl, slug, sales, views, stock })
+    addItem({ id, name, price, imageUrl, slug, sales, views, stock, category })
     setAdded(true)
     setTimeout(() => setAdded(false), 2000)
   }
@@ -45,12 +46,12 @@ export function ProductCard({
           -{Math.round(((compareAtPrice - price) / compareAtPrice) * 100)}%
         </span>
       )}
-      <Card className="group overflow-hidden hover:shadow-lg pt-0 gap-0 shadow-none pb-4  transition-all h-full">
+      <Card className="group overflow-hidden pt-0 gap-0 shadow-none pb-0 transition-all h-full border-none rounded-none">
         <Link
           href={`/tienda/${slug}`}
-          className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-t-lg"
+          className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring "
         >
-          <div className="relative aspect-square overflow-hidden bg-muted">
+          <div className="relative aspect-square overflow-hidden rounded-lg">
             {imageUrl ? (
               <Image
                 src={imageUrl}
@@ -68,29 +69,36 @@ export function ProductCard({
             )}
           </div>
         </Link>
-        <CardContent className="flex flex-col gap-2 p-4 pb-0 h-full">
+        <CardContent className="flex flex-col pb-0 h-full pt-3 px-0">
+          {category && category.length > 0 && (
+            <span className="">
+              <Link
+                key={category[0].id}
+                href={`/tienda?categoria=${category[0].slug}`}
+                className="text-xs text-muted-foreground tracking-wider font-medium hover:underline"
+              >
+                {category[0].name}
+              </Link>
+            </span>
+          )}
           <Link
             href={`/tienda/${slug}`}
             className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
           >
-            <h3 className="line-clamp-2 text-sm font-medium leading-snug text-foreground min-w-0">
-              {name}
-            </h3>
-          </Link>
-          <div className="flex flex-col h-full gap-2 justify-end">
-            <div className="flex items-center -mt-1 flex-wrap ">
+            <h3 className="line-clamp-2 font-bold text-sm text-foreground min-w-0 hover:underline">{name}</h3>
+            <div className="flex items-center mt-1.5 flex-wrap gap-1">
               {hasDiscount && (
-                <span className="text-lg text-muted-foreground line-through tabular-nums">
+                <span className="text-sm text-muted-foreground line-through tabular-nums">
                   {formatPrice(compareAtPrice, currencySymbol)}
                 </span>
               )}
-              <span className="text-lg font-bold tabular-nums">
-                {formatPrice(price, currencySymbol)}
-              </span>
+              <span className="tabular-nums text-sm">{formatPrice(price, currencySymbol)}</span>
             </div>
+          </Link>
+          <div className="flex flex-col h-full gap-2 justify-end">
             <Button
               size="sm"
-              className="mt-1 w-full bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity active:bg-primary/60 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mt-3.5 w-full bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity active:bg-primary/60 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleAdd}
               disabled={outOfStock}
               aria-label={outOfStock ? `${name} sin stock` : `Agregar ${name} al carrito`}

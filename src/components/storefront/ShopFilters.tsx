@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useCallback, useTransition } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Search, Loader2 } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
@@ -44,6 +44,7 @@ export function ShopFilters({
 
   const [search, setSearch] = useState(initialSearch)
   const [sliderValues, setSliderValues] = useState<[number, number]>([effectiveMin, effectiveMax])
+  const [activeCategory, setActiveCategory] = useState(activeCategorySlug ?? null)
 
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
   const sliderTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -93,6 +94,7 @@ export function ShopFilters({
   }
 
   const handleCategoryClick = (slug: string | null) => {
+    setActiveCategory(slug ?? null)
     navigate({ categoria: slug })
   }
 
@@ -108,9 +110,11 @@ export function ShopFilters({
   }
 
   return (
-    <div className="mt-4 flex xl:flex-row flex-col gap-5" aria-busy={isPending}>
-      <div className="flex flex-col gap-4 sm:flex-row xl:items-center flex-wrap">
-        <div className="relative flex-1 w-full">
+    <div className="flex flex-col gap-6 lg:top-6" aria-busy={isPending}>
+      {/* Search */}
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-semibold">Buscar</span>
+        <div className="relative">
           <label htmlFor="shop-search" className="sr-only">
             Buscar productos
           </label>
@@ -128,90 +132,91 @@ export function ShopFilters({
             value={search}
             onChange={handleSearchChange}
             disabled={isPending}
-            className="pl-9 min-w-64 w-full"
+            className="pl-9 w-full"
           />
         </div>
-
-        <div className="flex flex-1 flex-col gap-1.5 sm:max-w-xs min-w-64">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-muted-foreground">Precio</span>
-            <span className="text-xs font-medium tabular-nums text-foreground">
-              {formatPrice(sliderValues[0], currencySymbol)} &ndash;{' '}
-              {formatPrice(sliderValues[1], currencySymbol)}
-            </span>
-          </div>
-          <Slider
-            min={priceRange.min}
-            max={priceRange.max}
-            step={Math.max(1, Math.round((priceRange.max - priceRange.min) / 100))}
-            value={sliderValues}
-            onValueChange={handleSliderChange}
-            onValueCommit={handleSliderCommit}
-            disabled={isPending}
-            aria-label="Rango de precio"
-          />
-        </div>
-
-        {categories.length > 0 && (
-          <>
-            {/* Mobile: dropdown */}
-            <div className="sm:hidden w-full">
-              <Select
-                value={activeCategorySlug ?? 'all'}
-                onValueChange={(val) => handleCategoryClick(val === 'all' ? null : val)}
-                disabled={isPending}
-              >
-                <SelectTrigger className="w-full" aria-label="Filtrar por categoria">
-                  <SelectValue placeholder="Categoría" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  {categories.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.slug}>
-                      {cat.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Desktop (sm+): pill buttons */}
-            <div
-              className="hidden sm:flex flex-wrap gap-2 w-fit xl:mt-0 mt-4"
-              aria-label="Filtrar por categoria"
-            >
-              <Button
-                variant={!activeCategorySlug ? 'default' : 'outline'}
-                size="sm"
-                disabled={isPending}
-                className={!activeCategorySlug ? 'bg-site-primary text-primary-foreground' : ''}
-                onClick={() => handleCategoryClick(null)}
-              >
-                Todos
-              </Button>
-              {categories.map((cat) => {
-                const isActive = activeCategorySlug === cat.slug
-                return (
-                  <Button
-                    key={cat.id}
-                    variant={isActive ? 'default' : 'outline'}
-                    size="sm"
-                    disabled={isPending}
-                    className={isActive ? 'bg-site-primary text-primary-foreground' : ''}
-                    onClick={() => handleCategoryClick(cat.slug)}
-                  >
-                    {cat.name}
-                  </Button>
-                )
-              })}
-            </div>
-          </>
-        )}
       </div>
 
-      {/* {isPending && (
-        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" aria-hidden="true" />
-      )} */}
+      {/* Price range */}
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-semibold">Precio</span>
+          <span className="text-xs font-medium tabular-nums text-muted-foreground">
+            {formatPrice(sliderValues[0], currencySymbol)} &ndash;{' '}
+            {formatPrice(sliderValues[1], currencySymbol)}
+          </span>
+        </div>
+        <Slider
+          min={priceRange.min}
+          max={priceRange.max}
+          step={Math.max(1, Math.round((priceRange.max - priceRange.min) / 100))}
+          value={sliderValues}
+          onValueChange={handleSliderChange}
+          onValueCommit={handleSliderCommit}
+          disabled={isPending}
+          aria-label="Rango de precio"
+        />
+      </div>
+
+      {/* Categories */}
+      {categories.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <span className="text-sm font-semibold">Categorías</span>
+
+          {/* Mobile: dropdown */}
+          <div className="lg:hidden">
+            <Select
+              value={activeCategory ?? activeCategorySlug ?? 'all'}
+              onValueChange={(val) => handleCategoryClick(val === 'all' ? null : val)}
+              disabled={isPending}
+            >
+              <SelectTrigger className="w-full" aria-label="Filtrar por categoria">
+                <SelectValue placeholder="Categoría" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                {categories.map((cat) => (
+                  <SelectItem key={cat.id} value={cat.slug}>
+                    {cat.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Desktop (lg+): vertical list */}
+          <div className="hidden lg:flex flex-col gap-1" aria-label="Filtrar por categoria">
+            <button
+              disabled={isPending}
+              onClick={() => handleCategoryClick(null)}
+              className={`flex items-center justify-between py-2 px-3 rounded-md text-sm transition-colors text-left cursor-pointer ${
+                !activeCategorySlug
+                  ? 'bg-site-primary text-primary-foreground font-medium'
+                  : 'hover:bg-muted text-foreground'
+              }`}
+            >
+              Todos
+            </button>
+            {categories.map((cat) => {
+              const isActive = activeCategorySlug === cat.slug
+              return (
+                <button
+                  key={cat.id}
+                  disabled={isPending}
+                  onClick={() => handleCategoryClick(cat.slug)}
+                  className={`flex items-center justify-between py-2 px-3 rounded-md text-sm transition-colors text-left  cursor-pointer ${
+                    isActive
+                      ? 'bg-site-primary text-primary-foreground font-medium'
+                      : 'hover:bg-muted text-foreground'
+                  }`}
+                >
+                  {cat.name}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {hasActiveFilters && (
         <Button

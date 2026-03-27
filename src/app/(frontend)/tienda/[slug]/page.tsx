@@ -154,6 +154,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           sales: product.sales ?? 0,
           views: product.views ?? 0,
           stock: product.stock ?? 5,
+          category: product.category as Category[],
         }}
         currencySymbol={currencySymbol}
       />
