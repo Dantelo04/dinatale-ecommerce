@@ -55,7 +55,7 @@ export function GoogleReviews({ place }: { place: PlaceDetails }) {
   if (visibleReviews.length === 0) return null
 
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
+    <section className="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8 pt-16">
       <div className="flex flex-col xl:gap-6 gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex flex-row justify-between items-center w-full flex-wrap gap-2">
           <h2 className="text-xl font-bold tracking-tight text-wrap-balance sm:text-2xl">

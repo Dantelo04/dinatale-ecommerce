@@ -1,7 +1,7 @@
 import { ProductCard } from './ProductCard'
 import Link from 'next/link'
 import { ArrowRight, ShoppingBag } from 'lucide-react'
-import { Media, Product } from '@/payload-types'
+import { Category, Media, Product } from '@/payload-types'
 import { Fragment } from 'react'
 
 interface ProductsGalleryProps {
@@ -29,7 +29,7 @@ export const ProductsGallery = ({
   columnQuantity = 5,
 }: ProductsGalleryProps) => {
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
+    <section className="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8 pt-16">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold tracking-tight text-wrap-balance sm:text-2xl">{title}</h2>
 
@@ -61,6 +61,7 @@ export const ProductsGallery = ({
                 sales={product.sales ?? 0}
                 views={product.views ?? 0}
                 stock={product.stock ?? 5}
+                category={product.category as Category[]}
               />
               {products.length % 2 !== 0 && index === products.length - 1 && (
                 <Link

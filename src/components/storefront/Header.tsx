@@ -32,7 +32,7 @@ export function Header({ siteName, logoUrl, hideName, headerLogoSide, logoSize, 
   return (
     <header className={`sticky ${isAdmin ? 'top-9' : 'top-0'} z-50 bg-background backdrop-blur-sm supports-[backdrop-filter]:bg-background/75`}>
       {alertText && <AlertMarquee text={alertText} primaryColor={primaryColor} />}
-      <div className="mx-auto flex py-4 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex py-4 max-w-8xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {headerLogoSide === 'center' && (
           <HeaderSheet
             mobileOpen={mobileOpen}

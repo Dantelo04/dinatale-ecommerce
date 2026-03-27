@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react'
 import { ProductCard } from './ProductCard'
 import { loadMoreProducts } from '@/lib/product-actions'
 import type { SerializedProduct, ProductFilters } from '@/lib/types'
+import { Category } from '@/payload-types'
 
 interface ProductGridProps {
   initialProducts: SerializedProduct[]
@@ -95,7 +96,7 @@ export function ProductGrid({
 
   return (
     <>
-      <div className={`mt-8 grid ${gridColsMobileMap[gridColsMobile ?? 2]} gap-3 sm:grid-cols-2 lg:grid-cols-4 ${gridColsMap[gridCols ?? 5]}`}>
+      <div className={`grid ${gridColsMobileMap[gridColsMobile ?? 2]} gap-6 lg:gap-3 sm:grid-cols-2 lg:grid-cols-4 ${gridColsMap[gridCols ?? 5]}`}>
         {(onlyPromo ? products.filter((product) => product.compareAtPrice) : products).map((product) => (
           <ProductCard
             key={product.id}
@@ -110,6 +111,7 @@ export function ProductGrid({
             sales={product.sales}
             views={product.views}
             stock={product.stock}
+            category={product.category as Category[]}
           />
         ))}
       </div>

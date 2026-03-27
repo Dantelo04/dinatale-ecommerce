@@ -6,7 +6,7 @@ import { getCachedCategoriesWithProductCount, getCachedGlobal, getCachedPriceBou
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Where } from 'payload'
-import type { Media, SiteSetting } from '@/payload-types'
+import type { Category, Media, SiteSetting } from '@/payload-types'
 import type { SerializedProduct } from '@/lib/types'
 import { CornerTools } from '@/components/storefront/CornerTools'
 
@@ -127,6 +127,7 @@ export default async function TiendaPage({
       sales: product.sales ?? 0,
       views: product.views ?? 0,
       stock: product.stock ?? 5,
+      category: product.category as Category[],
     }
   })
 
@@ -145,7 +146,7 @@ export default async function TiendaPage({
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 lg:py-12 py-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-8xl px-4 lg:py-12 py-4 sm:px-6 lg:px-8">
       <h1 className="lg:text-3xl text-2xl font-bold tracking-tight text-wrap-balance sm:text-4xl">
         {ofertas === 'true' ? 'Promos' : pageTitle}
       </h1>
@@ -154,38 +155,44 @@ export default async function TiendaPage({
       </p>}
       <hr className="my-4" />
 
-      <Suspense>
-        <ShopFilters
-          categories={categories.map((c) => ({ id: c.id, name: c.name, slug: c.slug }))}
-          activeCategorySlug={activeCategorySlug}
-          priceRange={priceBounds}
-          initialSearch={buscar ?? ''}
-          initialPriceMin={parsedMin}
-          initialPriceMax={parsedMax}
-          currencySymbol={currencySymbol}
-        />
-      </Suspense>
+      <div className="flex flex-col lg:flex-row gap-8">
+        <aside className="lg:w-64 shrink-0">
+          <Suspense>
+            <ShopFilters
+              categories={categories.map((c) => ({ id: c.id, name: c.name, slug: c.slug }))}
+              activeCategorySlug={activeCategorySlug}
+              priceRange={priceBounds}
+              initialSearch={buscar ?? ''}
+              initialPriceMin={parsedMin}
+              initialPriceMax={parsedMax}
+              currencySymbol={currencySymbol}
+            />
+          </Suspense>
+        </aside>
 
-      {initialProducts.length === 0 ? (
-        <div className="mt-16 text-center">
-          <p className="text-lg text-muted-foreground">No se encontraron productos.</p>
-          {(activeCategorySlug || buscar || parsedMin !== null || parsedMax !== null) && (
-            <Link href="/tienda" className="mt-4 inline-block text-sm font-medium text-site-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">
-              Limpiar filtros y ver todos
-            </Link>
+        <div className="flex-1 min-w-0">
+          {initialProducts.length === 0 ? (
+            <div className="mt-16 text-center">
+              <p className="text-lg text-muted-foreground">No se encontraron productos.</p>
+              {(activeCategorySlug || buscar || parsedMin !== null || parsedMax !== null) && (
+                <Link href="/tienda" className="mt-4 inline-block text-sm font-medium text-site-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">
+                  Limpiar filtros y ver todos
+                </Link>
+              )}
+            </div>
+          ) : (
+            <ProductGrid
+              initialProducts={initialProducts}
+              hasNextPage={result.hasNextPage}
+              currencySymbol={currencySymbol}
+              filters={filters}
+              onlyPromo={ofertas === 'true'}
+              gridCols={gridCols}
+              gridColsMobile={gridColsMobile}
+            />
           )}
         </div>
-      ) : (
-        <ProductGrid
-          initialProducts={initialProducts}
-          hasNextPage={result.hasNextPage}
-          currencySymbol={currencySymbol}
-          filters={filters}
-          onlyPromo={ofertas === 'true'}
-          gridCols={gridCols}
-          gridColsMobile={gridColsMobile}
-        />
-      )}
+      </div>
 
       <CornerTools whatsappNumber={settings.whatsappNumber} />
     </div>
