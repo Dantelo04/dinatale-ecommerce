@@ -181,6 +181,33 @@ export const SiteSettings: GlobalConfig = {
     },
     {
       type: 'group',
+      name: 'pagopar',
+      label: 'Pagopar (Pasarela de Pagos)',
+      fields: [
+        {
+          name: 'enabled',
+          label: 'Habilitar Pagopar',
+          type: 'checkbox',
+          defaultValue: false,
+          admin: {
+            description:
+              'Activa la opción de pagar con tarjeta/billetera mediante Pagopar en el carrito. Requiere PAGOPAR_PUBLIC_KEY y PAGOPAR_PRIVATE_KEY en las variables de entorno.',
+          },
+        },
+        {
+          name: 'ciudadId',
+          label: 'ID de Ciudad (Pagopar)',
+          type: 'number',
+          defaultValue: 1,
+          admin: {
+            description: 'ID de la ciudad de la tienda en Pagopar (1 = Asunción). Consultar lista de ciudades en el panel de Pagopar.',
+            condition: (data: Record<string, unknown>) => Boolean((data?.pagopar as Record<string, unknown>)?.enabled),
+          },
+        },
+      ],
+    },
+    {
+      type: 'group',
       name: 'customAlert',
       label: 'Alerta Personalizada en el Header',
       fields: [

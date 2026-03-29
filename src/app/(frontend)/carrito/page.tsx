@@ -17,6 +17,8 @@ export default async function CarritoPage() {
       currencySymbol={settings.currencySymbol || '$'}
       siteName={settings.siteName}
       redirectToOrder={settings.storefront?.redirectToOrderAfterCheckout ?? false}
+      pagoparEnabled={settings.pagopar?.enabled ?? false}
+      pagoparCiudadId={settings.pagopar?.ciudadId ?? 1}
     />
   )
 }
