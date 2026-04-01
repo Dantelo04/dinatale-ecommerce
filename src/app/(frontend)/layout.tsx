@@ -1,6 +1,6 @@
 import React from 'react'
 import './styles.css'
-import { Inter } from 'next/font/google'
+import { DM_Sans, Epilogue } from 'next/font/google'
 import { headers } from 'next/headers'
 import { getPayload } from 'payload'
 import config from '@payload-config'
@@ -13,7 +13,12 @@ import type { Media } from '@/payload-types'
 import type { SiteSetting, StorefrontContent } from '@/payload-types'
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 
-const inter = Inter({ subsets: ['latin'], display: 'swap' })
+const dmSans = DM_Sans({ subsets: ['latin'], display: 'swap' })
+const epilogue = Epilogue({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-heading',
+})
 
 const SITE_URL = 'https://www.dinatale.com.py'
 
@@ -95,7 +100,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     >
       <GoogleAnalytics gaId="G-N3BBXYFZHF" />
       <GoogleTagManager gtmId="GTM-W7WNVJM6" />
-      <body className={`${inter.className} min-h-screen flex flex-col`}>
+      <body className={`${dmSans.className} ${epilogue.variable} min-h-screen flex flex-col`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}

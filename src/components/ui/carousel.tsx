@@ -132,13 +132,17 @@ function Carousel({
   )
 }
 
-function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
+interface CarouselContentProps extends React.ComponentProps<"div"> {
+  hasCards?: boolean
+}
+
+function CarouselContent({ className, hasCards = false, ...props }: CarouselContentProps) {
   const { carouselRef, orientation } = useCarousel()
 
   return (
     <div
       ref={carouselRef}
-      className="overflow-hidden"
+      className={cn("overflow-x-clip", hasCards ? "sm:px-2 sm:-ml-2 px-4" : "")}
       data-slot="carousel-content"
     >
       <div

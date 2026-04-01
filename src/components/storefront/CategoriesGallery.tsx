@@ -31,9 +31,9 @@ export const CategoriesGallery = ({ storefrontCategories }: CategoriesGalleryPro
         <hr className="my-2" />
       </div>
 
-      <div className="relative mt-6 mx-auto max-w-8xl px-0 sm:px-6 lg:px-8 ">
+      <div className="relative mt-6 mx-auto max-w-8xl px-0 sm:px-6 lg:px-8">
         <Carousel opts={{ align: 'start' }} className="w-full">
-          <CarouselContent className="-ml-3 sm:px-0 px-4">
+          <CarouselContent className="sm:px-0 px-1" hasCards={true}>
             {storefrontCategories.map((cat) => {
               const catImage = cat.category.image as Media | null
 
@@ -43,7 +43,7 @@ export const CategoriesGallery = ({ storefrontCategories }: CategoriesGalleryPro
                   className="pl-3 basis-[45%] sm:basis-1/3 lg:basis-1/5"
                 >
                   <Link href={`/tienda?categoria=${cat.category.slug}`}>
-                    <div className="group relative transition-all active:scale-95 overflow-clip rounded-lg">
+                    <div className="group relative transition-all active:scale-95 overflow-clip rounded-lg shadow-md">
                       <div className="relative aspect-3/4 bg-muted">
                         {catImage?.url ? (
                           <Image
@@ -59,11 +59,11 @@ export const CategoriesGallery = ({ storefrontCategories }: CategoriesGalleryPro
                             {cat.category.name}
                           </div>
                         )}
-                        <div className="absolute bottom-0 left-0 right-0 bg-site-secondary px-3 sm:py-4 py-3 flex items-center justify-between gap-2 w-full">
-                          <span className="text-sm font-medium line-clamp-1 text-white">
+                        <div className="absolute bottom-0 left-0 right-0 bg-white/85 backdrop-blur-sm px-3 sm:py-4 py-3 flex items-center justify-between gap-2 w-full">
+                          <span className="text-sm font-medium line-clamp-1 text-foreground">
                             {cat.category.name}
                           </span>
-                          <ChevronRight className="h-4 w-4 shrink-0 text-white" />
+                          <ChevronRight className="h-4 w-4 shrink-0 text-foreground" />
                         </div>
                       </div>
                     </div>

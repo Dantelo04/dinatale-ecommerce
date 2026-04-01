@@ -76,6 +76,8 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: 'DM Sans', sans-serif;
+  --font-serif: 'Epilogue', sans-serif;
 }
 
 @layer base {
@@ -88,5 +90,9 @@
     /* touch-action: manipulation; */
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), 'Epilogue', sans-serif;
   }
 }
