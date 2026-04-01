@@ -6,13 +6,13 @@ import { createHash } from 'crypto'
 
 export interface PagoparBuyer {
   nombre: string
-  ciudad: number
+  ciudad: number | null
   email: string
   telefono: string
   tipo_documento: string
   documento: string
   direccion: string
-  direccion_referencia: string
+  direccion_referencia: null
   coordenadas: string
   ruc: string
   razon_social: string
@@ -22,21 +22,16 @@ export interface PagoparItem {
   nombre: string
   cantidad: number
   precio_total: number
-  ciudad: number
+  ciudad: string
   descripcion: string
   url_imagen: string
-  peso: string
   vendedor_telefono: string
   vendedor_direccion: string
   vendedor_direccion_referencia: string
   vendedor_direccion_coordenadas: string
   public_key: string
-  categoria: number
+  categoria: string
   id_producto: number
-  largo: string
-  ancho: string
-  alto: string
-  comercio_comision: number
 }
 
 export interface PagoparTransactionParams {
