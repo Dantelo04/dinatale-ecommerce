@@ -26,7 +26,7 @@ export const CategoriesGallery = ({ storefrontCategories }: CategoriesGalleryPro
     <section className="lg:pt-16 pt-8">
       <div className="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8 ">
         <h2 className="text-xl font-bold tracking-tight text-wrap-balance sm:text-2xl">
-          Categorias
+          Comprar por Categoría
         </h2>
         <hr className="my-2" />
       </div>

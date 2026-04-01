@@ -126,6 +126,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             logoUrl={logoUrl}
             hideName={settings.hideName ?? false}
             socialLinks={content.socialLinks}
+            siteDescription={settings.siteDescription}
           />
         </CartProvider>
       </body>
