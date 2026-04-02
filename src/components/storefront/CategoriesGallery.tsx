@@ -33,7 +33,7 @@ export const CategoriesGallery = ({ storefrontCategories }: CategoriesGalleryPro
 
       <div className="relative mt-6 mx-auto max-w-8xl px-0 sm:px-6 lg:px-8">
         <Carousel opts={{ align: 'start' }} className="w-full">
-          <CarouselContent className="sm:px-0 px-1" hasCards={true}>
+          <CarouselContent className="sm:px-0 px-1 sm:pb-0 pb-3" hasCards={true}>
             {storefrontCategories.map((cat) => {
               const catImage = cat.category.image as Media | null
 
