@@ -3,14 +3,13 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ShoppingCart, ChevronLeft } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { ChevronLeft } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { useCart } from './CartProvider'
 import { formatPrice } from '@/lib/utils'
 import type { Category, Media } from '@/payload-types'
 import { RichTextContent } from './RichTextContent'
+import { AddToCartButton } from './AddToCartButton'
 
 interface ProductDetailProps {
   product: {
@@ -31,30 +30,11 @@ interface ProductDetailProps {
 }
 
 export function ProductDetail({ product, currencySymbol }: ProductDetailProps) {
-  const { addItem } = useCart()
   const [selectedImage, setSelectedImage] = useState(0)
-  const [added, setAdded] = useState(false)
 
   const hasDiscount = product.compareAtPrice && product.compareAtPrice > product.price
   const outOfStock = product.stock === 0
   const currentImage = product.images[selectedImage]
-
-  const handleAdd = () => {
-    if (outOfStock) return
-    addItem({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      imageUrl: product.images[0]?.url ?? null,
-      slug: product.slug,
-      sales: product.sales ?? 0,
-      views: product.views ?? 0,
-      stock: product.stock,
-      category: product.category,
-    })
-    setAdded(true)
-    setTimeout(() => setAdded(false), 2000)
-  }
 
   return (
     <div className="mx-auto max-w-8xl px-4 py-8 sm:px-6 lg:pt-8 pt-6 lg:px-8">
@@ -140,16 +120,22 @@ export function ProductDetail({ product, currencySymbol }: ProductDetailProps) {
           )}
 
           <div className="mt-8 flex flex-col gap-3">
-            <Button
+            <AddToCartButton
+              product={{
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                imageUrl: product.images[0]?.url ?? null,
+                slug: product.slug,
+                sales: product.sales ?? 0,
+                views: product.views ?? 0,
+                stock: product.stock,
+                category: product.category,
+              }}
               size="lg"
-              className="w-full bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
-              onClick={handleAdd}
-              disabled={outOfStock}
-              aria-label={outOfStock ? `${product.name} sin stock` : `Agregar ${product.name} al carrito`}
-            >
-              <ShoppingCart className="mr-2 h-5 w-5" aria-hidden="true" />
-              {outOfStock ? 'Sin stock' : added ? 'Agregado!' : 'Agregar al Carrito'}
-            </Button>
+              className="w-full sm:w-auto"
+              outOfStock={outOfStock}
+            />
             {outOfStock && (
               <p className="text-sm text-muted-foreground">
                 Este producto no está disponible en este momento.

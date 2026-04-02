@@ -251,8 +251,14 @@ export interface Order {
   id: number;
   orderNumber?: string | null;
   status: 'received' | 'in_process' | 'shipped' | 'delivered' | 'finalized';
+  paymentMethod?: ('whatsapp' | 'pagopar') | null;
+  /**
+   * Hash de transacción generado por Pagopar
+   */
+  pagoparHash?: string | null;
   customerName?: string | null;
   customerPhone?: string | null;
+  customerEmail?: string | null;
   items: {
     product?: (number | null) | Product;
     /**
@@ -442,8 +448,11 @@ export interface CategoriesSelect<T extends boolean = true> {
 export interface OrdersSelect<T extends boolean = true> {
   orderNumber?: T;
   status?: T;
+  paymentMethod?: T;
+  pagoparHash?: T;
   customerName?: T;
   customerPhone?: T;
+  customerEmail?: T;
   items?:
     | T
     | {
@@ -557,6 +566,16 @@ export interface SiteSetting {
      * Si se activa, después de confirmar el pedido se redirige al cliente a la página de estado del pedido
      */
     redirectToOrderAfterCheckout?: boolean | null;
+  };
+  pagopar?: {
+    /**
+     * Activa la opción de pagar con tarjeta/billetera mediante Pagopar en el carrito. Requiere PAGOPAR_PUBLIC_KEY y PAGOPAR_PRIVATE_KEY en las variables de entorno.
+     */
+    enabled?: boolean | null;
+    /**
+     * ID de la ciudad de la tienda en Pagopar (1 = Asunción). Consultar lista de ciudades en el panel de Pagopar.
+     */
+    ciudadId?: number | null;
   };
   customAlert?: {
     alertTitle?: string | null;
@@ -673,6 +692,12 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         gridCols?: T;
         gridColsMobile?: T;
         redirectToOrderAfterCheckout?: T;
+      };
+  pagopar?:
+    | T
+    | {
+        enabled?: T;
+        ciudadId?: T;
       };
   customAlert?:
     | T

@@ -46,6 +46,30 @@ export const Orders: CollectionConfig = {
       ],
     },
     {
+      name: 'paymentMethod',
+      type: 'select',
+      label: 'Método de Pago',
+      defaultValue: 'whatsapp',
+      options: [
+        { label: 'WhatsApp', value: 'whatsapp' },
+        { label: 'Pagopar', value: 'pagopar' },
+      ],
+      admin: {
+        readOnly: true,
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'pagoparHash',
+      type: 'text',
+      label: 'Hash Pagopar',
+      admin: {
+        readOnly: true,
+        hidden: true,
+        description: 'Hash de transacción generado por Pagopar',
+      },
+    },
+    {
       name: 'customerName',
       type: 'text',
       label: 'Nombre del cliente',
@@ -54,6 +78,11 @@ export const Orders: CollectionConfig = {
       name: 'customerPhone',
       type: 'text',
       label: 'Teléfono del cliente',
+    },
+    {
+      name: 'customerEmail',
+      type: 'email',
+      label: 'Email del cliente',
     },
     {
       name: 'items',

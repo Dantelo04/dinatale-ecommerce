@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
-import { Inter } from 'next/font/google'
+import { DM_Sans } from 'next/font/google'
 
-const inter = Inter({ subsets: ['latin'], display: 'swap' })
+const dmSans = DM_Sans({ subsets: ['latin'], display: 'swap' })
 
 export const metadata: Metadata = {
   title: '404 | Pagina no encontrada',
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function GlobalNotFound() {
   return (
-    <html lang="es" className={inter.className}>
+    <html lang="es" className={dmSans.className}>
       <body style={bodyStyle}>
         <main style={mainStyle}>
           <p style={codeStyle}>404</p>
@@ -68,6 +68,7 @@ const titleStyle: CSSProperties = {
   margin: '0.75rem 0 0',
   fontSize: 'clamp(1.875rem, 2vw + 1rem, 2.25rem)',
   lineHeight: 1.2,
+  fontFamily: "'Epilogue', sans-serif",
 }
 
 const descriptionStyle: CSSProperties = {

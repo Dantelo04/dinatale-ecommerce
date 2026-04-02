@@ -1,14 +1,12 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { ShoppingCart } from 'lucide-react'
-import { useCart } from './CartProvider'
 import { formatPrice } from '@/lib/utils'
 import type { SerializedProduct } from '@/lib/types'
+import { AddToCartButton } from './AddToCartButton'
 
 type ProductCardProps = SerializedProduct & { currencySymbol: string }
 
@@ -26,18 +24,8 @@ export function ProductCard({
   stock,
   category,
 }: ProductCardProps) {
-  const { addItem } = useCart()
-  const [added, setAdded] = useState(false)
-
   const hasDiscount = compareAtPrice && compareAtPrice > price
   const outOfStock = stock === 0
-
-  const handleAdd = () => {
-    if (outOfStock) return
-    addItem({ id, name, price, imageUrl, slug, sales, views, stock, category })
-    setAdded(true)
-    setTimeout(() => setAdded(false), 2000)
-  }
 
   return (
     <div className="relative h-full transition-all">
@@ -96,16 +84,12 @@ export function ProductCard({
             </div>
           </Link>
           <div className="flex flex-col h-full gap-2 justify-end">
-            <Button
+            <AddToCartButton
+              product={{ id, name, price, imageUrl, slug, sales, views, stock, category }}
               size="sm"
-              className="mt-3.5 w-full bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity active:bg-primary/60 disabled:opacity-50 disabled:cursor-not-allowed"
-              onClick={handleAdd}
-              disabled={outOfStock}
-              aria-label={outOfStock ? `${name} sin stock` : `Agregar ${name} al carrito`}
-            >
-              <ShoppingCart className="mr-2 h-4 w-4" aria-hidden="true" />
-              {outOfStock ? 'Sin stock' : added ? 'Agregado!' : 'Agregar'}
-            </Button>
+              className="mt-3.5 w-full"
+              outOfStock={outOfStock}
+            />
           </div>
         </CardContent>
       </Card>

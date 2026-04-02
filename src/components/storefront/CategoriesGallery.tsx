@@ -1,7 +1,16 @@
+'use client'
+
 import { Category, Media } from '@/payload-types'
-import { Card, CardContent } from '../ui/card'
 import Link from 'next/link'
 import Image from 'next/image'
+import { ChevronRight } from 'lucide-react'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from '@/components/ui/carousel'
 
 interface CategoriesGalleryProps {
   storefrontCategories: {
@@ -11,48 +20,62 @@ interface CategoriesGalleryProps {
 }
 
 export const CategoriesGallery = ({ storefrontCategories }: CategoriesGalleryProps) => {
-  if (storefrontCategories.length > 0) {
-    return (
-      <section className="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8 lg:pt-16 pt-8">
+  if (storefrontCategories.length === 0) return null
+
+  return (
+    <section className="lg:pt-16 pt-8">
+      <div className="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8 ">
         <h2 className="text-xl font-bold tracking-tight text-wrap-balance sm:text-2xl">
-          Categorias
+          Comprar por Categoría
         </h2>
         <hr className="my-2" />
-        <div className="mt-6 grid grid-cols-3 gap-4 sm:grid-cols-5 lg:grid-cols-7">
-          {storefrontCategories.map((cat) => {
-            const catImage = cat.category.image as Media | null
+      </div>
 
-            return (
-              <Link key={cat.category.id} href={`/tienda?categoria=${cat.category.slug}`}>
-                <Card className="group overflow-hidden transition-all active:scale-95 hover:shadow-lg pt-0 gap-0 lg:pb-2 pb-4 shadow-none">
-                  <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-                    {catImage?.url ? (
-                      <Image
-                        src={catImage.url}
-                        alt={cat.category.name}
-                        fill
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center text-muted-foreground text-sm">
-                        {cat.category.name}
+      <div className="relative mt-6 mx-auto max-w-8xl px-0 sm:px-6 lg:px-8">
+        <Carousel opts={{ align: 'start' }} className="w-full">
+          <CarouselContent className="sm:px-0 px-1" hasCards={true}>
+            {storefrontCategories.map((cat) => {
+              const catImage = cat.category.image as Media | null
+
+              return (
+                <CarouselItem
+                  key={cat.category.id}
+                  className="pl-3 basis-[45%] sm:basis-1/3 lg:basis-1/5"
+                >
+                  <Link href={`/tienda?categoria=${cat.category.slug}`}>
+                    <div className="group relative transition-all active:scale-95 overflow-clip rounded-lg shadow-md">
+                      <div className="relative aspect-3/4 bg-muted">
+                        {catImage?.url ? (
+                          <Image
+                            src={catImage.url}
+                            alt={cat.category.name}
+                            fill
+                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-muted-foreground text-sm">
+                            {cat.category.name}
+                          </div>
+                        )}
+                        <div className="absolute bottom-0 left-0 right-0 bg-white/85 backdrop-blur-sm px-3 sm:py-4 py-3 flex items-center justify-between gap-2 w-full">
+                          <span className="text-sm font-medium line-clamp-1 text-foreground">
+                            {cat.category.name}
+                          </span>
+                          <ChevronRight className="h-4 w-4 shrink-0 text-foreground" />
+                        </div>
                       </div>
-                    )}
-                  </div>
-                  <CardContent className="lg:p-3 p-2 lg:pt-4 pt-3 border-t flex flex-col gap-2 pb-0">
-                    <h3 className="text-sm font-medium line-clamp-1 -mb-1">{cat.category.name}</h3>
-                    <span className="text-xs text-muted-foreground max-h-32 truncate">
-                      {cat.category.description}
-                    </span>
-                  </CardContent>
-                </Card>
-              </Link>
-            )
-          })}
-        </div>
-      </section>
-    )
-  }
+                    </div>
+                  </Link>
+                </CarouselItem>
+              )
+            })}
+          </CarouselContent>
+          <CarouselPrevious className="hidden sm:flex" />
+          <CarouselNext className="hidden sm:flex" />
+        </Carousel>
+      </div>
+    </section>
+  )
 }

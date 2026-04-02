@@ -7,3 +7,8 @@ export const NAV_LINKS: NavLink[] = [
   { href: '/nosotros', label: 'Nosotros' },
   { href: '/contacto', label: 'Contacto' },
 ]
+
+export const LEGAL_LINKS: NavLink[] = [
+  { href: '/privacidad', label: 'Política de Privacidad' },
+  { href: '/terminos', label: 'Términos y Condiciones' },
+]

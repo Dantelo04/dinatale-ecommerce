@@ -141,6 +141,7 @@ export async function processCheckout(
     draft: false,
     data: {
       status: 'received',
+      paymentMethod: 'whatsapp' as const,
       ...(customerName ? { customerName } : {}),
       ...(customerPhone ? { customerPhone } : {}),
       items: items.map((item) => ({
