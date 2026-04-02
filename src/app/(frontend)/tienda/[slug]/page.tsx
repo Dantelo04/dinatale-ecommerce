@@ -1,6 +1,6 @@
 import React from 'react'
 import { notFound } from 'next/navigation'
-import type { Media, Category, SiteSetting } from '@/payload-types'
+import type { Media, Category, SiteSetting, Product } from '@/payload-types'
 import { ProductDetail } from '@/components/storefront/ProductDetail'
 import { ProductViewTracker } from '@/components/storefront/ProductViewTracker'
 import { getCachedGlobal, getCachedProductBySlug, getCachedProducts } from '@/lib/payload-cache'
@@ -116,6 +116,17 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     })(),
   ])
 
+  const variantProducts = ((product.variants ?? []) as (number | Product)[])
+    .filter((v): v is Product => typeof v === 'object')
+    .map((v) => ({
+      id: v.id,
+      name: v.name,
+      slug: v.slug,
+      price: v.price,
+      compareAtPrice: v.compareAtPrice ?? null,
+      imageUrl: ((v.images?.[0]?.image) as Media | null)?.url ?? null,
+    }))
+
   const currencySymbol = settings.currencySymbol || '$'
 
   const productJsonLd = {
@@ -157,6 +168,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           category: product.category as Category[],
         }}
         currencySymbol={currencySymbol}
+        variants={variantProducts}
+        variantLabel={product.variantLabel ?? null}
       />
       {recommended.length > 0 && (
         <ProductsGallery
