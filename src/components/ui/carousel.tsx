@@ -142,7 +142,7 @@ function CarouselContent({ className, hasCards = false, ...props }: CarouselCont
   return (
     <div
       ref={carouselRef}
-      className={cn("overflow-x-clip", hasCards ? "sm:px-2 sm:-ml-2 px-4" : "")}
+      className={cn("overflow-x-clip", hasCards ? "sm:px-2 sm:-ml-2 px-4 rounded-lg" : "")}
       data-slot="carousel-content"
     >
       <div

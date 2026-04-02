@@ -25,7 +25,7 @@ export function AdminBar({ userEmail }: AdminBarProps) {
   }, [])
 
   return (
-    <div className="sticky top-0 z-60 h-9 bg-zinc-900 text-zinc-100 text-xs flex items-center justify-between px-4 pb-1">
+    <div className="sticky top-0 z-1000 h-9 bg-zinc-900 text-zinc-100 text-xs flex items-center justify-between px-4 pb-1">
       <div className="flex items-center gap-3">
         <ShieldCheck className="size-3.5 shrink-0" strokeWidth={2} />
         <span className="truncate max-w-[180px]">{userEmail}</span>
