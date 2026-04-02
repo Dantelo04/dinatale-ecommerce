@@ -1,8 +1,103 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionAfterChangeHook, CollectionConfig } from 'payload'
 import {
   revalidateCollectionAfterChange,
   revalidateCollectionAfterDelete,
 } from '@/hooks/revalidateOnChange'
+
+const toIds = (variants: unknown): number[] =>
+  ((variants as (number | { id: number })[]) ?? []).map((v) =>
+    typeof v === 'object' && v !== null ? v.id : (v as number),
+  )
+
+const syncVariantsBidirectional: CollectionAfterChangeHook = async ({
+  doc,
+  previousDoc,
+  req,
+  operation,
+}) => {
+  if (req.context?.skipVariantSync) return doc
+
+  const newIds = toIds(doc.variants)
+  const oldIds = operation === 'create' ? [] : toIds(previousDoc?.variants)
+
+  const added = newIds.filter((id) => !oldIds.includes(id))
+  const removed = oldIds.filter((id) => !newIds.includes(id))
+  const labelChanged = (doc.variantLabel ?? null) !== (previousDoc?.variantLabel ?? null)
+
+  if (added.length === 0 && removed.length === 0 && !labelChanged) return doc
+
+  const context = { ...req.context, skipVariantSync: true }
+
+  // Added variants: add current product to their list + sync label
+  await Promise.all(
+    added.map(async (variantId) => {
+      const variant = await req.payload.findByID({
+        collection: 'products',
+        id: variantId,
+        req,
+        overrideAccess: true,
+      })
+      const currentIds = toIds(variant.variants)
+      const data: Record<string, unknown> = {}
+      if (!currentIds.includes(doc.id)) data.variants = [...currentIds, doc.id]
+      if (doc.variantLabel != null) data.variantLabel = doc.variantLabel
+      if (Object.keys(data).length > 0) {
+        await req.payload.update({
+          collection: 'products',
+          id: variantId,
+          data,
+          req,
+          context,
+          overrideAccess: true,
+        })
+      }
+    }),
+  )
+
+  // Removed variants: remove current product from their list
+  await Promise.all(
+    removed.map(async (variantId) => {
+      const variant = await req.payload.findByID({
+        collection: 'products',
+        id: variantId,
+        req,
+        overrideAccess: true,
+      })
+      const currentIds = toIds(variant.variants)
+      if (currentIds.includes(doc.id)) {
+        await req.payload.update({
+          collection: 'products',
+          id: variantId,
+          data: { variants: currentIds.filter((id) => id !== doc.id) },
+          req,
+          context,
+          overrideAccess: true,
+        })
+      }
+    }),
+  )
+
+  // Label changed: propagate to all existing variants not already updated above
+  if (labelChanged) {
+    const alreadyUpdated = new Set(added)
+    await Promise.all(
+      newIds
+        .filter((id) => !alreadyUpdated.has(id))
+        .map((variantId) =>
+          req.payload.update({
+            collection: 'products',
+            id: variantId,
+            data: { variantLabel: doc.variantLabel ?? null },
+            req,
+            context,
+            overrideAccess: true,
+          }),
+        ),
+    )
+  }
+
+  return doc
+}
 
 export const Products: CollectionConfig = {
   slug: 'products',
@@ -146,9 +241,31 @@ export const Products: CollectionConfig = {
       },
       label: 'Stock',
     },
+    {
+      name: 'variants',
+      type: 'relationship',
+      relationTo: 'products',
+      hasMany: true,
+      label: 'Variantes',
+      admin: {
+        description:
+          'Otros productos que son variantes de este (ej: el mismo producto en otro color)',
+        components: {
+          Field: '/components/admin/VariantsField',
+        },
+      },
+    },
+    {
+      name: 'variantLabel',
+      type: 'text',
+      label: 'Nombre de la variante',
+      admin: {
+        description: 'Ej: Color, Talle, Material (se muestra como "Color: Nombre del producto")',
+      },
+    },
   ],
   hooks: {
-    afterChange: [revalidateCollectionAfterChange()],
+    afterChange: [revalidateCollectionAfterChange(), syncVariantsBidirectional],
     afterDelete: [revalidateCollectionAfterDelete()],
     beforeValidate: [
       ({ data, operation }) => {

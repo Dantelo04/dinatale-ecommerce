@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { ChevronLeft } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
@@ -10,6 +11,15 @@ import { formatPrice } from '@/lib/utils'
 import type { Category, Media } from '@/payload-types'
 import { RichTextContent } from './RichTextContent'
 import { AddToCartButton } from './AddToCartButton'
+
+interface VariantProduct {
+  id: number
+  name: string
+  slug: string
+  price: number
+  compareAtPrice?: number | null
+  imageUrl: string | null
+}
 
 interface ProductDetailProps {
   product: {
@@ -27,10 +37,14 @@ interface ProductDetailProps {
     category: Category[]
   }
   currencySymbol: string
+  variants?: VariantProduct[]
+  variantLabel?: string | null
 }
 
-export function ProductDetail({ product, currencySymbol }: ProductDetailProps) {
+export function ProductDetail({ product, currencySymbol, variants, variantLabel }: ProductDetailProps) {
   const [selectedImage, setSelectedImage] = useState(0)
+  const [navigatingTo, setNavigatingTo] = useState<string | null>(null)
+  const router = useRouter()
 
   const hasDiscount = product.compareAtPrice && product.compareAtPrice > product.price
   const outOfStock = product.stock === 0
@@ -101,7 +115,7 @@ export function ProductDetail({ product, currencySymbol }: ProductDetailProps) {
           <h1 className="text-3xl font-bold tracking-tight text-wrap-balance">{product.name}</h1>
 
           <div className="mt-4 flex items-baseline gap-3">
-            <span className="text-3xl font-bold tabular-nums">
+            <span className="text-3xl tabular-nums">
               {formatPrice(product.price, currencySymbol)}
             </span>
             {hasDiscount && (
@@ -110,6 +124,78 @@ export function ProductDetail({ product, currencySymbol }: ProductDetailProps) {
               </span>
             )}
           </div>
+
+          {variants && variants.length > 0 && (
+            <div className="mt-6">
+              <p className="text-sm mb-3">
+                {variantLabel && <span className="font-medium">{variantLabel}: </span>}
+                <span className="font-bold">{product.name}</span>
+              </p>
+              <div className="flex gap-2 flex-wrap">
+                <div className="border-2 border-[var(--color-site-primary)] rounded-lg p-1 w-[4.5rem] shrink-0">
+                  <div className="relative aspect-square overflow-hidden rounded-md bg-muted">
+                    {product.images[0]?.url && (
+                      <Image
+                        src={product.images[0].url}
+                        alt={product.images[0].alt || product.name}
+                        fill
+                        sizes="72px"
+                        className="object-cover"
+                      />
+                    )}
+                  </div>
+                  {/* <div className="text-xs font-semibold tabular-nums leading-tight">
+                    {formatPrice(product.price, currencySymbol)}
+                  </div>
+                  {hasDiscount && (
+                    <div className="text-xs text-muted-foreground line-through tabular-nums leading-tight">
+                      {formatPrice(product.compareAtPrice!, currencySymbol)}
+                    </div>
+                  )} */}
+                </div>
+                {variants.map((v) => {
+                  const isLoading = navigatingTo === v.slug
+                  const isDisabled = navigatingTo !== null
+                  return (
+                    <button
+                      key={v.id}
+                      onClick={() => {
+                        if (isDisabled) return
+                        setNavigatingTo(v.slug)
+                        router.push(`/tienda/${v.slug}`)
+                      }}
+                      disabled={isDisabled}
+                      aria-label={`Ver variante: ${v.name}`}
+                      className={`border-2 rounded-lg p-1 w-[4.5rem] flex-shrink-0 transition-all relative ${
+                        isLoading
+                          ? 'border-(--color-site-primary)/50 opacity-70 cursor'
+                          : isDisabled
+                            ? 'border-transparent opacity-40'
+                            : 'border-transparent hover:border-(--color-site-primary)/50 cursor-pointer'
+                      }`}
+                    >
+                      <div className="relative aspect-square overflow-hidden rounded-md bg-muted">
+                        {v.imageUrl && (
+                          <Image
+                            src={v.imageUrl}
+                            alt={v.name}
+                            fill
+                            sizes="72px"
+                            className={`object-cover transition-opacity ${isLoading ? 'opacity-50' : ''}`}
+                          />
+                        )}
+                        {isLoading && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="h-4 w-4 rounded-full border-2 border-site-primary border-t-transparent animate-spin" />
+                          </div>
+                        )}
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
 
           <Separator className="my-6" />
 

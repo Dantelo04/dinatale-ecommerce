@@ -227,6 +227,14 @@ export interface Product {
    * Unidades disponibles en stock
    */
   stock?: number | null;
+  /**
+   * Otros productos que son variantes de este (ej: el mismo producto en otro color)
+   */
+  variants?: (number | Product)[] | null;
+  /**
+   * Ej: Color, Talle, Material (se muestra como "Color: Nombre del producto")
+   */
+  variantLabel?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -426,6 +434,8 @@ export interface ProductsSelect<T extends boolean = true> {
   views?: T;
   sales?: T;
   stock?: T;
+  variants?: T;
+  variantLabel?: T;
   updatedAt?: T;
   createdAt?: T;
 }
