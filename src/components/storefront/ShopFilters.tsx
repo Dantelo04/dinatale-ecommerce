@@ -76,7 +76,7 @@ export function ShopFilters({
     if (searchTimeout.current) clearTimeout(searchTimeout.current)
     searchTimeout.current = setTimeout(() => {
       navigate({ buscar: value || null })
-    }, 400)
+    }, 2500)
   }
 
   const handleSliderChange = (values: number[]) => {

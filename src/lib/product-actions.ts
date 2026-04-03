@@ -5,6 +5,7 @@ import config from '@payload-config'
 import type { Where } from 'payload'
 import type { Category, Media } from '@/payload-types'
 import type { SerializedProduct, ProductFilters } from '@/lib/types'
+import { atomicDecrementStock, atomicRollbackStock } from '@/lib/stock-ops'
 
 export type { SerializedProduct }
 
@@ -108,29 +109,15 @@ export async function processCheckout(
 ): Promise<{ success: true; orderNumber: string } | { success: false; error: string }> {
   const payload = await getPayload({ config: await config })
 
+  const decremented: { id: number; name: string; quantity: number }[] = []
   for (const item of items) {
-    const product = await payload.findByID({ collection: 'products', id: item.id, depth: 0 })
-    if ((product.stock ?? 0) < item.quantity) {
-      return {
-        success: false,
-        error: `Solo quedan ${product.stock} unidades de "${item.name}".`,
-      }
+    const ok = await atomicDecrementStock(payload, item.id, item.quantity)
+    if (!ok) {
+      await Promise.all(decremented.map((d) => atomicRollbackStock(payload, d.id, d.quantity)))
+      return { success: false, error: `No hay suficiente stock de "${item.name}".` }
     }
+    decremented.push(item)
   }
-
-  await Promise.all(
-    items.map(async (item) => {
-      const product = await payload.findByID({ collection: 'products', id: item.id, depth: 0 })
-      return payload.update({
-        collection: 'products',
-        id: item.id,
-        data: {
-          sales: (product.sales ?? 0) + item.quantity,
-          stock: Math.max(0, (product.stock ?? 0) - item.quantity),
-        },
-      })
-    }),
-  )
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
   const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0)

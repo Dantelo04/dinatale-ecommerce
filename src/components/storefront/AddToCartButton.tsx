@@ -27,7 +27,7 @@ export function AddToCartButton({
     return (
       <Button
         size={size}
-        className={`bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed ${className ?? ''}`}
+        className={`bg-site-primary text-primary-foreground hover:opacity-90 max-w-sm transition-opacity h-8 disabled:opacity-50 disabled:cursor-not-allowed ${className ?? ''}`}
         disabled
         aria-label={`${product.name} sin stock`}
       >
@@ -40,7 +40,7 @@ export function AddToCartButton({
   if (quantity > 0 && !justAdded) {
     return (
       <div
-        className={`flex items-center justify-between rounded-md bg-site-primary text-primary-foreground ${size === 'lg' ? 'h-11' : 'h-9'} ${className ?? ''}`}
+        className={`flex items-center justify-between rounded-md max-w-sm bg-site-primary text-primary-foreground ${size === 'lg' ? 'h-11' : 'h-8'} ${className ?? ''}`}
         role="group"
         aria-label={`Cantidad de ${product.name} en el carrito`}
       >
@@ -73,7 +73,7 @@ export function AddToCartButton({
   return (
     <Button
       size={size}
-      className={`bg-site-primary text-primary-foreground hover:opacity-90 h-9 active:scale-90 transition-all ${className ?? ''}`}
+      className={`bg-site-primary text-primary-foreground hover:opacity-90 max-w-sm h-8 active:scale-90 transition-all ${className ?? ''} ${size === 'lg' ? 'h-11' : 'h-8'}`}
       onClick={() => {
         addItem(product)
         setJustAdded(true)

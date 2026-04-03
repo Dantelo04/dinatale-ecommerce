@@ -10,7 +10,7 @@ import type { Category, Media, SiteSetting } from '@/payload-types'
 import type { SerializedProduct } from '@/lib/types'
 import { CornerTools } from '@/components/storefront/CornerTools'
 
-const PAGE_SIZE = 21
+const PAGE_SIZE = 40
 
 
 export async function generateMetadata({
