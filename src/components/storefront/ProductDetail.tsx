@@ -84,7 +84,7 @@ export function ProductDetail({ product, currencySymbol, variants, variantLabel 
                 <button
                   key={img.id}
                   onClick={() => setSelectedImage(idx)}
-                  className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                  className={`relative h-20 w-20 shrink-0 overflow-hidden rounded-md border-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                     idx === selectedImage ? 'border-site-primary' : 'border-transparent'
                   }`}
                   aria-label={`Ver imagen ${idx + 1} de ${product.name}`}
@@ -132,7 +132,7 @@ export function ProductDetail({ product, currencySymbol, variants, variantLabel 
                 <span className="font-bold">{product.name}</span>
               </p>
               <div className="flex gap-2 flex-wrap">
-                <div className="border-2 border-[var(--color-site-primary)] rounded-lg p-1 w-[4.5rem] shrink-0">
+                <div className="border-2 border-(--color-site-primary) rounded-lg p-1 w-18 shrink-0">
                   <div className="relative aspect-square overflow-hidden rounded-md bg-muted">
                     {product.images[0]?.url && (
                       <Image
@@ -166,7 +166,7 @@ export function ProductDetail({ product, currencySymbol, variants, variantLabel 
                       }}
                       disabled={isDisabled}
                       aria-label={`Ver variante: ${v.name}`}
-                      className={`border-2 rounded-lg p-1 w-[4.5rem] flex-shrink-0 transition-all relative ${
+                      className={`border-2 rounded-lg p-1 w-18 shrink-0 transition-all relative ${
                         isLoading
                           ? 'border-(--color-site-primary)/50 opacity-70 cursor'
                           : isDisabled

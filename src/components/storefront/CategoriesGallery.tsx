@@ -34,7 +34,7 @@ export const CategoriesGallery = ({ storefrontCategories }: CategoriesGalleryPro
       <div className="relative mt-6 mx-auto max-w-8xl px-0 sm:px-6 lg:px-8">
         <Carousel opts={{ align: 'start' }} className="w-full">
           <CarouselContent className="sm:px-0 px-1 sm:pb-0 pb-3" hasCards={true}>
-            {storefrontCategories.map((cat) => {
+            {storefrontCategories.map((cat, idx) => {
               const catImage = cat.category.image as Media | null
 
               return (
@@ -52,7 +52,7 @@ export const CategoriesGallery = ({ storefrontCategories }: CategoriesGalleryPro
                             fill
                             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                             className="object-cover transition-transform duration-300 group-hover:scale-105"
-                            loading="lazy"
+                            priority={idx < 3}
                           />
                         ) : (
                           <div className="flex h-full items-center justify-center text-muted-foreground text-sm">

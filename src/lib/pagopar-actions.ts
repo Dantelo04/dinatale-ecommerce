@@ -4,6 +4,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { createTransaction } from '@/lib/pagopar'
 import type { PagoparItem } from '@/lib/pagopar'
+import { atomicDecrementStock, atomicRollbackStock } from '@/lib/stock-ops'
 
 interface CheckoutItem {
   id: number
@@ -28,29 +29,15 @@ export async function processPagoparCheckout(
 ): Promise<PagoparCheckoutSuccess | PagoparCheckoutError> {
   const payload = await getPayload({ config: await config })
 
+  const decremented: CheckoutItem[] = []
   for (const item of items) {
-    const product = await payload.findByID({ collection: 'products', id: item.id, depth: 0 })
-    if ((product.stock ?? 0) < item.quantity) {
-      return {
-        success: false,
-        error: `Solo quedan ${product.stock} unidades de "${item.name}".`,
-      }
+    const ok = await atomicDecrementStock(payload, item.id, item.quantity)
+    if (!ok) {
+      await Promise.all(decremented.map((d) => atomicRollbackStock(payload, d.id, d.quantity)))
+      return { success: false, error: `No hay suficiente stock de "${item.name}".` }
     }
+    decremented.push(item)
   }
-
-  await Promise.all(
-    items.map(async (item) => {
-      const product = await payload.findByID({ collection: 'products', id: item.id, depth: 0 })
-      return payload.update({
-        collection: 'products',
-        id: item.id,
-        data: {
-          sales: (product.sales ?? 0) + item.quantity,
-          stock: Math.max(0, (product.stock ?? 0) - item.quantity),
-        },
-      })
-    }),
-  )
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
   const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -117,19 +104,7 @@ export async function processPagoparCheckout(
 
   if (!result.ok) {
     await payload.delete({ collection: 'orders', id: order.id, overrideAccess: true })
-    await Promise.all(
-      items.map(async (item) => {
-        const product = await payload.findByID({ collection: 'products', id: item.id, depth: 0 })
-        return payload.update({
-          collection: 'products',
-          id: item.id,
-          data: {
-            sales: Math.max(0, (product.sales ?? 0) - item.quantity),
-            stock: (product.stock ?? 0) + item.quantity,
-          },
-        })
-      }),
-    )
+    await Promise.all(items.map((item) => atomicRollbackStock(payload, item.id, item.quantity)))
     return { success: false, error: result.error }
   }
 
