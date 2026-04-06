@@ -600,16 +600,6 @@ export interface SiteSetting {
 export interface StorefrontContent {
   id: number;
   /**
-   * Arrastra las secciones para cambiar su orden en el home. El Hero siempre se muestra primero.
-   */
-  homeSections?:
-    | {
-        type: 'categories' | 'featured' | 'reviews' | 'latest';
-        enabled?: boolean | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
    * Cada slide se muestra en el carrusel del banner principal
    */
   heroSlides?:
@@ -622,6 +612,24 @@ export interface StorefrontContent {
          * Ruta interna (ej: /tienda) o URL externa
          */
         buttonLink?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Arrastra las secciones para cambiar su orden en el home. El Hero siempre se muestra primero.
+   */
+  homeSections?:
+    | {
+        type: 'categories' | 'featured' | 'reviews' | 'latest';
+        /**
+         * Dejar vacío para usar el título por defecto
+         */
+        title?: string | null;
+        /**
+         * Si no se selecciona, se usará la variante por defecto
+         */
+        variant?: ('variant1' | 'variant2') | null;
+        enabled?: boolean | null;
         id?: string | null;
       }[]
     | null;
@@ -723,13 +731,6 @@ export interface SiteSettingsSelect<T extends boolean = true> {
  * via the `definition` "storefront-content_select".
  */
 export interface StorefrontContentSelect<T extends boolean = true> {
-  homeSections?:
-    | T
-    | {
-        type?: T;
-        enabled?: T;
-        id?: T;
-      };
   heroSlides?:
     | T
     | {
@@ -738,6 +739,15 @@ export interface StorefrontContentSelect<T extends boolean = true> {
         image?: T;
         buttonText?: T;
         buttonLink?: T;
+        id?: T;
+      };
+  homeSections?:
+    | T
+    | {
+        type?: T;
+        title?: T;
+        variant?: T;
+        enabled?: T;
         id?: T;
       };
   categories?:

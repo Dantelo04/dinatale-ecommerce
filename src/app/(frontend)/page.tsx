@@ -65,7 +65,12 @@ export default async function HomePage() {
         switch (section.type) {
           case 'categories':
             return (
-              <CategoriesGallery key={section.id} storefrontCategories={storefrontCategories} />
+              <CategoriesGallery
+                key={section.id}
+                storefrontCategories={storefrontCategories}
+                title={section.title || undefined}
+                variant={section.variant || undefined}
+              />
             )
           case 'featured':
             return featured.length > 0 ? (
@@ -73,19 +78,25 @@ export default async function HomePage() {
                 key={section.id}
                 products={featured}
                 currencySymbol={currencySymbol}
-                title="Productos Destacados"
+                title={section.title || 'Productos Destacados'}
                 columnQuantity={5}
               />
             ) : null
           case 'reviews':
-            return placeDetails ? <GoogleReviews key={section.id} place={placeDetails} /> : null
+            return placeDetails ? (
+              <GoogleReviews
+                key={section.id}
+                place={placeDetails}
+                title={section.title || undefined}
+              />
+            ) : null
           case 'latest':
             return latest.length > 0 ? (
               <ProductsGallery
                 key={section.id}
                 products={latest}
                 currencySymbol={currencySymbol}
-                title="Ultimos Productos"
+                title={section.title || 'Ultimos Productos'}
                 columnQuantity={5}
               />
             ) : null

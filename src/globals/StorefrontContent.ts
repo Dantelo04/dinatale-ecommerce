@@ -16,36 +16,6 @@ export const StorefrontContent: GlobalConfig = {
   },
   fields: [
     {
-      name: 'homeSections',
-      label: 'Secciones del Home',
-      type: 'array',
-      admin: {
-        description:
-          'Arrastra las secciones para cambiar su orden en el home. El Hero siempre se muestra primero.',
-      },
-      labels: { singular: 'Seccion', plural: 'Secciones' },
-      fields: [
-        {
-          name: 'type',
-          label: 'Tipo de Seccion',
-          type: 'select',
-          required: true,
-          options: [
-            { label: 'Categorias', value: 'categories' },
-            { label: 'Productos Destacados', value: 'featured' },
-            { label: 'Reseñas de Google', value: 'reviews' },
-            { label: 'Ultimos Productos', value: 'latest' },
-          ],
-        },
-        {
-          name: 'enabled',
-          label: 'Habilitada',
-          type: 'checkbox',
-          defaultValue: true,
-        },
-      ],
-    },
-    {
       name: 'heroSlides',
       label: 'Slides del Banner',
       type: 'array',
@@ -91,6 +61,59 @@ export const StorefrontContent: GlobalConfig = {
           admin: {
             description: 'Ruta interna (ej: /tienda) o URL externa',
           },
+        },
+      ],
+    },
+    {
+      name: 'homeSections',
+      label: 'Secciones del Home',
+      type: 'array',
+      admin: {
+        description:
+          'Arrastra las secciones para cambiar su orden en el home. El Hero siempre se muestra primero.',
+      },
+      labels: { singular: 'Seccion', plural: 'Secciones' },
+      fields: [
+        {
+          name: 'type',
+          label: 'Tipo de Seccion',
+          type: 'select',
+          required: true,
+          options: [
+            { label: 'Categorias', value: 'categories' },
+            { label: 'Productos Destacados', value: 'featured' },
+            { label: 'Reseñas de Google', value: 'reviews' },
+            { label: 'Ultimos Productos', value: 'latest' },
+          ],
+        },
+        {
+          name: 'title',
+          label: 'Titulo de Seccion',
+          type: 'text',
+          admin: {
+            description: 'Dejar vacío para usar el título por defecto',
+            placeholder: 'Ej: Nuestros Destacados',
+          },
+        },
+        {
+          name: 'variant',
+          label: 'Variante de la Seccion',
+          type: 'select',
+          options: [
+            { label: 'Variante 1', value: 'variant1' },
+            { label: 'Variante 2', value: 'variant2' },
+          ],
+          admin: {
+            description: 'Si no se selecciona, se usará la variante por defecto',
+            placeholder: 'Ej: Variante 1',
+          },
+          defaultValue: 'variant1',
+        },
+        {
+          name: 'enabled',
+          label: 'Habilitada',
+          type: 'checkbox',
+          defaultValue: true,
         },
       ],
     },

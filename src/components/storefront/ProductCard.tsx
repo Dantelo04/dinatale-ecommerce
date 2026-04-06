@@ -46,7 +46,7 @@ export function ProductCard({
                 alt={imageAlt}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                className="object-cover transition-transform duration-300 group-hover:scale-105 group-active:scale-105"
                 loading="lazy"
                 style={{ filter: outOfStock ? 'grayscale(50%)' : 'none' }}
               />
@@ -63,7 +63,7 @@ export function ProductCard({
               <Link
                 key={category[0].id}
                 href={`/tienda?categoria=${category[0].slug}`}
-                className="text-xs text-muted-foreground tracking-wider font-medium hover:underline"
+                className="text-xs text-muted-foreground tracking-wider font-medium hover:underline active:underline"
               >
                 {category[0].name}
               </Link>
@@ -73,7 +73,7 @@ export function ProductCard({
             href={`/tienda/${slug}`}
             className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
           >
-            <h3 className="line-clamp-2 font-bold text-sm text-foreground min-w-0 hover:underline">{name}</h3>
+            <h3 className="line-clamp-2 font-bold text-sm text-foreground min-w-0 hover:underline group-active:underline sm:group-active:no-underline">{name}</h3>
             <div className="flex items-center mt-1.5 flex-wrap gap-1">
               {hasDiscount && (
                 <span className="text-sm text-muted-foreground line-through tabular-nums">
