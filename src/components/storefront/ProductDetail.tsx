@@ -119,7 +119,7 @@ export function ProductDetail({ product, currencySymbol, variants, variantLabel 
               {formatPrice(product.price, currencySymbol)}
             </span>
             {hasDiscount && (
-              <span className="text-lg text-muted-foreground line-through tabular-nums">
+              <span className="text-xl text-muted-foreground line-through tabular-nums">
                 {formatPrice(product.compareAtPrice!, currencySymbol)}
               </span>
             )}

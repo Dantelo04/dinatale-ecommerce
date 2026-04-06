@@ -49,7 +49,7 @@ function AggregateRating({ rating, totalReviews }: { rating: number; totalReview
   )
 }
 
-export function GoogleReviews({ place }: { place: PlaceDetails }) {
+export function GoogleReviews({ place, title }: { place: PlaceDetails; title?: string }) {
   const visibleReviews = place.reviews.filter((r) => r.text.length > 0).slice(0, 6)
 
   if (visibleReviews.length === 0) return null
@@ -59,7 +59,7 @@ export function GoogleReviews({ place }: { place: PlaceDetails }) {
       <div className="flex flex-col xl:gap-6 gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex flex-row justify-between items-center w-full flex-wrap gap-2">
           <h2 className="text-xl font-bold tracking-tight text-wrap-balance sm:text-2xl">
-            Lo que dicen nuestros clientes
+            {title ?? 'Lo que dicen nuestros clientes'}
           </h2>
 
           {place.googleMapsUrl && (
