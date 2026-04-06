@@ -43,8 +43,8 @@ export const CategoriesGallery = ({ storefrontCategories }: CategoriesGalleryPro
                   className="pl-3 basis-[45%] sm:basis-1/3 lg:basis-1/5"
                 >
                   <Link href={`/tienda?categoria=${cat.category.slug}`}>
-                    <div className="group relative transition-all active:scale-95 overflow-clip rounded-lg shadow-md">
-                      <div className="relative aspect-3/4 bg-muted">
+                    <div className="group relative transition-all active:scale-95 overflow-hidden rounded-lg shadow-md">
+                      <div className="relative aspect-square bg-muted">
                         {catImage?.url ? (
                           <Image
                             src={catImage.url}
@@ -59,7 +59,7 @@ export const CategoriesGallery = ({ storefrontCategories }: CategoriesGalleryPro
                             {cat.category.name}
                           </div>
                         )}
-                        <div className="absolute bottom-0 left-0 right-0 bg-white/85 backdrop-blur-sm px-3 sm:py-4 py-3 flex items-center justify-between gap-2 w-full">
+                        <div className="absolute bottom-0 left-0 right-0 backdrop-blur-sm bg-white/80 px-3 sm:py-4 py-3 flex items-center justify-between gap-2 w-full">
                           <span className="text-sm font-medium line-clamp-1 text-foreground">
                             {cat.category.name}
                           </span>
