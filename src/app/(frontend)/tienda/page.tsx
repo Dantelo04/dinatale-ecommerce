@@ -9,6 +9,8 @@ import type { Where } from 'payload'
 import type { Category, Media, SiteSetting } from '@/payload-types'
 import type { SerializedProduct } from '@/lib/types'
 import { CornerTools } from '@/components/storefront/CornerTools'
+import { SortSelect } from '@/components/storefront/SortSelect'
+import { resolveSort } from '@/lib/utils'
 
 const PAGE_SIZE = 40
 
@@ -53,9 +55,10 @@ export default async function TiendaPage({
     precioMin?: string
     precioMax?: string
     ofertas?: string
+    ordenar?: string
   }>
 }) {
-  const { categoria, buscar, precioMin, precioMax, ofertas } = await searchParams
+  const { categoria, buscar, precioMin, precioMax, ofertas, ordenar } = await searchParams
 
   const [settings, categories, priceBounds, payload] = await Promise.all([
     getCachedGlobal<SiteSetting>('site-settings')(),
@@ -110,7 +113,7 @@ export default async function TiendaPage({
     where: whereClause,
     limit: PAGE_SIZE,
     page: 1,
-    sort: '-createdAt',
+    sort: resolveSort(ordenar),
     depth: 2,
   })
 
@@ -143,6 +146,7 @@ export default async function TiendaPage({
     precioMin: precioMin ?? undefined,
     precioMax: precioMax ?? undefined,
     categoryId: activeCategoryId,
+    ordenar: ordenar ?? undefined,
   }
 
   return (
@@ -171,6 +175,11 @@ export default async function TiendaPage({
         </aside>
 
         <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-end mb-4">
+            <Suspense>
+              <SortSelect />
+            </Suspense>
+          </div>
           {initialProducts.length === 0 ? (
             <div className="mt-16 text-center">
               <p className="text-lg text-muted-foreground">No se encontraron productos.</p>

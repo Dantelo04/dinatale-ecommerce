@@ -79,6 +79,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const secondaryColor = settings.secondaryColor || '#71717a'
   const logoUrl = (settings.logo as Media)?.url ?? null
   const headerLogoSide = settings.headerLogoSide as 'left' | 'center' | 'right'
+  const showNosotros = !!content.about?.aboutContent
 
   const orgJsonLd = {
     '@context': 'https://schema.org',
@@ -124,6 +125,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             alertText={settings.customAlert?.alertTitle || ''}
             primaryColor={primaryColor}
             isAdmin={isAdmin}
+            showNosotros={showNosotros}
           />
           <main id="main-content" className="flex-1 pb-16">{children}</main>
           <Footer
@@ -132,6 +134,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             hideName={settings.hideName ?? false}
             socialLinks={content.socialLinks}
             siteDescription={settings.siteDescription}
+            showNosotros={showNosotros}
           />
         </CartProvider>
       </body>

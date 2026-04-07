@@ -15,7 +15,7 @@ export default async function HomePage() {
       getCachedGlobal<StorefrontContent>('storefront-content', 2)(),
       getCachedProducts({
         where: { featured: { equals: true }, active: { equals: true } },
-        limit: 4,
+        limit: 5,
         sort: '-createdAt',
       })(),
       getCachedProducts({

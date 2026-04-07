@@ -29,6 +29,7 @@ export interface ProductFilters {
   precioMin?: string
   precioMax?: string
   categoryId?: number | null
+  ordenar?: string
 }
 
 export const ORDER_STATUSES = ['received', 'in_process', 'shipped', 'delivered', 'finalized'] as const

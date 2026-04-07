@@ -6,6 +6,7 @@ import type { Where } from 'payload'
 import type { Category, Media } from '@/payload-types'
 import type { SerializedProduct, ProductFilters } from '@/lib/types'
 import { atomicDecrementStock, atomicRollbackStock } from '@/lib/stock-ops'
+import { resolveSort } from '@/lib/utils'
 
 export type { SerializedProduct }
 
@@ -51,7 +52,7 @@ export async function loadMoreProducts(
     where,
     limit: PAGE_SIZE,
     page,
-    sort: '-createdAt',
+    sort: resolveSort(filters.ordenar),
     depth: 2,
   })
 
