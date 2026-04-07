@@ -19,9 +19,11 @@ interface FooterProps {
     tiktok?: string | null
     googleMaps?: string | null
   } | null
+  showNosotros?: boolean
 }
 
-export function Footer({ siteName, logoUrl, hideName, siteDescription, socialLinks }: FooterProps) {
+export function Footer({ siteName, logoUrl, hideName, siteDescription, socialLinks, showNosotros }: FooterProps) {
+  const navLinks = showNosotros ? NAV_LINKS : NAV_LINKS.filter((l) => l.href !== '/nosotros')
   const hasSocial =
     socialLinks?.instagram ||
     socialLinks?.facebook ||
@@ -65,7 +67,7 @@ export function Footer({ siteName, logoUrl, hideName, siteDescription, socialLin
                 Navegación
               </h3>
               <nav className="flex flex-col gap-2" aria-label="Navegacion del footer">
-                {NAV_LINKS.map((link) => (
+                {navLinks.map((link) => (
                   <CustomLink key={link.href} href={link.href} asChild>
                     <Link href={link.href}>{link.label}</Link>
                   </CustomLink>

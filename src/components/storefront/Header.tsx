@@ -20,6 +20,7 @@ interface HeaderProps {
   alertText: string
   primaryColor: string
   isAdmin?: boolean
+  showNosotros?: boolean
 }
 
 export function Header({
@@ -32,8 +33,10 @@ export function Header({
   alertText,
   primaryColor,
   isAdmin,
+  showNosotros,
 }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const navLinks = showNosotros ? NAV_LINKS : NAV_LINKS.filter((l) => l.href !== '/nosotros')
 
   return (
     <header
@@ -46,7 +49,7 @@ export function Header({
             mobileOpen={mobileOpen}
             setMobileOpen={setMobileOpen}
             side="left"
-            NAV_LINKS={NAV_LINKS}
+            NAV_LINKS={navLinks}
           />
         )}
 
@@ -75,7 +78,7 @@ export function Header({
           className="hidden items-center gap-1 md:flex -mb-0.5"
           aria-label="Navegacion principal"
         >
-          {NAV_LINKS.map((link) => (
+          {navLinks.map((link) => (
             <CustomLink key={link.href} variant="nav" asChild>
               <Link href={link.href}>{link.label}</Link>
             </CustomLink>
@@ -90,7 +93,7 @@ export function Header({
               mobileOpen={mobileOpen}
               setMobileOpen={setMobileOpen}
               side="right"
-              NAV_LINKS={NAV_LINKS}
+              NAV_LINKS={navLinks}
             />
           )}
         </div>

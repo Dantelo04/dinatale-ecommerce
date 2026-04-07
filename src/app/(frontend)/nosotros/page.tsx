@@ -40,7 +40,7 @@ export default async function NosotrosPage() {
             <RichTextContent content={content.about.aboutContent} />
           ) : (
             <p className="text-muted-foreground">
-              Contenido proximamente. Edita desde el panel de administracion.
+              Proximamente...
             </p>
           )}
         </div>
