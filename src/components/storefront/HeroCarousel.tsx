@@ -117,9 +117,9 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
                   priority={index === 0}
                   loading={index === 0 ? 'eager' : 'lazy'}
                   sizes="100vw"
-                  style={{ objectFit: 'cover', filter: slide.title || slide.subtitle ? 'blur(2px)' : undefined }}
+                  style={{ objectFit: 'cover' }}
                 />
-                <div className="absolute inset-0 bg-black/40" />
+                {slide.title && <div className="absolute inset-0 bg-black/60 w-[105%] h-full" />}
                 <div className="relative z-10 mx-auto max-w-3xl px-4 text-center text-white">
                   <h2 className="text-4xl font-bold tracking-tight text-wrap-balance sm:text-5xl lg:text-6xl">
                     {slide.title}
