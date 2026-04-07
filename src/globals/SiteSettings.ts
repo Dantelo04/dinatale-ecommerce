@@ -218,5 +218,18 @@ export const SiteSettings: GlobalConfig = {
         },
       ],
     },
+    {
+      type: 'group',
+      name: 'showTitles',
+      label: 'Mostrar Titulo de la Tienda',
+      fields: [
+        {
+          name: 'showPageTitles',
+          label: 'Mostrar Titulo de la Tienda',
+          type: 'checkbox',
+          defaultValue: true,
+        },
+      ],
+    }
   ],
 }

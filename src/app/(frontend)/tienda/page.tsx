@@ -151,13 +151,18 @@ export default async function TiendaPage({
 
   return (
     <div className="mx-auto max-w-8xl px-4 lg:py-12 py-4 sm:px-6 lg:px-8">
-      <h1 className="lg:text-3xl text-2xl font-bold tracking-tight text-wrap-balance sm:text-4xl">
-        {ofertas === 'true' ? 'Promos' : pageTitle}
-      </h1>
-      {categoryDescription && <p className="mt-2 text-muted-foreground">
-        {categoryDescription}
-      </p>}
-      <hr className="my-4" />
+      {settings.showTitles?.showPageTitles !== false && (
+        <>
+          <h1 className="lg:text-3xl text-2xl font-bold tracking-tight text-wrap-balance sm:text-4xl">
+            {ofertas === 'true' ? 'Promos' : pageTitle}
+          </h1>
+          {categoryDescription && <p className="mt-2 text-muted-foreground">
+            {categoryDescription}
+          </p>}
+          <hr className="my-4" />
+        </>
+      )}
+      
 
       <div className="flex flex-col lg:flex-row gap-8">
         <aside className="lg:w-64 shrink-0">

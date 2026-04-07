@@ -7,9 +7,15 @@ import type { SiteSetting, StorefrontContent } from '@/payload-types'
 
 export const metadata = {
   title: 'Contacto',
-  description: '¿Tenés alguna pregunta? Contactanos por email, teléfono o envianos un mensaje directo.',
+  description:
+    '¿Tenés alguna pregunta? Contactanos por email, teléfono o envianos un mensaje directo.',
   alternates: { canonical: '/contacto' },
-  openGraph: { type: 'website' as const, title: 'Contacto', url: 'https://www.dinatale.com.py/contacto', locale: 'es_AR' },
+  openGraph: {
+    type: 'website' as const,
+    title: 'Contacto',
+    url: 'https://www.dinatale.com.py/contacto',
+    locale: 'es_AR',
+  },
 }
 
 export default async function ContactoPage() {
@@ -23,12 +29,14 @@ export default async function ContactoPage() {
 
   return (
     <div className="mx-auto max-w-8xl px-4 lg:py-12 py-4 sm:px-6 lg:px-8">
-      <h1 className="lg:text-3xl text-2xl font-bold tracking-tight text-wrap-balance sm:text-4xl">
-        Contacto
-      </h1>
-      <p className="mt-2 text-muted-foreground text-pretty">
-        Tienes alguna pregunta? No dudes en contactarnos.
-      </p>
+      <>
+        <h1 className="lg:text-3xl text-2xl font-bold tracking-tight text-wrap-balance sm:text-4xl">
+          Contacto
+        </h1>
+        <p className="mt-2 text-muted-foreground text-pretty">
+          Tienes alguna pregunta? No dudes en contactarnos.
+        </p>
+      </>
 
       <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-2">
         {hasContactInfo && (
@@ -36,7 +44,10 @@ export default async function ContactoPage() {
             {contact?.contactEmail && (
               <Card>
                 <CardContent className="flex items-start gap-4 p-6">
-                  <Mail className="mt-0.5 h-5 w-5 flex-shrink-0 text-site-primary" aria-hidden="true" />
+                  <Mail
+                    className="mt-0.5 h-5 w-5 flex-shrink-0 text-site-primary"
+                    aria-hidden="true"
+                  />
                   <div>
                     <h3 className="text-sm font-semibold">Email</h3>
                     <a
@@ -53,7 +64,10 @@ export default async function ContactoPage() {
             {contact?.contactPhone && (
               <Card>
                 <CardContent className="flex items-start gap-4 p-6">
-                  <Phone className="mt-0.5 h-5 w-5 flex-shrink-0 text-site-primary" aria-hidden="true" />
+                  <Phone
+                    className="mt-0.5 h-5 w-5 flex-shrink-0 text-site-primary"
+                    aria-hidden="true"
+                  />
                   <div>
                     <h3 className="text-sm font-semibold">Telefono</h3>
                     <a
@@ -70,7 +84,10 @@ export default async function ContactoPage() {
             {contact?.contactAddress && (
               <Card>
                 <CardContent className="flex items-start gap-4 p-6">
-                  <MapPin className="mt-0.5 h-5 w-5 flex-shrink-0 text-site-primary" aria-hidden="true" />
+                  <MapPin
+                    className="mt-0.5 h-5 w-5 flex-shrink-0 text-site-primary"
+                    aria-hidden="true"
+                  />
                   <div>
                     <h3 className="text-sm font-semibold">Direccion</h3>
                     <p className="text-sm text-muted-foreground whitespace-pre-line">

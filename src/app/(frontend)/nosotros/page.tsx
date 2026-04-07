@@ -2,17 +2,25 @@ import React from 'react'
 import Image from 'next/image'
 import { RichTextContent } from '@/components/storefront/RichTextContent'
 import { getCachedGlobal } from '@/lib/payload-cache'
-import type { Media, StorefrontContent } from '@/payload-types'
+import type { Media, SiteSetting, StorefrontContent } from '@/payload-types'
 
 export const metadata = {
   title: 'Nosotros',
   description: 'Conocé más sobre nosotros, nuestra historia y los valores que nos guían.',
   alternates: { canonical: '/nosotros' },
-  openGraph: { type: 'website' as const, title: 'Nosotros', url: 'https://www.dinatale.com.py/nosotros', locale: 'es_AR' },
+  openGraph: {
+    type: 'website' as const,
+    title: 'Nosotros',
+    url: 'https://www.dinatale.com.py/nosotros',
+    locale: 'es_AR',
+  },
 }
 
 export default async function NosotrosPage() {
-  const content = await getCachedGlobal<StorefrontContent>('storefront-content')()
+  const [content, settings] = await Promise.all([
+    getCachedGlobal<StorefrontContent>('storefront-content')(),
+    getCachedGlobal<SiteSetting>('site-settings')(),
+  ])
 
   const aboutImage = content.about?.aboutImage as Media | null
 
@@ -35,13 +43,13 @@ export default async function NosotrosPage() {
             />
           </div>
         )}
-        <div className={`prose prose-neutral max-w-none text-foreground ${!aboutImage?.url ? 'lg:col-span-2' : ''}`}>
+        <div
+          className={`prose prose-neutral max-w-none text-foreground ${!aboutImage?.url ? 'lg:col-span-2' : ''}`}
+        >
           {content.about?.aboutContent ? (
             <RichTextContent content={content.about.aboutContent} />
           ) : (
-            <p className="text-muted-foreground">
-              Proximamente...
-            </p>
+            <p className="text-muted-foreground">Proximamente...</p>
           )}
         </div>
       </div>

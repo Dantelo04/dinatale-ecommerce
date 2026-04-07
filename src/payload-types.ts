@@ -590,6 +590,9 @@ export interface SiteSetting {
   customAlert?: {
     alertTitle?: string | null;
   };
+  showTitles?: {
+    showPageTitles?: boolean | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -721,6 +724,11 @@ export interface SiteSettingsSelect<T extends boolean = true> {
     | T
     | {
         alertTitle?: T;
+      };
+  showTitles?:
+    | T
+    | {
+        showPageTitles?: T;
       };
   updatedAt?: T;
   createdAt?: T;
