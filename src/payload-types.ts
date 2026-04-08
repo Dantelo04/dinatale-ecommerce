@@ -72,6 +72,7 @@ export interface Config {
     products: Product;
     categories: Category;
     orders: Order;
+    'pending-pagopar-transactions': PendingPagoparTransaction;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -84,6 +85,7 @@ export interface Config {
     products: ProductsSelect<false> | ProductsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     orders: OrdersSelect<false> | OrdersSelect<true>;
+    'pending-pagopar-transactions': PendingPagoparTransactionsSelect<false> | PendingPagoparTransactionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -286,6 +288,37 @@ export interface Order {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pending-pagopar-transactions".
+ */
+export interface PendingPagoparTransaction {
+  id: number;
+  pagoparHash: string;
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string;
+  customerCI: string;
+  ciudadId: number;
+  siteName: string;
+  customerComment?: string | null;
+  /**
+   * Array JSON de items: [{id, name, quantity, price, imageUrl}]
+   */
+  items:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  totalAmount: number;
+  totalItems: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -327,6 +360,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'orders';
         value: number | Order;
+      } | null)
+    | ({
+        relationTo: 'pending-pagopar-transactions';
+        value: number | PendingPagoparTransaction;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -476,6 +513,25 @@ export interface OrdersSelect<T extends boolean = true> {
   totalAmount?: T;
   customerComment?: T;
   deliveredAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pending-pagopar-transactions_select".
+ */
+export interface PendingPagoparTransactionsSelect<T extends boolean = true> {
+  pagoparHash?: T;
+  customerName?: T;
+  customerPhone?: T;
+  customerEmail?: T;
+  customerCI?: T;
+  ciudadId?: T;
+  siteName?: T;
+  customerComment?: T;
+  items?: T;
+  totalAmount?: T;
+  totalItems?: T;
   updatedAt?: T;
   createdAt?: T;
 }
