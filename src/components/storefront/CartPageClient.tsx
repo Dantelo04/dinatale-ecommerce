@@ -13,6 +13,7 @@ import { useCart } from './CartProvider'
 import { processCheckout } from '@/lib/product-actions'
 import { processPagoparCheckout } from '@/lib/pagopar-actions'
 import { formatPrice } from '@/lib/utils'
+import { FaWhatsapp } from 'react-icons/fa'
 
 interface CartPageClientProps {
   whatsappNumber: string
@@ -101,7 +102,12 @@ export function CartPageClient({
         window.location.href = result.redirectUrl
       } else {
         const result = await processCheckout(
-          items.map((item) => ({ id: item.id, name: item.name, quantity: item.quantity, price: item.price })),
+          items.map((item) => ({
+            id: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+          })),
           comment.trim() || undefined,
           customerName.trim(),
           customerPhone.trim(),
@@ -126,12 +132,17 @@ export function CartPageClient({
   if (items.length === 0) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-20 text-center sm:px-6">
-        <ShoppingCart className="mx-auto h-16 w-16 text-muted-foreground" aria-hidden="true" strokeWidth={1.5}/>
+        <ShoppingCart
+          className="mx-auto h-16 w-16 text-muted-foreground"
+          aria-hidden="true"
+          strokeWidth={1.5}
+        />
         <h1 className="mt-6 text-2xl font-bold text-wrap-balance">Tu carrito esta vacio</h1>
-        <p className="mt-2 text-muted-foreground">
-          Agrega productos para comenzar tu pedido.
-        </p>
-        <Button asChild className="mt-8 bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity">
+        <p className="mt-2 text-muted-foreground">Agrega productos para comenzar tu pedido.</p>
+        <Button
+          asChild
+          className="mt-8 bg-site-primary text-primary-foreground hover:opacity-90 transition-opacity"
+        >
           <Link href="/tienda">Ver Productos</Link>
         </Button>
       </div>
@@ -140,7 +151,9 @@ export function CartPageClient({
 
   return (
     <div className="mx-auto max-w-8xl px-4 lg:py-12 py-4 sm:px-6 lg:px-8">
-      <h1 className="lg:text-3xl text-2xl font-bold tracking-tight text-wrap-balance">Carrito de Compras</h1>
+      <h1 className="lg:text-3xl text-2xl font-bold tracking-tight text-wrap-balance">
+        Carrito de Compras
+      </h1>
       <p className="mt-1 text-muted-foreground">
         {totalItems} {totalItems === 1 ? 'producto' : 'productos'}
       </p>
@@ -189,7 +202,10 @@ export function CartPageClient({
                       >
                         <Minus className="h-3 w-3" aria-hidden="true" />
                       </Button>
-                      <span className="w-8 text-center text-sm tabular-nums" aria-label={`Cantidad: ${item.quantity}`}>
+                      <span
+                        className="w-8 text-center text-sm tabular-nums"
+                        aria-label={`Cantidad: ${item.quantity}`}
+                      >
                         {item.quantity}
                       </span>
                       <Button
@@ -215,8 +231,49 @@ export function CartPageClient({
                 </CardContent>
               </Card>
             ))}
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-4 sm:hidden"
+              onClick={clearCart}
+            >
+              Vaciar carrito
+            </Button>
           </div>
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {pagoparEnabled && (
+              <div className="flex flex-col gap-2 sm:hidden">
+                <p className="text-sm font-medium">Método de pago</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod('whatsapp')}
+                    className={`flex flex-col items-center gap-1 rounded-lg border-2 p-3 text-xs font-medium transition-colors ${
+                      paymentMethod === 'whatsapp'
+                        ? 'border-green-600 bg-green-50 text-green-700'
+                        : 'border-border text-muted-foreground hover:border-muted-foreground'
+                    }`}
+                    aria-pressed={paymentMethod === 'whatsapp'}
+                  >
+                    <FaWhatsapp className="h-5 w-5" aria-hidden="true" />
+                    WhatsApp
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod('pagopar')}
+                    className={`flex flex-col items-center gap-1 rounded-lg border-2 p-3 text-xs font-medium transition-colors ${
+                      paymentMethod === 'pagopar'
+                        ? 'border-blue-600 bg-blue-50 text-blue-700'
+                        : 'border-border text-muted-foreground hover:border-muted-foreground'
+                    }`}
+                    aria-pressed={paymentMethod === 'pagopar'}
+                  >
+                    <CreditCard className="h-5 w-5" aria-hidden="true" />
+                    Pagopar
+                  </button>
+                </div>
+              </div>
+            )}
             <div>
               <label htmlFor="customer-name" className="mb-2 block text-sm font-medium">
                 Nombre <span className="text-destructive">*</span>
@@ -286,12 +343,7 @@ export function CartPageClient({
               rows={4}
             />
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="mt-4"
-            onClick={clearCart}
-          >
+          <Button variant="outline" size="sm" className="mt-4 hidden sm:block" onClick={clearCart}>
             Vaciar carrito
           </Button>
         </div>
@@ -318,7 +370,7 @@ export function CartPageClient({
               </div>
 
               {pagoparEnabled && (
-                <div className="flex flex-col gap-2">
+                <div className="flex-col gap-2 hidden sm:flex">
                   <p className="text-sm font-medium">Método de pago</p>
                   <div className="grid grid-cols-2 gap-2">
                     <button
@@ -331,7 +383,7 @@ export function CartPageClient({
                       }`}
                       aria-pressed={paymentMethod === 'whatsapp'}
                     >
-                      <MessageCircle className="h-5 w-5" aria-hidden="true" />
+                      <FaWhatsapp className="h-5 w-5" aria-hidden="true" />
                       WhatsApp
                     </button>
                     <button
@@ -374,7 +426,7 @@ export function CartPageClient({
                   onClick={handleCheckout}
                   disabled={checkoutLoading}
                 >
-                  <MessageCircle className="mr-2 h-5 w-5" aria-hidden="true" />
+                  <FaWhatsapp className="mr-2 h-5 w-5" aria-hidden="true" />
                   {checkoutLoading ? 'Procesando...' : 'Pedir por WhatsApp'}
                 </Button>
               )}
