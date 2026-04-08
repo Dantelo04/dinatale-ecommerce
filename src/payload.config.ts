@@ -12,6 +12,7 @@ import { Media } from './collections/Media'
 import { Products } from './collections/Products'
 import { Categories } from './collections/Categories'
 import { Orders } from './collections/Orders'
+import { PendingPagoparTransactions } from './collections/PendingPagoparTransactions'
 import { SiteSettings } from './globals/SiteSettings'
 import { StorefrontContent } from './globals/StorefrontContent'
 
@@ -56,7 +57,7 @@ export default buildConfig({
     supportedLanguages: { es },
     fallbackLanguage: 'es',
   },
-  collections: [Users, Media, Products, Categories, Orders],
+  collections: [Users, Media, Products, Categories, Orders, PendingPagoparTransactions],
   globals: [SiteSettings, StorefrontContent],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

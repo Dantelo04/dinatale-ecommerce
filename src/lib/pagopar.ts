@@ -60,6 +60,7 @@ interface PagoparWebhookPayload {
   hash_pedido: string
   token: string
   pagado: boolean
+  cancelado: boolean
   numero_pedido?: string
   forma_pago?: string
 }
@@ -117,6 +118,7 @@ export function parseWebhookBody(body: unknown): PagoparWebhookPayload | null {
     hash_pedido: first.hash_pedido,
     token: first.token,
     pagado: first.pagado === true,
+    cancelado: first.cancelado === true,
     numero_pedido: typeof first.numero_pedido === 'string' ? first.numero_pedido : undefined,
     forma_pago: typeof first.forma_pago === 'string' ? first.forma_pago : undefined,
   }
@@ -179,7 +181,7 @@ export async function createTransaction(
 
 export async function queryOrderStatus(hashPedido: string) {
   const { publicKey, privateKey } = getKeys()
-  const token = generateQueryToken(privateKey)
+  const token = sha1(`${privateKey}CONSULTA`)
 
   const res = await fetch(`${API_BASE}/pedidos/1.1/traer`, {
     method: 'POST',
@@ -190,7 +192,7 @@ export async function queryOrderStatus(hashPedido: string) {
     body: JSON.stringify({
       hash_pedido: hashPedido,
       token,
-      public_key: publicKey,
+      token_publico: publicKey,
     }),
   })
 

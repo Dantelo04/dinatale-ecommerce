@@ -4,7 +4,6 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { createTransaction } from '@/lib/pagopar'
 import type { PagoparItem } from '@/lib/pagopar'
-import { atomicDecrementStock, atomicRollbackStock } from '@/lib/stock-ops'
 
 interface CheckoutItem {
   id: number
@@ -14,7 +13,7 @@ interface CheckoutItem {
   imageUrl?: string | null
 }
 
-type PagoparCheckoutSuccess = { success: true; redirectUrl: string; orderNumber: string }
+type PagoparCheckoutSuccess = { success: true; redirectUrl: string }
 type PagoparCheckoutError = { success: false; error: string }
 
 export async function processPagoparCheckout(
@@ -29,40 +28,8 @@ export async function processPagoparCheckout(
 ): Promise<PagoparCheckoutSuccess | PagoparCheckoutError> {
   const payload = await getPayload({ config: await config })
 
-  const decremented: CheckoutItem[] = []
-  for (const item of items) {
-    const ok = await atomicDecrementStock(payload, item.id, item.quantity)
-    if (!ok) {
-      await Promise.all(decremented.map((d) => atomicRollbackStock(payload, d.id, d.quantity)))
-      return { success: false, error: `No hay suficiente stock de "${item.name}".` }
-    }
-    decremented.push(item)
-  }
-
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
   const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-
-  const order = await payload.create({
-    collection: 'orders',
-    overrideAccess: true,
-    draft: false,
-    data: {
-      status: 'received',
-      paymentMethod: 'pagopar',
-      customerName,
-      customerPhone,
-      customerEmail,
-      items: items.map((item) => ({
-        product: item.id,
-        productName: item.name,
-        quantity: item.quantity,
-        unitPrice: item.price,
-      })),
-      totalItems,
-      totalAmount,
-      ...(customerComment ? { customerComment } : {}),
-    },
-  })
 
   const publicKey = process.env.PAGOPAR_PUBLIC_KEY ?? ''
 
@@ -82,8 +49,12 @@ export async function processPagoparCheckout(
     id_producto: item.id,
   }))
 
+  // 2. Generate a temporary order ID for Pagopar (not persisted as an order yet)
+  const tempOrderId = `ORD-${Date.now()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`
+
+  // 3. Initiate Pagopar transaction — if this fails, rollback stock and return error without DB records
   const result = await createTransaction({
-    orderId: order.orderNumber!,
+    orderId: tempOrderId,
     totalAmount,
     description: `Pedido en ${siteName}`,
     buyer: {
@@ -103,21 +74,36 @@ export async function processPagoparCheckout(
   })
 
   if (!result.ok) {
-    await payload.delete({ collection: 'orders', id: order.id, overrideAccess: true })
-    await Promise.all(items.map((item) => atomicRollbackStock(payload, item.id, item.quantity)))
     return { success: false, error: result.error }
   }
 
-  await payload.update({
-    collection: 'orders',
-    id: order.id,
+  // 4. Store pending transaction — order will be created by webhook on payment confirmation
+  await payload.create({
+    collection: 'pending-pagopar-transactions',
     overrideAccess: true,
-    data: { pagoparHash: result.hashPedido },
+    data: {
+      pagoparHash: result.hashPedido,
+      customerName,
+      customerPhone,
+      customerEmail,
+      customerCI,
+      ciudadId,
+      siteName,
+      items: items.map((item) => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        imageUrl: item.imageUrl ?? null,
+      })),
+      totalItems,
+      totalAmount,
+      ...(customerComment ? { customerComment } : {}),
+    },
   })
 
   return {
     success: true,
     redirectUrl: result.redirectUrl,
-    orderNumber: order.orderNumber!,
   }
 }

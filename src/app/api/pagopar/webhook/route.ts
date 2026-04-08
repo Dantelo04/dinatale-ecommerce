@@ -1,54 +1,137 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { parseWebhookBody, verifyWebhookToken } from '@/lib/pagopar'
+import { parseWebhookBody, verifyWebhookToken, queryOrderStatus } from '@/lib/pagopar'
+import { atomicDecrementStock } from '@/lib/stock-ops'
+
+interface PendingItem {
+  id: number
+  name: string
+  quantity: number
+  price: number
+  imageUrl?: string | null
+}
 
 export function GET() {
   return NextResponse.json({ respuesta: true, resultado: 'OK' })
 }
 
 export async function POST(req: NextRequest) {
+  const rawText = await req.text()
+  console.log('[pagopar/webhook] content-type:', req.headers.get('content-type'))
+  console.log('[pagopar/webhook] raw body:', rawText)
+
   let body: unknown
   try {
-    body = await req.json()
+    body = JSON.parse(rawText)
   } catch {
-    return NextResponse.json({ respuesta: false, resultado: 'Invalid JSON' }, { status: 400 })
+    // Pagopar might send form-encoded data
+    try {
+      const params = new URLSearchParams(rawText)
+      const obj: Record<string, string> = {}
+      params.forEach((v, k) => { obj[k] = v })
+      body = obj
+    } catch {
+      return NextResponse.json({ respuesta: false, resultado: 'Invalid body' }, { status: 400 })
+    }
   }
+
+  console.log('[pagopar/webhook] parsed body:', JSON.stringify(body))
 
   const data = parseWebhookBody(body)
   if (!data) {
+    console.log('[pagopar/webhook] parseWebhookBody returned null — unexpected format')
     return NextResponse.json({ respuesta: false, resultado: 'Payload inválido' }, { status: 400 })
   }
 
+  console.log('[pagopar/webhook] parsed data:', JSON.stringify(data))
+
   if (!verifyWebhookToken(data.hash_pedido, data.token)) {
+    console.log('[pagopar/webhook] token verification failed')
     return NextResponse.json({ respuesta: false, resultado: 'Token inválido' }, { status: 401 })
   }
 
+  // Paso 3: query Pagopar to confirm payment status (required for staging certification)
+  const statusResult = await queryOrderStatus(data.hash_pedido)
+  console.log('[pagopar/webhook] queryOrderStatus result:', JSON.stringify(statusResult))
+
+  // Process order (create/cancel) before responding
+  await processWebhook(data)
+
+  // Paso 2: return just the "resultado" array — Pagopar expects this exact format
+  const b = body as Record<string, unknown>
+  return NextResponse.json(b.resultado)
+}
+
+async function processWebhook(data: NonNullable<ReturnType<typeof parseWebhookBody>>) {
   const payload = await getPayload({ config: await config })
 
-  const found = await payload.find({
+  // Check if order was already created (idempotent — webhook may fire more than once)
+  const existingOrder = await payload.find({
     collection: 'orders',
     where: { pagoparHash: { equals: data.hash_pedido } },
     limit: 1,
     overrideAccess: true,
-    depth: 1,
+    depth: 0,
+  })
+  if (existingOrder.docs.length > 0) return
+
+  // Find the pending transaction
+  const found = await payload.find({
+    collection: 'pending-pagopar-transactions',
+    where: { pagoparHash: { equals: data.hash_pedido } },
+    limit: 1,
+    overrideAccess: true,
+    depth: 0,
   })
 
-  const order = found.docs[0]
-  if (!order) {
-    return NextResponse.json({ respuesta: false, resultado: 'Pedido no encontrado' }, { status: 404 })
+  const pending = found.docs[0]
+  if (!pending) {
+    console.log('[pagopar/webhook] no pending transaction found for hash:', data.hash_pedido)
+    return
   }
+
+  const items = pending.items as PendingItem[]
 
   if (data.pagado) {
-    await payload.update({
+    // Payment confirmed — decrement stock now that payment is confirmed
+    for (const item of items) {
+      await atomicDecrementStock(payload, item.id, item.quantity)
+    }
+
+    // Create the real order
+    await payload.create({
       collection: 'orders',
-      id: order.id,
       overrideAccess: true,
-      data: { status: 'in_process' },
+      data: {
+        status: 'received',
+        paymentMethod: 'pagopar',
+        pagoparHash: pending.pagoparHash,
+        customerName: pending.customerName,
+        customerPhone: pending.customerPhone,
+        customerEmail: pending.customerEmail as string,
+        items: items.map((item) => ({
+          product: item.id,
+          productName: item.name,
+          quantity: item.quantity,
+          unitPrice: item.price,
+        })),
+        totalItems: pending.totalItems,
+        totalAmount: pending.totalAmount,
+        ...(pending.customerComment ? { customerComment: pending.customerComment as string } : {}),
+      },
+    })
+    await payload.delete({
+      collection: 'pending-pagopar-transactions',
+      id: pending.id,
+      overrideAccess: true,
+    })
+  } else if (data.cancelado) {
+    // Payment explicitly cancelled — clean up pending transaction
+    await payload.delete({
+      collection: 'pending-pagopar-transactions',
+      id: pending.id,
+      overrideAccess: true,
     })
   }
-  // If not paid (expired/rejected), leave as 'received' — admin can cancel manually.
-  // Stock was already decremented at checkout initiation.
-
-  return NextResponse.json({ respuesta: true, resultado: 'OK' })
 }
