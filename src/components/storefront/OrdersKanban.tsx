@@ -12,7 +12,7 @@ import {
 } from '@dnd-kit/core'
 import { useDroppable } from '@dnd-kit/core'
 import { useDraggable } from '@dnd-kit/core'
-import { RefreshCw, Phone, Package, Hash, User, MessageSquare } from 'lucide-react'
+import { RefreshCw, Phone, Package, Hash, User, MessageSquare, MapPin } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -98,6 +98,18 @@ function OrderCard({ order, currencySymbol }: { order: SerializedOrder; currency
                   <span>{order.customerPhone}</span>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Delivery */}
+          {order.deliveryMethod && (
+            <div className="flex items-center gap-1.5 text-xs text-gray-600">
+              <MapPin className="w-3 h-3 text-gray-400 shrink-0" />
+              <span className="truncate">
+                {order.deliveryMethod === 'delivery'
+                  ? order.deliveryAddress || 'Envío'
+                  : 'Retiro en local'}
+              </span>
             </div>
           )}
 

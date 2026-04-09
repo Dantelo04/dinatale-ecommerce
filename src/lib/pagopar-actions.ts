@@ -25,6 +25,8 @@ export async function processPagoparCheckout(
   ciudadId: number,
   siteName: string,
   customerComment?: string,
+  deliveryMethod?: 'pickup' | 'delivery',
+  deliveryAddress?: string,
 ): Promise<PagoparCheckoutSuccess | PagoparCheckoutError> {
   const payload = await getPayload({ config: await config })
 
@@ -64,7 +66,7 @@ export async function processPagoparCheckout(
       telefono: customerPhone,
       tipo_documento: 'CI',
       documento: customerCI,
-      direccion: '',
+      direccion: deliveryAddress || '',
       direccion_referencia: null,
       coordenadas: '',
       ruc: '',
@@ -99,6 +101,8 @@ export async function processPagoparCheckout(
       totalItems,
       totalAmount,
       ...(customerComment ? { customerComment } : {}),
+      ...(deliveryMethod ? { deliveryMethod } : {}),
+      ...(deliveryAddress ? { deliveryAddress } : {}),
     },
   })
 

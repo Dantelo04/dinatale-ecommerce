@@ -26,6 +26,8 @@ function serializeOrder(o: {
   totalItems: number
   totalAmount: number
   customerComment?: string | null
+  deliveryMethod?: 'pickup' | 'delivery' | null
+  deliveryAddress?: string | null
   createdAt: string
 }): SerializedOrder {
   return {
@@ -42,6 +44,8 @@ function serializeOrder(o: {
     totalItems: o.totalItems,
     totalAmount: o.totalAmount,
     customerComment: o.customerComment ?? null,
+    deliveryMethod: o.deliveryMethod ?? null,
+    deliveryAddress: o.deliveryAddress ?? null,
     createdAt: o.createdAt,
   }
 }

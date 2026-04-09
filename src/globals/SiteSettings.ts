@@ -177,6 +177,36 @@ export const SiteSettings: GlobalConfig = {
               'Si se activa, después de confirmar el pedido se redirige al cliente a la página de estado del pedido',
           },
         },
+        {
+          name: 'showPickup',
+          label: 'Mostrar opción "Pasar a retirar" en el carrito',
+          type: 'checkbox',
+          defaultValue: false,
+        },
+        {
+          name: 'pickupInfo',
+          label: 'Especificaciones para "Pasar a retirar"',
+          type: 'text',
+          admin: {
+            description: 'Ej: "Tiempo de espera de 1 a 2 días hábiles"',
+            condition: (data) => data?.storefront?.showPickup,
+          },
+        },
+        {
+          name: 'showDelivery',
+          label: 'Mostrar opción "Envío" en el carrito',
+          type: 'checkbox',
+          defaultValue: false,
+        },
+        {
+          name: 'deliveryInfo',
+          label: 'Especificaciones para "Envío"',
+          type: 'text',
+          admin: {
+            description: 'Ej: "Tiempo de envío de 2 a 3 días hábiles"',
+            condition: (data) => data?.storefront?.showDelivery,
+          },
+        },
       ],
     },
     {

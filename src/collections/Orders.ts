@@ -146,6 +146,26 @@ export const Orders: CollectionConfig = {
       label: 'Comentario del cliente',
     },
     {
+      name: 'deliveryMethod',
+      type: 'select',
+      label: 'Método de Entrega',
+      options: [
+        { label: 'Pasar a retirar', value: 'pickup' },
+        { label: 'Envío', value: 'delivery' },
+      ],
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'deliveryAddress',
+      type: 'text',
+      label: 'Dirección de Envío',
+      admin: {
+        condition: (data) => data?.deliveryMethod === 'delivery',
+      },
+    },
+    {
       name: 'deliveredAt',
       type: 'date',
       label: 'Fecha de entrega',

@@ -119,6 +119,8 @@ async function processWebhook(data: NonNullable<ReturnType<typeof parseWebhookBo
         totalItems: pending.totalItems,
         totalAmount: pending.totalAmount,
         ...(pending.customerComment ? { customerComment: pending.customerComment as string } : {}),
+        ...(pending.deliveryMethod ? { deliveryMethod: pending.deliveryMethod } : {}),
+        ...(pending.deliveryAddress ? { deliveryAddress: pending.deliveryAddress as string } : {}),
       },
     })
     await payload.delete({

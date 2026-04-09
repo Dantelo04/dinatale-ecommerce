@@ -19,6 +19,10 @@ export default async function CarritoPage() {
       redirectToOrder={settings.storefront?.redirectToOrderAfterCheckout ?? false}
       pagoparEnabled={settings.pagopar?.enabled ?? false}
       pagoparCiudadId={settings.pagopar?.ciudadId ?? 1}
+      showPickup={settings.storefront?.showPickup ?? false}
+      showDelivery={settings.storefront?.showDelivery ?? false}
+      pickupInfo={settings.storefront?.pickupInfo ?? ''}
+      deliveryInfo={settings.storefront?.deliveryInfo ?? ''}
     />
   )
 }

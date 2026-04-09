@@ -282,6 +282,8 @@ export interface Order {
   totalItems: number;
   totalAmount: number;
   customerComment?: string | null;
+  deliveryMethod?: ('pickup' | 'delivery') | null;
+  deliveryAddress?: string | null;
   deliveredAt?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -300,6 +302,8 @@ export interface PendingPagoparTransaction {
   ciudadId: number;
   siteName: string;
   customerComment?: string | null;
+  deliveryMethod?: ('pickup' | 'delivery') | null;
+  deliveryAddress?: string | null;
   /**
    * Array JSON de items: [{id, name, quantity, price, imageUrl}]
    */
@@ -512,6 +516,8 @@ export interface OrdersSelect<T extends boolean = true> {
   totalItems?: T;
   totalAmount?: T;
   customerComment?: T;
+  deliveryMethod?: T;
+  deliveryAddress?: T;
   deliveredAt?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -529,6 +535,8 @@ export interface PendingPagoparTransactionsSelect<T extends boolean = true> {
   ciudadId?: T;
   siteName?: T;
   customerComment?: T;
+  deliveryMethod?: T;
+  deliveryAddress?: T;
   items?: T;
   totalAmount?: T;
   totalItems?: T;
@@ -632,6 +640,16 @@ export interface SiteSetting {
      * Si se activa, después de confirmar el pedido se redirige al cliente a la página de estado del pedido
      */
     redirectToOrderAfterCheckout?: boolean | null;
+    showPickup?: boolean | null;
+    /**
+     * Ej: "Tiempo de espera de 1 a 2 días hábiles"
+     */
+    pickupInfo?: string | null;
+    showDelivery?: boolean | null;
+    /**
+     * Ej: "Tiempo de envío de 2 a 3 días hábiles"
+     */
+    deliveryInfo?: string | null;
   };
   pagopar?: {
     /**
@@ -769,6 +787,10 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         gridCols?: T;
         gridColsMobile?: T;
         redirectToOrderAfterCheckout?: T;
+        showPickup?: T;
+        pickupInfo?: T;
+        showDelivery?: T;
+        deliveryInfo?: T;
       };
   pagopar?:
     | T
