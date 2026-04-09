@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Trash2, Plus, Minus, ShoppingCart, MessageCircle, CreditCard } from 'lucide-react'
+import { Trash2, Plus, Minus, ShoppingCart, CreditCard, Store, Truck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -22,6 +22,10 @@ interface CartPageClientProps {
   redirectToOrder?: boolean
   pagoparEnabled?: boolean
   pagoparCiudadId?: number
+  showPickup?: boolean
+  showDelivery?: boolean
+  pickupInfo?: string
+  deliveryInfo?: string
 }
 
 export function CartPageClient({
@@ -31,6 +35,10 @@ export function CartPageClient({
   redirectToOrder,
   pagoparEnabled = false,
   pagoparCiudadId = 1,
+  showPickup = false,
+  showDelivery = false,
+  pickupInfo = '',
+  deliveryInfo = '',
 }: CartPageClientProps) {
   const { items, totalItems, totalPrice, removeItem, updateQuantity, clearCart } = useCart()
   const [customerName, setCustomerName] = useState('')
@@ -38,6 +46,8 @@ export function CartPageClient({
   const [customerEmail, setCustomerEmail] = useState('')
   const [customerCI, setCustomerCI] = useState('')
   const [comment, setComment] = useState('')
+  const [deliveryMethod, setDeliveryMethod] = useState<'pickup' | 'delivery'>(showPickup ? 'pickup' : 'delivery')
+  const [deliveryAddress, setDeliveryAddress] = useState('')
   const [paymentMethod, setPaymentMethod] = useState<'whatsapp' | 'pagopar'>('whatsapp')
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
   const [checkoutLoading, setCheckoutLoading] = useState(false)
@@ -45,7 +55,12 @@ export function CartPageClient({
   const buildWhatsAppMessage = () => {
     const nameLine = customerName.trim() ? `Nombre: ${customerName.trim()}\n` : ''
     const phoneLine = customerPhone.trim() ? `Teléfono: ${customerPhone.trim()}\n` : ''
-    const contactBlock = nameLine || phoneLine ? `${nameLine}${phoneLine}\n` : ''
+    const deliveryLine = (showPickup || showDelivery)
+      ? deliveryMethod === 'delivery'
+        ? `Envío a: ${deliveryAddress.trim()}\n`
+        : `Retiro en local\n`
+      : ''
+    const contactBlock = nameLine || phoneLine || deliveryLine ? `${nameLine}${phoneLine}${deliveryLine}\n` : ''
     const header = `Hola! Quiero hacer un pedido en ${siteName}:\n\n${contactBlock}`
     const itemLines = items
       .map(
@@ -72,6 +87,10 @@ export function CartPageClient({
       setCheckoutError('Por favor ingresá tu cédula de identidad para pagar con Pagopar.')
       return
     }
+    if (showDelivery && deliveryMethod === 'delivery' && !deliveryAddress.trim()) {
+      setCheckoutError('Por favor ingresá tu dirección de envío.')
+      return
+    }
 
     setCheckoutError(null)
     setCheckoutLoading(true)
@@ -93,6 +112,8 @@ export function CartPageClient({
           pagoparCiudadId,
           siteName,
           comment.trim() || undefined,
+          (showPickup || showDelivery) ? deliveryMethod : undefined,
+          showDelivery && deliveryMethod === 'delivery' ? deliveryAddress.trim() : undefined,
         )
         if (!result.success) {
           setCheckoutError(result.error)
@@ -111,6 +132,8 @@ export function CartPageClient({
           comment.trim() || undefined,
           customerName.trim(),
           customerPhone.trim(),
+          (showPickup || showDelivery) ? deliveryMethod : undefined,
+          showDelivery && deliveryMethod === 'delivery' ? deliveryAddress.trim() : undefined,
         )
         if (!result.success) {
           setCheckoutError(result.error)
@@ -328,6 +351,66 @@ export function CartPageClient({
                   required
                 />
               </div>
+            </div>
+          )}
+
+          {(showPickup || showDelivery) && (
+            <div className="mt-4">
+              <p className="mb-2 text-sm font-medium">
+                Método de entrega <span className="text-destructive">*</span>
+              </p>
+              <div className={`grid gap-2 ${showPickup && showDelivery ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                {showPickup && (
+                  <button
+                    type="button"
+                    onClick={() => setDeliveryMethod('pickup')}
+                    className={`flex flex-col items-center gap-1.5 rounded-lg border-2 p-3 text-xs font-medium transition-colors ${
+                      deliveryMethod === 'pickup'
+                        ? 'border-site-primary bg-site-primary/5 text-site-primary'
+                        : 'border-border text-muted-foreground hover:border-muted-foreground'
+                    }`}
+                    aria-pressed={deliveryMethod === 'pickup'}
+                  >
+                    <Store className="h-5 w-5" aria-hidden="true" />
+                    Pasar a retirar
+                    {pickupInfo && (
+                      <span className="font-normal text-center leading-tight opacity-75">{pickupInfo}</span>
+                    )}
+                  </button>
+                )}
+                {showDelivery && (
+                  <button
+                    type="button"
+                    onClick={() => setDeliveryMethod('delivery')}
+                    className={`flex flex-col items-center gap-1.5 rounded-lg border-2 p-3 text-xs font-medium transition-colors ${
+                      deliveryMethod === 'delivery'
+                        ? 'border-site-primary bg-site-primary/5 text-site-primary'
+                        : 'border-border text-muted-foreground hover:border-muted-foreground'
+                    }`}
+                    aria-pressed={deliveryMethod === 'delivery'}
+                  >
+                    <Truck className="h-5 w-5" aria-hidden="true" />
+                    Envío
+                    {deliveryInfo && (
+                      <span className="font-normal text-center leading-tight opacity-75">{deliveryInfo}</span>
+                    )}
+                  </button>
+                )}
+              </div>
+              {showDelivery && deliveryMethod === 'delivery' && (
+                <div className="mt-3">
+                  <label htmlFor="delivery-address" className="mb-2 block text-sm font-medium">
+                    Dirección <span className="text-destructive">*</span>
+                  </label>
+                  <Input
+                    id="delivery-address"
+                    value={deliveryAddress}
+                    onChange={(e) => setDeliveryAddress(e.target.value)}
+                    placeholder="Ej: Avda. Mariscal López 1234, Asunción"
+                    required
+                  />
+                </div>
+              )}
             </div>
           )}
 

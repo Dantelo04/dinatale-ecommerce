@@ -39,6 +39,8 @@ export default async function OrdersPage() {
     totalItems: o.totalItems,
     totalAmount: o.totalAmount,
     customerComment: o.customerComment ?? null,
+    deliveryMethod: o.deliveryMethod ?? null,
+    deliveryAddress: o.deliveryAddress ?? null,
     createdAt: o.createdAt,
   }))
 

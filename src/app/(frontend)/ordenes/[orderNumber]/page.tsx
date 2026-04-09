@@ -39,6 +39,8 @@ export default async function OrderStatusPage({
         totalItems: order.totalItems,
         totalAmount: order.totalAmount,
         customerComment: order.customerComment ?? null,
+        deliveryMethod: order.deliveryMethod ?? null,
+        deliveryAddress: order.deliveryAddress ?? null,
         createdAt: order.createdAt,
       }}
       currencySymbol={settings.currencySymbol || '$'}

@@ -107,6 +107,8 @@ export async function processCheckout(
   customerComment?: string,
   customerName?: string,
   customerPhone?: string,
+  deliveryMethod?: 'pickup' | 'delivery',
+  deliveryAddress?: string,
 ): Promise<{ success: true; orderNumber: string } | { success: false; error: string }> {
   const payload = await getPayload({ config: await config })
 
@@ -141,6 +143,8 @@ export async function processCheckout(
       totalItems,
       totalAmount,
       ...(customerComment ? { customerComment } : {}),
+      ...(deliveryMethod ? { deliveryMethod } : {}),
+      ...(deliveryAddress ? { deliveryAddress } : {}),
     },
   })
 

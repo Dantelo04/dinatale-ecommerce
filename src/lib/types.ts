@@ -58,5 +58,7 @@ export interface SerializedOrder {
   totalItems: number
   totalAmount: number
   customerComment?: string | null
+  deliveryMethod?: 'pickup' | 'delivery' | null
+  deliveryAddress?: string | null
   createdAt: string
 }

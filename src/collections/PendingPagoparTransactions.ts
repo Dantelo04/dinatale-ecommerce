@@ -68,6 +68,20 @@ export const PendingPagoparTransactions: CollectionConfig = {
       label: 'Comentario del cliente',
     },
     {
+      name: 'deliveryMethod',
+      type: 'select',
+      label: 'Método de Entrega',
+      options: [
+        { label: 'Pasar a retirar', value: 'pickup' },
+        { label: 'Envío', value: 'delivery' },
+      ],
+    },
+    {
+      name: 'deliveryAddress',
+      type: 'text',
+      label: 'Dirección de Envío',
+    },
+    {
       name: 'items',
       type: 'json',
       required: true,

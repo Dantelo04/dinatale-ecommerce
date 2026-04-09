@@ -1,5 +1,5 @@
 import React from 'react'
-import { Package, Clock, Truck, CheckCircle } from 'lucide-react'
+import { Package, Clock, Truck, CheckCircle, MapPin } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
@@ -16,6 +16,8 @@ interface OrderStatusViewProps {
     totalItems: number
     totalAmount: number
     customerComment: string | null
+    deliveryMethod?: 'pickup' | 'delivery' | null
+    deliveryAddress?: string | null
     createdAt: string
   }
   currencySymbol: string
@@ -169,6 +171,21 @@ export function OrderStatusView({ order, currencySymbol }: OrderStatusViewProps)
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Cantidad de productos</p>
                 <p className="mt-0.5 text-sm">{order.totalItems} {order.totalItems === 1 ? 'producto' : 'productos'}</p>
               </div>
+              {order.deliveryMethod && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Método de entrega</p>
+                  <div className="mt-0.5 flex items-center gap-1.5 text-sm">
+                    <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                    <span>{order.deliveryMethod === 'delivery' ? 'Envío' : 'Retiro en local'}</span>
+                  </div>
+                </div>
+              )}
+              {order.deliveryAddress && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Dirección</p>
+                  <p className="mt-0.5 text-sm">{order.deliveryAddress}</p>
+                </div>
+              )}
               {order.customerComment && (
                 <div>
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Comentario</p>
