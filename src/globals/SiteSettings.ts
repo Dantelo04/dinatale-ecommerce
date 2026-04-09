@@ -134,6 +134,14 @@ export const SiteSettings: GlobalConfig = {
       },
     },
     {
+      name: 'adminNotificationEmail',
+      label: 'Email de Notificaciones de Admin',
+      type: 'email',
+      admin: {
+        description: 'Email que recibirá alertas cuando se realice un nuevo pedido con Pagopar.',
+      },
+    },
+    {
       type: 'row',
       fields: [
         {

@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { parseWebhookBody, verifyWebhookToken, queryOrderStatus } from '@/lib/pagopar'
 import { atomicDecrementStock } from '@/lib/stock-ops'
+import { sendCustomerNewOrderEmail, sendAdminNewOrderEmail } from '@/lib/email'
 
 interface PendingItem {
   id: number
@@ -100,7 +101,7 @@ async function processWebhook(data: NonNullable<ReturnType<typeof parseWebhookBo
     }
 
     // Create the real order
-    await payload.create({
+    const newOrder = await payload.create({
       collection: 'orders',
       overrideAccess: true,
       data: {
@@ -123,6 +124,37 @@ async function processWebhook(data: NonNullable<ReturnType<typeof parseWebhookBo
         ...(pending.deliveryAddress ? { deliveryAddress: pending.deliveryAddress as string } : {}),
       },
     })
+
+    // Send email notifications (errors are swallowed inside each function)
+    const settings = await payload.findGlobal({
+      slug: 'site-settings',
+      depth: 0,
+      overrideAccess: true,
+    })
+    const adminEmail = settings.adminNotificationEmail
+
+    const orderEmailData = {
+      id: newOrder.id,
+      orderNumber: newOrder.orderNumber as string,
+      status: newOrder.status as 'received',
+      customerName: newOrder.customerName,
+      customerEmail: newOrder.customerEmail,
+      customerPhone: newOrder.customerPhone,
+      items: (newOrder.items ?? []).map((item) => ({
+        productName: item.productName,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+      })),
+      totalAmount: newOrder.totalAmount,
+      deliveryMethod: newOrder.deliveryMethod as 'pickup' | 'delivery' | null | undefined,
+      deliveryAddress: newOrder.deliveryAddress,
+    }
+
+    await sendCustomerNewOrderEmail(payload, orderEmailData)
+    if (adminEmail) {
+      await sendAdminNewOrderEmail(payload, adminEmail, orderEmailData)
+    }
+
     await payload.delete({
       collection: 'pending-pagopar-transactions',
       id: pending.id,
