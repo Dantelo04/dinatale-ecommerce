@@ -135,6 +135,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             socialLinks={content.socialLinks}
             siteDescription={settings.siteDescription}
             showNosotros={showNosotros}
+            pagoparEnabled={settings.pagopar?.enabled ?? false}
           />
         </CartProvider>
       </body>

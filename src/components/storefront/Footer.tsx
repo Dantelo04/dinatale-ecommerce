@@ -20,9 +20,18 @@ interface FooterProps {
     googleMaps?: string | null
   } | null
   showNosotros?: boolean
+  pagoparEnabled?: boolean
 }
 
-export function Footer({ siteName, logoUrl, hideName, siteDescription, socialLinks, showNosotros }: FooterProps) {
+export function Footer({
+  siteName,
+  logoUrl,
+  hideName,
+  siteDescription,
+  socialLinks,
+  showNosotros,
+  pagoparEnabled,
+}: FooterProps) {
   const navLinks = showNosotros ? NAV_LINKS : NAV_LINKS.filter((l) => l.href !== '/nosotros')
   const hasSocial =
     socialLinks?.instagram ||
@@ -123,13 +132,40 @@ export function Footer({ siteName, logoUrl, hideName, siteDescription, socialLin
 
           <Separator className="my-8" />
 
-          <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} {siteName}. Todos los derechos reservados. Desarrollado por{' '}
-            <CustomLink href="https://www.anoto.com.py/" variant="primary" external>
-              Anoto
-            </CustomLink>
-            .
-          </p>
+          <div className="flex flex-col gap-4">
+            {/* Payment badges */}
+            {pagoparEnabled && (
+              <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
+                <div className="flex items-center gap-3">
+                  <Image
+                    src="/metodos-de-pago-free.png"
+                    alt="Métodos de pago aceptados"
+                    width={280}
+                    height={93}
+                    className="h-12 w-auto object-contain"
+                    unoptimized
+                  />
+                  <Image
+                    src="/logo-pagopar.png"
+                    alt="Pagopar"
+                    width={200}
+                    height={67}
+                    className="h-7 w-auto object-contain"
+                    unoptimized
+                  />
+                </div>
+              </div>
+            )}
+
+            <p className="text-sm text-muted-foreground">
+              &copy; {new Date().getFullYear()} {siteName}. Todos los derechos reservados.
+              Desarrollado por{' '}
+              <CustomLink href="https://www.anoto.com.py/" variant="primary" external>
+                Anoto
+              </CustomLink>
+              .
+            </p>
+          </div>
         </div>
       </div>
     </footer>
