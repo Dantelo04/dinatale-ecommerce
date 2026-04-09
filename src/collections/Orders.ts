@@ -3,6 +3,7 @@ import {
   revalidateCollectionAfterChange,
   revalidateCollectionAfterDelete,
 } from '@/hooks/revalidateOnChange'
+import { sendCustomerStatusChangeEmail } from '@/lib/email'
 
 export const Orders: CollectionConfig = {
   slug: 'orders',
@@ -207,6 +208,35 @@ export const Orders: CollectionConfig = {
             context: { skipDeliveredHook: true },
           })
         }
+        return doc
+      },
+      async ({ doc, previousDoc, req, operation, context }) => {
+        if (context?.skipEmailHook) return doc
+        if (operation === 'create') return doc
+        if (!previousDoc || previousDoc.status === doc.status) return doc
+        if (!doc.customerEmail) return doc
+
+        try {
+          await sendCustomerStatusChangeEmail(req.payload, {
+            id: doc.id,
+            orderNumber: doc.orderNumber,
+            status: doc.status,
+            customerName: doc.customerName,
+            customerEmail: doc.customerEmail,
+            customerPhone: doc.customerPhone,
+            items: (doc.items ?? []).map((item: { productName: string; quantity: number; unitPrice: number }) => ({
+              productName: item.productName,
+              quantity: item.quantity,
+              unitPrice: item.unitPrice,
+            })),
+            totalAmount: doc.totalAmount,
+            deliveryMethod: doc.deliveryMethod as 'pickup' | 'delivery' | null | undefined,
+            deliveryAddress: doc.deliveryAddress,
+          })
+        } catch (err) {
+          console.error('[orders/afterChange] email error:', err)
+        }
+
         return doc
       },
     ],

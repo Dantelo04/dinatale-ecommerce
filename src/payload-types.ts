@@ -631,6 +631,10 @@ export interface SiteSetting {
    * Numero con codigo de pais sin + ni espacios (ej: 5491112345678)
    */
   whatsappNumber: string;
+  /**
+   * Email que recibirá alertas cuando se realice un nuevo pedido con Pagopar.
+   */
+  adminNotificationEmail?: string | null;
   currency?: string | null;
   currencySymbol?: string | null;
   storefront?: {
@@ -779,6 +783,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   primaryColor?: T;
   secondaryColor?: T;
   whatsappNumber?: T;
+  adminNotificationEmail?: T;
   currency?: T;
   currencySymbol?: T;
   storefront?:
