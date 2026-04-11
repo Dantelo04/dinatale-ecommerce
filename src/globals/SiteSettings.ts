@@ -138,7 +138,7 @@ export const SiteSettings: GlobalConfig = {
       label: 'Email de Notificaciones de Admin',
       type: 'email',
       admin: {
-        description: 'Email que recibirá alertas cuando se realice un nuevo pedido con Pagopar.',
+        description: 'Email que recibirá alertas cuando se realice un nuevo pedido (WhatsApp o Pagopar).',
       },
     },
     {
