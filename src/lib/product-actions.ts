@@ -7,6 +7,7 @@ import type { Category, Media } from '@/payload-types'
 import type { SerializedProduct, ProductFilters } from '@/lib/types'
 import { atomicDecrementStock, atomicRollbackStock } from '@/lib/stock-ops'
 import { resolveSort } from '@/lib/utils'
+import { sendAdminNewOrderEmail } from '@/lib/email'
 
 export type { SerializedProduct }
 
@@ -147,6 +148,32 @@ export async function processCheckout(
       ...(deliveryAddress ? { deliveryAddress } : {}),
     },
   })
+
+  // Notify admin of new WhatsApp order
+  const settings = await payload.findGlobal({
+    slug: 'site-settings',
+    depth: 0,
+    overrideAccess: true,
+  })
+  const adminEmail = settings.adminNotificationEmail
+  if (adminEmail) {
+    await sendAdminNewOrderEmail(payload, adminEmail, {
+      id: order.id,
+      orderNumber: order.orderNumber as string,
+      status: order.status as 'received',
+      customerName: order.customerName,
+      customerEmail: order.customerEmail,
+      customerPhone: order.customerPhone,
+      items: (order.items ?? []).map((item) => ({
+        productName: item.productName,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+      })),
+      totalAmount: order.totalAmount,
+      deliveryMethod: order.deliveryMethod as 'pickup' | 'delivery' | null | undefined,
+      deliveryAddress: order.deliveryAddress,
+    })
+  }
 
   return { success: true, orderNumber: order.orderNumber! }
 }
