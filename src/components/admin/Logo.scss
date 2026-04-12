@@ -1,0 +1,18 @@
+.admin-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    &__image {
+      width: 200px;
+      height: auto;
+      object-fit: contain;
+    }
+  
+    &__text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--theme-text);
+    }
+  }
+  

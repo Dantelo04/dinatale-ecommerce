@@ -1,0 +1,110 @@
+.kpi-dashboard {
+  padding: 0 0.5rem 1.5rem;
+  font-family: 'DM Sans', sans-serif;
+
+  &__section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--theme-elevation-500);
+    margin-bottom: 0.75rem;
+    margin-top: 0;
+  }
+
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__tables {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.kpi-card {
+  background-color: var(--color-base-50);
+  border-radius: var(--style-radius-m);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-family: 'DM Sans', sans-serif;
+
+  &__label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--theme-elevation-500);
+  }
+
+  &__value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--theme-elevation-900);
+    line-height: 1.2;
+  }
+
+  &__sub {
+    font-size: 0.7rem;
+    color: var(--theme-elevation-400);
+  }
+}
+
+.kpi-table {
+  background-color: var(--color-base-50);
+  border-radius: var(--style-radius-m);
+  padding: 1.25rem;
+  overflow-x: auto;
+  font-family: 'DM Sans', sans-serif;
+
+  &__title {
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+    color: var(--theme-elevation-900);
+  }
+
+  &__empty {
+    text-align: center;
+    color: var(--theme-elevation-400);
+    font-size: 0.8125rem;
+    padding: 1rem 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+
+  th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--theme-elevation-500);
+    border-bottom: 1px solid var(--theme-elevation-200);
+    white-space: nowrap;
+    font-size: 0.75rem;
+  }
+
+  td {
+    padding: 0.5rem 0rem;
+    color: var(--theme-elevation-800);
+    border-bottom: 1px solid var(--theme-elevation-150);
+    white-space: nowrap;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
