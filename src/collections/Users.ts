@@ -1,0 +1,35 @@
+import type { CollectionConfig } from 'payload'
+
+export const Users: CollectionConfig = {
+  slug: 'users',
+  labels: {
+    singular: 'Usuario',
+    plural: 'Usuarios',
+  },
+  admin: {
+    useAsTitle: 'email',
+    hideAPIURL: true,
+  },
+  auth: {
+    tokenExpiration: 604800, // 7 days
+  },
+  fields: [
+    {
+      name: 'roles',
+      type: 'select',
+      hasMany: true,
+      options: [
+        { label: 'Admin', value: 'admin' },
+        { label: 'User', value: 'user' },
+      ],
+      defaultValue: ['user'],
+      required: true,
+      saveToJWT: true,
+      access: {
+        update: ({ req: { user } }) => {
+          return Boolean(user?.roles?.includes('admin'))
+        },
+      },
+    },
+  ],
+}
