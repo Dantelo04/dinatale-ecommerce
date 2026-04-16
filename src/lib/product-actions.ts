@@ -11,8 +11,6 @@ import { sendAdminNewOrderEmail } from '@/lib/email'
 
 export type { SerializedProduct }
 
-const PAGE_SIZE = 24
-
 function buildWhereClause(filters: ProductFilters): Where {
   const where: Where = { active: { equals: true } }
 
@@ -22,6 +20,10 @@ function buildWhereClause(filters: ProductFilters): Where {
 
   if (filters.buscar) {
     where.name = { contains: filters.buscar }
+  }
+
+  if (filters.ofertas === 'true') {
+    where.compareAtPrice = { not_equals: null }
   }
 
   const parsedMin = filters.precioMin ? Number(filters.precioMin) : null
@@ -51,7 +53,7 @@ export async function loadMoreProducts(
   const result = await payload.find({
     collection: 'products',
     where,
-    limit: PAGE_SIZE,
+    limit: filters.limit ?? 40,
     page,
     sort: resolveSort(filters.ordenar),
     depth: 2,

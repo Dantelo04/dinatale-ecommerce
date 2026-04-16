@@ -12,7 +12,7 @@ import { CornerTools } from '@/components/storefront/CornerTools'
 import { SortSelect } from '@/components/storefront/SortSelect'
 import { resolveSort } from '@/lib/utils'
 
-const PAGE_SIZE = 40
+const ROWS_PER_PAGE = 8
 
 
 export async function generateMetadata({
@@ -70,6 +70,7 @@ export default async function TiendaPage({
   const currencySymbol = settings.currencySymbol || '$'
   const gridCols = settings.storefront?.gridCols || 5
   const gridColsMobile = settings.storefront?.gridColsMobile || 2
+  const pageSize = gridCols * ROWS_PER_PAGE
   const whereClause: Where = { active: { equals: true } }
   let activeCategorySlug: string | null = null
   let activeCategoryId: number | null = null
@@ -111,7 +112,7 @@ export default async function TiendaPage({
   const result = await payload.find({
     collection: 'products',
     where: whereClause,
-    limit: PAGE_SIZE,
+    limit: pageSize,
     page: 1,
     sort: resolveSort(ordenar),
     depth: 2,
@@ -147,6 +148,8 @@ export default async function TiendaPage({
     precioMax: precioMax ?? undefined,
     categoryId: activeCategoryId,
     ordenar: ordenar ?? undefined,
+    ofertas: ofertas ?? undefined,
+    limit: pageSize,
   }
 
   return (
@@ -196,11 +199,11 @@ export default async function TiendaPage({
             </div>
           ) : (
             <ProductGrid
+              key={`${categoria}-${buscar}-${precioMin}-${precioMax}-${ofertas}-${ordenar}`}
               initialProducts={initialProducts}
               hasNextPage={result.hasNextPage}
               currencySymbol={currencySymbol}
               filters={filters}
-              onlyPromo={ofertas === 'true'}
               gridCols={gridCols}
               gridColsMobile={gridColsMobile}
             />

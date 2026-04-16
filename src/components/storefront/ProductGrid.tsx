@@ -11,7 +11,6 @@ interface ProductGridProps {
   initialProducts: SerializedProduct[]
   hasNextPage: boolean
   currencySymbol: string
-  onlyPromo?: boolean
   filters: ProductFilters
   gridCols?: number
   gridColsMobile?: number
@@ -45,7 +44,6 @@ export function ProductGrid({
   hasNextPage: initialHasNextPage,
   currencySymbol,
   filters,
-  onlyPromo = false,
   gridCols = 5,
   gridColsMobile = 2,
 }: ProductGridProps) {
@@ -97,7 +95,7 @@ export function ProductGrid({
   return (
     <>
       <div className={`grid ${gridColsMobileMap[gridColsMobile ?? 2]} gap-6 lg:gap-3 sm:grid-cols-2 lg:grid-cols-4 ${gridColsMap[gridCols ?? 5]}`}>
-        {(onlyPromo ? products.filter((product) => product.compareAtPrice) : products).map((product) => (
+        {products.map((product) => (
           <ProductCard
             key={product.id}
             id={product.id}
