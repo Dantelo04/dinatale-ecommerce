@@ -94,7 +94,7 @@ export function ProductGrid({
 
   return (
     <>
-      <div className={`grid ${gridColsMobileMap[gridColsMobile ?? 2]} gap-6 lg:gap-3 sm:grid-cols-2 lg:grid-cols-4 ${gridColsMap[gridCols ?? 5]}`}>
+      <div className={`grid ${gridColsMobileMap[gridColsMobile ?? 2]} gap-6 lg:gap-3 sm:grid-cols-2 ${gridColsMap[gridCols ?? 5]}`}>
         {products.map((product) => (
           <ProductCard
             key={product.id}

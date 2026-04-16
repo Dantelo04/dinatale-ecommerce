@@ -51,6 +51,7 @@ export function CartPageClient({
   const [paymentMethod, setPaymentMethod] = useState<'whatsapp' | 'pagopar'>('whatsapp')
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
   const [checkoutLoading, setCheckoutLoading] = useState(false)
+  const [whatsappFallbackUrl, setWhatsappFallbackUrl] = useState<string | null>(null)
 
   const buildWhatsAppMessage = () => {
     const nameLine = customerName.trim() ? `Nombre: ${customerName.trim()}\n` : ''
@@ -141,9 +142,11 @@ export function CartPageClient({
         }
         const message = buildWhatsAppMessage()
         const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
-        window.open(url, '_blank', 'noopener,noreferrer')
+        const popup = window.open(url, '_blank', 'noopener,noreferrer')
         clearCart()
-        if (redirectToOrder) {
+        if (!popup) {
+          setWhatsappFallbackUrl(url)
+        } else if (redirectToOrder) {
           window.location.href = `/ordenes/${result.orderNumber}`
         }
       }
@@ -236,6 +239,7 @@ export function CartPageClient({
                         size="icon"
                         className="h-8 w-8"
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        disabled={item.quantity >= item.stock}
                         aria-label={`Aumentar cantidad de ${item.name}`}
                       >
                         <Plus className="h-3 w-3" aria-hidden="true" />
@@ -490,6 +494,23 @@ export function CartPageClient({
                 <p className="text-sm text-destructive" role="alert">
                   {checkoutError}
                 </p>
+              )}
+
+              {whatsappFallbackUrl && (
+                <div className="rounded-md bg-green-50 border border-green-200 p-3 text-sm" role="alert">
+                  <p className="font-medium text-green-800">¡Pedido registrado!</p>
+                  <p className="mt-1 text-green-700">
+                    WhatsApp no se abrió automáticamente.{' '}
+                    <a
+                      href={whatsappFallbackUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline font-medium"
+                    >
+                      Hacé click aquí para enviar el mensaje
+                    </a>
+                  </p>
+                </div>
               )}
 
               {paymentMethod === 'pagopar' ? (

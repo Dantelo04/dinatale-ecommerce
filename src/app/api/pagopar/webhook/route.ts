@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { parseWebhookBody, verifyWebhookToken, queryOrderStatus } from '@/lib/pagopar'
-import { atomicDecrementStock } from '@/lib/stock-ops'
+import { atomicDecrementStock, atomicRollbackStock } from '@/lib/stock-ops'
 import { sendCustomerNewOrderEmail, sendAdminNewOrderEmail } from '@/lib/email'
 
 interface PendingItem {
@@ -96,11 +96,18 @@ async function processWebhook(data: NonNullable<ReturnType<typeof parseWebhookBo
 
   if (data.pagado) {
     // Payment confirmed — decrement stock now that payment is confirmed
+    const decremented: { id: number; quantity: number }[] = []
     for (const item of items) {
-      await atomicDecrementStock(payload, item.id, item.quantity)
+      const ok = await atomicDecrementStock(payload, item.id, item.quantity)
+      if (!ok) {
+        console.error('[pagopar/webhook] stock decrement failed for item', item.id, '— rolling back')
+        await Promise.all(decremented.map((d) => atomicRollbackStock(payload, d.id, d.quantity)))
+        return
+      }
+      decremented.push({ id: item.id, quantity: item.quantity })
     }
 
-    // Create the real order
+    // Create the real order — rollback stock if creation fails
     const newOrder = await payload.create({
       collection: 'orders',
       overrideAccess: true,
@@ -123,7 +130,13 @@ async function processWebhook(data: NonNullable<ReturnType<typeof parseWebhookBo
         ...(pending.deliveryMethod ? { deliveryMethod: pending.deliveryMethod } : {}),
         ...(pending.deliveryAddress ? { deliveryAddress: pending.deliveryAddress as string } : {}),
       },
+    }).catch(async (err) => {
+      console.error('[pagopar/webhook] order creation failed, rolling back stock:', err)
+      await Promise.all(decremented.map((d) => atomicRollbackStock(payload, d.id, d.quantity)))
+      return null
     })
+
+    if (!newOrder) return
 
     // Send email notifications (errors are swallowed inside each function)
     const settings = await payload.findGlobal({

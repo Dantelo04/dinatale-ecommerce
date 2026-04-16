@@ -217,6 +217,9 @@ export const Products: CollectionConfig = {
         description: 'Número de visitas a la página del producto',
         readOnly: true,
       },
+      access: {
+        update: () => false,
+      },
       label: 'Visitas',
     },
     {
@@ -227,6 +230,9 @@ export const Products: CollectionConfig = {
         position: 'sidebar',
         description: 'Número de ventas del producto',
         readOnly: true,
+      },
+      access: {
+        update: () => false,
       },
       label: 'Ventas',
     },
