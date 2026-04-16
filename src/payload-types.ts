@@ -632,7 +632,7 @@ export interface SiteSetting {
    */
   whatsappNumber: string;
   /**
-   * Email que recibirá alertas cuando se realice un nuevo pedido con Pagopar.
+   * Email que recibirá alertas cuando se realice un nuevo pedido (WhatsApp o Pagopar).
    */
   adminNotificationEmail?: string | null;
   currency?: string | null;
