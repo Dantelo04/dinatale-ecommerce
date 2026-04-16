@@ -51,12 +51,21 @@ function formatAmount(amount: number): string {
   return amount.toLocaleString('es-PY')
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 function renderItemsTable(items: OrderItem[]): string {
   const rows = items
     .map(
       (item) => `
     <tr>
-      <td style="padding: 8px 12px; border-bottom: 1px solid #e4e4e7; color: #18181b;">${item.productName}</td>
+      <td style="padding: 8px 12px; border-bottom: 1px solid #e4e4e7; color: #18181b;">${escapeHtml(item.productName)}</td>
       <td style="padding: 8px 12px; border-bottom: 1px solid #e4e4e7; text-align: center; color: #52525b;">${item.quantity}</td>
       <td style="padding: 8px 12px; border-bottom: 1px solid #e4e4e7; text-align: right; color: #52525b;">Gs. ${formatAmount(item.unitPrice)}</td>
     </tr>`,
@@ -81,7 +90,7 @@ function renderDelivery(order: OrderEmailData): string {
   if (order.deliveryMethod === 'pickup') {
     return '<p style="margin: 8px 0; color: #52525b;">Entrega: <strong>Pasar a retirar</strong></p>'
   }
-  return `<p style="margin: 8px 0; color: #52525b;">Entrega: <strong>Envío a domicilio</strong>${order.deliveryAddress ? ` — ${order.deliveryAddress}` : ''}</p>`
+  return `<p style="margin: 8px 0; color: #52525b;">Entrega: <strong>Envío a domicilio</strong>${order.deliveryAddress ? ` — ${escapeHtml(order.deliveryAddress)}` : ''}</p>`
 }
 
 function renderCtaButton(url: string, label: string, primaryColor: string): string {
@@ -103,9 +112,9 @@ function emailLayout(title: string, body: string, siteName: string, primaryColor
       <td align="center">
         <table width="600" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
           <tr>
-            <td style="background: ${primaryColor}; padding: 24px 32px;">
-              <p style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 700; letter-spacing: 0.05em;">${siteName}</p>
-              <p style="margin: 4px 0 0; color: rgba(255,255,255,0.6); font-size: 13px;">${title}</p>
+            <td style="background: ${escapeHtml(primaryColor)}; padding: 24px 32px;">
+              <p style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 700; letter-spacing: 0.05em;">${escapeHtml(siteName)}</p>
+              <p style="margin: 4px 0 0; color: rgba(255,255,255,0.6); font-size: 13px;">${escapeHtml(title)}</p>
             </td>
           </tr>
           <tr>
@@ -115,7 +124,7 @@ function emailLayout(title: string, body: string, siteName: string, primaryColor
           </tr>
           <tr>
             <td style="background: #f4f4f5; padding: 16px 32px; text-align: center;">
-              <p style="margin: 0; color: #a1a1aa; font-size: 12px;">${siteName} &mdash; Tu tienda online</p>
+              <p style="margin: 0; color: #a1a1aa; font-size: 12px;">${escapeHtml(siteName)} &mdash; Tu tienda online</p>
             </td>
           </tr>
         </table>
@@ -139,10 +148,10 @@ export async function sendCustomerNewOrderEmail(
   const { siteName, primaryColor } = await getSiteConfig(payload)
   const orderUrl = getOrderUrl(order.orderNumber)
   const body = `
-    <p style="margin: 0 0 16px; color: #18181b; font-size: 18px; font-weight: 600;">¡Gracias por tu compra${order.customerName ? `, ${order.customerName}` : ''}!</p>
+    <p style="margin: 0 0 16px; color: #18181b; font-size: 18px; font-weight: 600;">¡Gracias por tu compra${order.customerName ? `, ${escapeHtml(order.customerName)}` : ''}!</p>
     <p style="margin: 0 0 16px; color: #52525b;">Tu pedido fue recibido y está siendo procesado.</p>
     <p style="margin: 0 0 4px; color: #71717a; font-size: 13px;">Número de pedido</p>
-    <p style="margin: 0 0 20px; color: #18181b; font-size: 17px; font-weight: 700;">#${order.orderNumber}</p>
+    <p style="margin: 0 0 20px; color: #18181b; font-size: 17px; font-weight: 700;">#${escapeHtml(order.orderNumber)}</p>
     ${renderItemsTable(order.items)}
     <p style="margin: 4px 0 16px; color: #18181b; font-weight: 700; font-size: 15px;">Total: Gs. ${formatAmount(order.totalAmount)}</p>
     ${renderDelivery(order)}
@@ -175,11 +184,11 @@ export async function sendAdminNewOrderEmail(
   const body = `
     <p style="margin: 0 0 16px; color: #18181b; font-size: 18px; font-weight: 600;">Nuevo pedido recibido</p>
     <p style="margin: 0 0 4px; color: #71717a; font-size: 13px;">Número de pedido</p>
-    <p style="margin: 0 0 20px; color: #18181b; font-size: 17px; font-weight: 700;">#${order.orderNumber}</p>
+    <p style="margin: 0 0 20px; color: #18181b; font-size: 17px; font-weight: 700;">#${escapeHtml(order.orderNumber)}</p>
     <p style="margin: 0 0 8px; color: #71717a; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Cliente</p>
-    <p style="margin: 0 0 4px; color: #18181b; font-weight: 600;">${order.customerName || '—'}</p>
-    <p style="margin: 0 0 4px; color: #52525b;">${order.customerPhone || '—'}</p>
-    <p style="margin: 0 0 20px; color: #52525b;">${order.customerEmail || '—'}</p>
+    <p style="margin: 0 0 4px; color: #18181b; font-weight: 600;">${order.customerName ? escapeHtml(order.customerName) : '—'}</p>
+    <p style="margin: 0 0 4px; color: #52525b;">${order.customerPhone ? escapeHtml(order.customerPhone) : '—'}</p>
+    <p style="margin: 0 0 20px; color: #52525b;">${order.customerEmail ? escapeHtml(order.customerEmail) : '—'}</p>
     ${renderItemsTable(order.items)}
     <p style="margin: 4px 0 16px; color: #18181b; font-weight: 700; font-size: 15px;">Total: Gs. ${formatAmount(order.totalAmount)}</p>
     ${renderDelivery(order)}
@@ -212,9 +221,9 @@ export async function sendCustomerStatusChangeEmail(
   const body = `
     <p style="margin: 0 0 16px; color: #18181b; font-size: 18px; font-weight: 600;">Tu pedido fue actualizado</p>
     <p style="margin: 0 0 4px; color: #71717a; font-size: 13px;">Número de pedido</p>
-    <p style="margin: 0 0 20px; color: #18181b; font-size: 17px; font-weight: 700;">#${order.orderNumber}</p>
+    <p style="margin: 0 0 20px; color: #18181b; font-size: 17px; font-weight: 700;">#${escapeHtml(order.orderNumber)}</p>
     <p style="margin: 0 0 12px; color: #52525b;">El estado de tu pedido cambió a:</p>
-    <p style="margin: 0 0 24px; color: #18181b; font-size: 20px; font-weight: 700; text-align: center; padding: 16px; background: #f4f4f5; border-radius: 6px;">${statusLabel}</p>
+    <p style="margin: 0 0 24px; color: #18181b; font-size: 20px; font-weight: 700; text-align: center; padding: 16px; background: #f4f4f5; border-radius: 6px;">${escapeHtml(statusLabel)}</p>
     ${renderCtaButton(orderUrl, 'Ver mi pedido', primaryColor)}`
 
   try {

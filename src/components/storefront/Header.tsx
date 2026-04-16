@@ -1,6 +1,38 @@
 'use client'
 
 import React, { useState } from 'react'
+
+const logoHeightMap: Record<string, string> = {
+  '6': 'h-6',
+  '7': 'h-7',
+  '8': 'h-8',
+  '9': 'h-9',
+  '10': 'h-10',
+  '11': 'h-11',
+  '12': 'h-12',
+  '14': 'h-14',
+  '16': 'h-16',
+  '20': 'h-20',
+  '24': 'h-24',
+  '28': 'h-28',
+  '32': 'h-32',
+}
+
+const logoHeightXlMap: Record<string, string> = {
+  '6': 'xl:h-6',
+  '7': 'xl:h-7',
+  '8': 'xl:h-8',
+  '9': 'xl:h-9',
+  '10': 'xl:h-10',
+  '11': 'xl:h-11',
+  '12': 'xl:h-12',
+  '14': 'xl:h-14',
+  '16': 'xl:h-16',
+  '20': 'xl:h-20',
+  '24': 'xl:h-24',
+  '28': 'xl:h-28',
+  '32': 'xl:h-32',
+}
 import Link from 'next/link'
 import Image from 'next/image'
 import { CustomLink } from '@/components/ui/link'
@@ -63,7 +95,7 @@ export function Header({
               alt={siteName}
               width={1920}
               height={1080}
-              className={`xl:h-${logoSize} h-${logoSizeMobile} w-auto object-contain`}
+              className={`${logoHeightMap[logoSizeMobile] ?? 'h-10'} ${logoHeightXlMap[logoSize] ?? 'xl:h-14'} w-auto object-contain`}
               priority
             />
           ) : null}

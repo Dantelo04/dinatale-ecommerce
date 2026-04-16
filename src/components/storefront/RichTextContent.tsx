@@ -22,11 +22,12 @@ function renderNode(node: LexicalNode, index: number): React.ReactNode {
   if (node.type === 'text') {
     let text: React.ReactNode = node.text || ''
     if (node.format && typeof node.format === 'number') {
-      if (node.format & 1) text = <strong key={index}>{text}</strong>
-      if (node.format & 2) text = <em key={index}>{text}</em>
-      if (node.format & 8) text = <u key={index}>{text}</u>
-      if (node.format & 4) text = <s key={index}>{text}</s>
-      if (node.format & 16) text = <code key={index}>{text}</code>
+      // Apply formats by nesting — outermost wrapper applied last so inner wrappers are preserved
+      if (node.format & 16) text = <code>{text}</code>
+      if (node.format & 4) text = <s>{text}</s>
+      if (node.format & 8) text = <u>{text}</u>
+      if (node.format & 2) text = <em>{text}</em>
+      if (node.format & 1) text = <strong>{text}</strong>
     }
     return <React.Fragment key={index}>{text}</React.Fragment>
   }

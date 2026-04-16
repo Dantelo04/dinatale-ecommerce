@@ -113,10 +113,40 @@ export async function processCheckout(
   deliveryMethod?: 'pickup' | 'delivery',
   deliveryAddress?: string,
 ): Promise<{ success: true; orderNumber: string } | { success: false; error: string }> {
+  if (!items || items.length === 0) {
+    return { success: false, error: 'El carrito está vacío.' }
+  }
+  for (const item of items) {
+    if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
+      return { success: false, error: `Cantidad inválida para "${item.name}".` }
+    }
+  }
+
   const payload = await getPayload({ config: await config })
 
+  // Re-fetch prices server-side — never trust client-supplied values
+  const productDocs = await Promise.all(
+    items.map(async (item) => {
+      try {
+        return await payload.findByID({ collection: 'products', id: item.id, depth: 0 })
+      } catch {
+        return null
+      }
+    }),
+  )
+
+  const verifiedItems: { id: number; name: string; quantity: number; price: number }[] = []
+  for (let i = 0; i < items.length; i++) {
+    const doc = productDocs[i]
+    const item = items[i]
+    if (!doc || !doc.active) {
+      return { success: false, error: `Producto no disponible: "${item.name}".` }
+    }
+    verifiedItems.push({ id: item.id, name: doc.name, quantity: item.quantity, price: doc.price })
+  }
+
   const decremented: { id: number; name: string; quantity: number }[] = []
-  for (const item of items) {
+  for (const item of verifiedItems) {
     const ok = await atomicDecrementStock(payload, item.id, item.quantity)
     if (!ok) {
       await Promise.all(decremented.map((d) => atomicRollbackStock(payload, d.id, d.quantity)))
@@ -125,31 +155,42 @@ export async function processCheckout(
     decremented.push(item)
   }
 
-  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
-  const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const totalItems = verifiedItems.reduce((sum, item) => sum + item.quantity, 0)
+  const totalAmount = verifiedItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
-  const order = await payload.create({
-    collection: 'orders',
-    overrideAccess: true,
-    draft: false,
-    data: {
-      status: 'received',
-      paymentMethod: 'whatsapp' as const,
-      ...(customerName ? { customerName } : {}),
-      ...(customerPhone ? { customerPhone } : {}),
-      items: items.map((item) => ({
-        product: item.id,
-        productName: item.name,
-        quantity: item.quantity,
-        unitPrice: item.price,
-      })),
-      totalItems,
-      totalAmount,
-      ...(customerComment ? { customerComment } : {}),
-      ...(deliveryMethod ? { deliveryMethod } : {}),
-      ...(deliveryAddress ? { deliveryAddress } : {}),
-    },
-  })
+  const orderResult = await payload
+    .create({
+      collection: 'orders',
+      overrideAccess: true,
+      draft: false,
+      data: {
+        status: 'received',
+        paymentMethod: 'whatsapp' as const,
+        ...(customerName ? { customerName } : {}),
+        ...(customerPhone ? { customerPhone } : {}),
+        items: verifiedItems.map((item) => ({
+          product: item.id,
+          productName: item.name,
+          quantity: item.quantity,
+          unitPrice: item.price,
+        })),
+        totalItems,
+        totalAmount,
+        ...(customerComment ? { customerComment } : {}),
+        ...(deliveryMethod ? { deliveryMethod } : {}),
+        ...(deliveryAddress ? { deliveryAddress } : {}),
+      },
+    })
+    .catch(async (err) => {
+      await Promise.all(decremented.map((d) => atomicRollbackStock(payload, d.id, d.quantity)))
+      console.error('[processCheckout] order creation failed, stock rolled back:', err)
+      return null
+    })
+
+  if (!orderResult) {
+    return { success: false, error: 'Error al crear el pedido. Por favor intentá nuevamente.' }
+  }
+  const order = orderResult
 
   // Notify admin of new WhatsApp order
   const settings = await payload.findGlobal({

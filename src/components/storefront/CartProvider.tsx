@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react'
+import React, { createContext, useContext, useReducer, useEffect, useRef, useCallback } from 'react'
 import type { SerializedProduct } from '@/lib/types'
 
 export interface CartItem extends Omit<SerializedProduct, 'imageAlt' | 'compareAtPrice'> {
@@ -79,6 +79,22 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 
 const STORAGE_KEY = 'anoto-cart'
 
+function isValidCartItems(value: unknown): value is CartItem[] {
+  if (!Array.isArray(value)) return false
+  return value.every(
+    (item) =>
+      item !== null &&
+      typeof item === 'object' &&
+      typeof item.id === 'number' &&
+      typeof item.name === 'string' &&
+      typeof item.price === 'number' &&
+      Number.isFinite(item.price) &&
+      typeof item.quantity === 'number' &&
+      Number.isInteger(item.quantity) &&
+      item.quantity > 0,
+  )
+}
+
 export function CartProvider({
   children,
   currencySymbol,
@@ -90,19 +106,25 @@ export function CartProvider({
     items: [],
     currencySymbol,
   })
+  const isHydrated = useRef(false)
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY)
       if (saved) {
-        dispatch({ type: 'HYDRATE', payload: JSON.parse(saved) })
+        const parsed: unknown = JSON.parse(saved)
+        if (isValidCartItems(parsed)) {
+          dispatch({ type: 'HYDRATE', payload: parsed })
+        }
       }
     } catch {
       /* ignore */
     }
+    isHydrated.current = true
   }, [])
 
   useEffect(() => {
+    if (!isHydrated.current) return
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items))
     } catch {

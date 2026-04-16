@@ -88,7 +88,7 @@ export default async function TiendaPage({
     whereClause.name = { contains: buscar }
   }
 
-  if (ofertas) {
+  if (ofertas === 'true') {
     whereClause.compareAtPrice = { not_equals: null }
   }
 
