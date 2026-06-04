@@ -68,6 +68,8 @@ export default async function TiendaPage({
   ])
 
   const currencySymbol = settings.currencySymbol || '$'
+  const storeDefault = settings.storefront?.storeDefaultSort ?? 'destacado'
+  const effectiveOrdenar = ordenar ?? storeDefault
   const gridCols = settings.storefront?.gridCols || 5
   const gridColsMobile = settings.storefront?.gridColsMobile || 2
   const pageSize = gridCols * ROWS_PER_PAGE
@@ -114,7 +116,7 @@ export default async function TiendaPage({
     where: whereClause,
     limit: pageSize,
     page: 1,
-    sort: resolveSort(ordenar),
+    sort: resolveSort(effectiveOrdenar),
     depth: 2,
   })
 
@@ -147,7 +149,7 @@ export default async function TiendaPage({
     precioMin: precioMin ?? undefined,
     precioMax: precioMax ?? undefined,
     categoryId: activeCategoryId,
-    ordenar: ordenar ?? undefined,
+    ordenar: effectiveOrdenar,
     ofertas: ofertas ?? undefined,
     limit: pageSize,
   }
@@ -185,7 +187,7 @@ export default async function TiendaPage({
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-end mb-4">
             <Suspense>
-              <SortSelect />
+              <SortSelect defaultSort={storeDefault} />
             </Suspense>
           </div>
           {initialProducts.length === 0 ? (

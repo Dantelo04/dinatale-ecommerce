@@ -3,29 +3,33 @@ import { GoogleReviews } from '@/components/storefront/GoogleReviews'
 import { HeroCarousel, type HeroSlide } from '@/components/storefront/HeroCarousel'
 import { getCachedGlobal, getCachedProducts } from '@/lib/payload-cache'
 import { getCachedPlaceDetails } from '@/lib/google-places'
+import { resolveSort } from '@/lib/utils'
 import type { Media, Category, SiteSetting, StorefrontContent } from '@/payload-types'
 import { CornerTools } from '@/components/storefront/CornerTools'
 import { CategoriesGallery } from '@/components/storefront/CategoriesGallery'
 import { ProductsGallery } from '@/components/storefront/ProductsGallery'
 
 export default async function HomePage() {
-  const [settings, content, { docs: featured }, { docs: latest }, placeDetails] = await Promise.all(
-    [
-      getCachedGlobal<SiteSetting>('site-settings')(),
-      getCachedGlobal<StorefrontContent>('storefront-content', 2)(),
-      getCachedProducts({
-        where: { featured: { equals: true }, active: { equals: true } },
-        limit: 5,
-        sort: '-createdAt',
-      })(),
-      getCachedProducts({
-        where: { active: { equals: true } },
-        limit: 5,
-        sort: '-createdAt',
-      })(),
-      getCachedPlaceDetails(),
-    ],
-  )
+  const [settings, content, placeDetails] = await Promise.all([
+    getCachedGlobal<SiteSetting>('site-settings')(),
+    getCachedGlobal<StorefrontContent>('storefront-content', 2)(),
+    getCachedPlaceDetails(),
+  ])
+
+  const homeSort = resolveSort(settings.storefront?.homeDefaultSort ?? undefined)
+
+  const [{ docs: featured }, { docs: latest }] = await Promise.all([
+    getCachedProducts({
+      where: { featured: { equals: true }, active: { equals: true } },
+      limit: 5,
+      sort: homeSort,
+    })(),
+    getCachedProducts({
+      where: { active: { equals: true } },
+      limit: 5,
+      sort: '-createdAt',
+    })(),
+  ])
 
   const currencySymbol = settings.currencySymbol || '$'
 

@@ -9,28 +9,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { SORT_OPTIONS } from '@/lib/utils'
 
-const SORT_OPTIONS = [
-  { value: 'destacado', label: 'Destacado' },
-  { value: 'mas-vendidos', label: 'Más vendidos' },
-  { value: 'a-z', label: 'Alfabéticamente, A–Z' },
-  { value: 'z-a', label: 'Alfabéticamente, Z–A' },
-  { value: 'precio-asc', label: 'Precio: menor a mayor' },
-  { value: 'precio-desc', label: 'Precio: mayor a menor' },
-  { value: 'mas-antiguo', label: 'Fecha: más antiguo' },
-  { value: 'mas-reciente', label: 'Fecha: más reciente' },
-]
-
-export function SortSelect() {
+export function SortSelect({ defaultSort = 'destacado' }: { defaultSort?: string }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
 
-  const currentSort = searchParams.get('ordenar') ?? 'destacado'
+  const currentSort = searchParams.get('ordenar') ?? defaultSort
 
   const handleChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString())
-    if (value === 'destacado') {
+    if (value === defaultSort) {
       params.delete('ordenar')
     } else {
       params.set('ordenar', value)
