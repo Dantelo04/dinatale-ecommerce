@@ -640,6 +640,15 @@ export interface SiteSetting {
   storefront?: {
     gridCols?: number | null;
     gridColsMobile?: number | null;
+    homeDefaultSort?:
+      | ('destacado' | 'mas-vendidos' | 'a-z' | 'z-a' | 'precio-asc' | 'precio-desc' | 'mas-antiguo' | 'mas-reciente')
+      | null;
+    /**
+     * Orden inicial de la tienda antes de que el cliente elija otro
+     */
+    storeDefaultSort?:
+      | ('destacado' | 'mas-vendidos' | 'a-z' | 'z-a' | 'precio-asc' | 'precio-desc' | 'mas-antiguo' | 'mas-reciente')
+      | null;
     /**
      * Si se activa, después de confirmar el pedido se redirige al cliente a la página de estado del pedido
      */
@@ -791,6 +800,8 @@ export interface SiteSettingsSelect<T extends boolean = true> {
     | {
         gridCols?: T;
         gridColsMobile?: T;
+        homeDefaultSort?: T;
+        storeDefaultSort?: T;
         redirectToOrderAfterCheckout?: T;
         showPickup?: T;
         pickupInfo?: T;

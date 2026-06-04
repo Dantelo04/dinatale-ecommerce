@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 import { revalidateGlobalAfterChange } from '@/hooks/revalidateOnChange'
+import { SORT_OPTIONS } from '@/lib/utils'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
@@ -174,6 +175,21 @@ export const SiteSettings: GlobalConfig = {
           label: 'Columnas en la Grilla de Productos de Tienda en Móvil',
           type: 'number',
           defaultValue: 2,
+        },
+        {
+          name: 'homeDefaultSort',
+          label: 'Orden por defecto de las secciones de productos del Home',
+          type: 'select',
+          options: SORT_OPTIONS,
+          defaultValue: 'destacado',
+        },
+        {
+          name: 'storeDefaultSort',
+          label: 'Orden por defecto de la Tienda',
+          type: 'select',
+          options: SORT_OPTIONS,
+          defaultValue: 'destacado',
+          admin: { description: 'Orden inicial de la tienda antes de que el cliente elija otro' },
         },
         {
           name: 'redirectToOrderAfterCheckout',
