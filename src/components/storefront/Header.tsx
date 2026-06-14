@@ -37,6 +37,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { CustomLink } from '@/components/ui/link'
 import { HeaderSheet } from './HeaderSheet'
+import { HeaderSearch } from './HeaderSearch'
 import { CartSheet } from './CartSheet'
 import { AlertMarquee } from './AlertMarquee'
 import { NAV_LINKS } from '@/lib/constants'
@@ -118,6 +119,7 @@ export function Header({
         </nav>
         
         <div className="flex items-center xl:gap-2 gap-4">
+          <HeaderSearch />
           <CartSheet />
 
           {headerLogoSide === 'left' && (
