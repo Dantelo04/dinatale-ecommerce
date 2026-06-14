@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Search } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 
 export function HeaderSearch() {
   const [open, setOpen] = useState(false)
@@ -11,9 +11,12 @@ export function HeaderSearch() {
   const inputRef = useRef<HTMLInputElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
 
-  // Focus the input when it expands
+  // Focus the input after it expands. rAF waits for the element to become
+  // visible/focusable before calling focus().
   useEffect(() => {
-    if (open) inputRef.current?.focus()
+    if (!open) return
+    const id = requestAnimationFrame(() => inputRef.current?.focus())
+    return () => cancelAnimationFrame(id)
   }, [open])
 
   // Collapse on click-outside when empty
@@ -31,11 +34,7 @@ export function HeaderSearch() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const q = query.trim()
-    if (q) {
-      router.push(`/tienda?buscar=${encodeURIComponent(q)}`)
-    } else {
-      router.push('/tienda')
-    }
+    router.push(q ? `/tienda?buscar=${encodeURIComponent(q)}` : '/tienda')
     setOpen(false)
   }
 
@@ -47,16 +46,28 @@ export function HeaderSearch() {
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="flex items-center">
-      <button
-        type={open ? 'submit' : 'button'}
-        onClick={() => !open && setOpen(true)}
-        aria-label="Buscar"
-        aria-expanded={open}
-        className="grid place-items-center rounded-md p-1 text-foreground transition-colors hover:text-muted-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        <Search className="size-7" />
-      </button>
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      role="search"
+      className={`flex items-center transition-all duration-200 ${
+        open
+          ? 'rounded-md border border-border bg-background pl-3 pr-1 focus-within:ring-1 focus-within:ring-ring'
+          : ''
+      }`}
+    >
+      {!open && (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label="Buscar"
+          aria-expanded={false}
+          className="grid place-items-center rounded-md p-1 text-foreground transition-colors hover:text-muted-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <Search className="size-7" />
+        </button>
+      )}
+
       <input
         ref={inputRef}
         type="search"
@@ -68,9 +79,34 @@ export function HeaderSearch() {
         aria-hidden={!open}
         tabIndex={open ? 0 : -1}
         className={`${
-          open ? 'w-36 md:w-56 ml-1 px-3' : 'w-0 px-0'
-        } overflow-hidden rounded-md border-0 bg-transparent py-1.5 text-sm text-foreground placeholder:text-muted-foreground transition-all duration-200 focus:outline-none focus:border focus:border-border focus:bg-background focus:ring-1 focus:ring-ring`}
+          open ? 'w-40 md:w-56 py-1.5' : 'w-0 p-0'
+        } overflow-hidden border-0 bg-transparent text-sm text-foreground placeholder:text-muted-foreground transition-all duration-200 focus:outline-none [&::-webkit-search-cancel-button]:appearance-none`}
       />
+
+      {open && (
+        <>
+          {query && (
+            <button
+              type="button"
+              onClick={() => {
+                setQuery('')
+                inputRef.current?.focus()
+              }}
+              aria-label="Limpiar busqueda"
+              className="grid place-items-center rounded-md p-1 text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <X className="size-5" />
+            </button>
+          )}
+          <button
+            type="submit"
+            aria-label="Buscar"
+            className="grid place-items-center rounded-md p-1 text-foreground transition-colors hover:text-muted-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <Search className="size-6" />
+          </button>
+        </>
+      )}
     </form>
   )
 }
