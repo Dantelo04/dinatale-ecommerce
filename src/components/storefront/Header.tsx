@@ -76,7 +76,7 @@ export function Header({
       className={`sticky ${isAdmin ? 'top-9' : 'top-0'} z-50 bg-background backdrop-blur-sm supports-[backdrop-filter]:bg-background/75`}
     >
       {alertText && <AlertMarquee text={alertText} primaryColor={primaryColor} />}
-      <div className="mx-auto flex py-4 max-w-8xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto flex py-4 max-w-8xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {headerLogoSide === 'center' && (
           <HeaderSheet
             mobileOpen={mobileOpen}
@@ -88,7 +88,11 @@ export function Header({
 
         <Link
           href="/"
-          className="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className={`flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+            headerLogoSide === 'center'
+              ? 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:translate-x-0 md:translate-y-0'
+              : ''
+          }`}
         >
           {logoUrl ? (
             <Image
