@@ -6,6 +6,7 @@ const nextConfig = {
     globalNotFound: true,
   },
   images: {
+    unoptimized: true,
     remotePatterns: [
       { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
     ],
